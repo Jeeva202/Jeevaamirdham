@@ -1,0 +1,17 @@
+.container{
+    display: flex;
+    gap: 10px;
+}
+.subtitle{
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.edition > .subtitle{
+    font-size:16px;
+    letter-spacing: -1px;
+}
+
+.popular > .subtitle{
+    font-size: 26px;
+}
