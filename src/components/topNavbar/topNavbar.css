@@ -1,0 +1,37 @@
+.topContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #E6E6E6;
+    padding: 0.3rem;
+}
+
+.topLeft {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.topRight {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.text {
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.navContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+/* .container{
+    background: #FFF;
+    box-shadow: 0px 5px 14px 0px rgba(0, 0, 0, 0.16);
+} */
