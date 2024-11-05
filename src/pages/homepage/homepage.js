@@ -1,5 +1,6 @@
 import BooksSection from "../../components/booksSection/booksSection"
 import NewsLetter from "../../components/newsLetter/newsletter"
+import KPI from "../../components/kpi/kpi"
 import "./homepage.css"
 export default function HomePage(){
 
@@ -20,9 +21,9 @@ export default function HomePage(){
             <div className="playStore">
 
             </div>  
-            <div className="NewsLetter">
-                <NewsLetter/>
-            </div> 
+
+            <NewsLetter/>
+            <KPI/>
         </div>
 
     )
