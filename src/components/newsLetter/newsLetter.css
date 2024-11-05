@@ -1,0 +1,8 @@
+.NewsLetter{
+    display: flex;
+}
+.subscribe button{
+    background-color: #F09300;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
