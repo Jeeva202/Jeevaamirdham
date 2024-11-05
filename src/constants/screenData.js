@@ -8,6 +8,9 @@ import SearchIcon from '../assets/icons/search.svg'
 import userIcon from '../assets/icons/user.svg'
 import cartIcon from '../assets/icons/cart.svg'
 
+import Cart from "../assets/icons/cart.svg"
+import Emoji from "../assets/icons/emoji.svg"
+import Book from "../assets/icons/book.svg"
 export const navBanner = {
     icons:{
         phone: phoneIcon,
@@ -20,4 +23,7 @@ export const navBanner = {
         cart: cartIcon
     },
     logo: appLogo,
-}
+        Cart,
+        Emoji,
+        Book
+    }

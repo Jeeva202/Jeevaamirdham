@@ -1,17 +1,68 @@
-.container{
+/* Main container for aligning left and right side with equal height */
+.container {
     display: flex;
     gap: 10px;
+    align-items: stretch;
+    background-color: #F9E2BE;
 }
-.subtitle{
+
+
+.left-side {
+    font-size: 1rem;
+    flex: 0 0 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.right-side {
+    flex: 1; /* Right side takes up the remaining width */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.subtitle {
     font-weight: 600;
     letter-spacing: 1px;
 }
 
-.edition > .subtitle{
-    font-size:16px;
-    letter-spacing: -1px;
+.left-side > .subtitle {
+    font-size: 1rem;
+    letter-spacing: -0.5px;
 }
 
-.popular > .subtitle{
-    font-size: 26px;
+.right-side .subtitle {
+    font-size: 1.2rem;
 }
+
+.subtitle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.edition-cards, .popular {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.viewAll {
+    display: flex;
+    align-items: center;
+}
+
+/* Optional: Adjustments for responsive design */
+/* @media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    .left-side, .right-side {
+        width: 100%;
+    }
+} */
