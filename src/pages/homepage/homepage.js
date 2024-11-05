@@ -1,6 +1,7 @@
 import BooksSection from "../../components/booksSection/booksSection"
 import NewsLetter from "../../components/newsLetter/newsletter"
 import KPI from "../../components/kpi/kpi"
+import Footer from "../../components/footer/footer"
 import "./homepage.css"
 export default function HomePage(){
 
@@ -24,6 +25,7 @@ export default function HomePage(){
 
             <NewsLetter/>
             <KPI/>
+            <Footer/>
         </div>
 
     )
