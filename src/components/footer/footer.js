@@ -1,10 +1,14 @@
 import "./footer.css"
-import logo from "../../assets/images/jeevaamirdhamLogo.svg"
+import { navBanner } from "../../constants/screenData"
+
 export default function Footer() {
+    console.log(navBanner);
+    
     return (
+        <div className="foot-section">
         <div className="footer">
             <div className="about">
-                <img src={logo} alt="" srcset="" />
+                <img src={navBanner.logo} alt="" srcset="" />
                 <div className="summary">
                     Who are the Siddhars? What is <br />
                     ideology? Who are the saints? Who are <br />
@@ -78,5 +82,18 @@ export default function Footer() {
                 </div>
             </div>
         </div>
+        <div className="copyright">
+            <div className="text">
+            Copyright © 2024 <span> Jeevaamirdham </span> . All rights reserved.
+            </div>
+            <div className="socialmedia">
+                <navBanner.icons.facebook sx={{ fontSize: "1rem", fill:"#999999" }} />
+                <navBanner.icons.twitter sx={{ fontSize: "1rem", fill:"#999999"  }} />
+                <navBanner.icons.instagram sx={{ fontSize: "1rem", fill:"#999999"  }} />
+                <img src={navBanner.icons.pinterest} alt="" srcset=""/>
+
+            </div>
+        </div>
+    </div>
     )
 }

@@ -3,6 +3,7 @@ import NewsLetter from "../../components/newsLetter/newsletter"
 import KPI from "../../components/kpi/kpi"
 import Footer from "../../components/footer/footer"
 import "./homepage.css"
+import PranavamTV from "../../components/pranavam_tv/pranavamtv"
 export default function HomePage(){
 
     return (
@@ -14,7 +15,7 @@ export default function HomePage(){
                 <BooksSection/>
             </div> 
             <div className="YouTube">
-            
+            <PranavamTV/>
             </div>
             <div className="News">
             
@@ -22,10 +23,18 @@ export default function HomePage(){
             <div className="playStore">
 
             </div>  
+            <div className="newsletter">
+                <NewsLetter/>
 
-            <NewsLetter/>
+            </div>
+            <div className="kpi">
             <KPI/>
+
+            </div>
+            <div className="ft">
             <Footer/>
+
+            </div>
         </div>
 
     )

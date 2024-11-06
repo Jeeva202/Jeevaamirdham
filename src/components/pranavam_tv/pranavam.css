@@ -1,0 +1,18 @@
+.PranavamTV{
+    width: 80%;
+    padding-bottom: 30px;
+}
+.PranavamTV .title{
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.PranavamTV .video-section iframe{
+    width: 65%;
+    height: 45vh;
+    border-radius: 10px;
+}

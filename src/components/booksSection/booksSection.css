@@ -1,5 +1,6 @@
 /* Main container for aligning left and right side with equal height */
 .container {
+    width: 80%;
     display: flex;
     gap: 10px;
     align-items: stretch;
