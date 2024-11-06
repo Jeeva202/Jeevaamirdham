@@ -1,10 +1,11 @@
-import { Divider, Typography, Button } from '@mui/material'
+import { Divider, Typography, Button, Badge } from '@mui/material'
 import React from 'react'
 import { navBanner } from '../../constants/screenData'
 import "./topNavbar.css"
 import { styled } from '@mui/material/styles';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import { useNavigate } from 'react-router-dom';
 
 const StyledTabs = styled((props) => (
     <Tabs
@@ -44,14 +45,29 @@ const StyledTab = styled((props) => <Tab disableRipple {...props} />)(
         },
     }),
 );
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    '& .MuiBadge-badge': {
+      right: "-3px",
+      top: "-3px",
+      border: `2px solid ${theme.palette.background.paper}`,
+      padding: '0 4px',
+      background:"#F09300",
+      color: "white",
+    },
+  }));
 export default function TopNavbar() {
     const [value, setValue] = React.useState(0);
+    const navigate = useNavigate();
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        
+        // Navigate to different routes based on the selected tab index
+        const routes = ['/', '/shop', '/pranavam-tv', '/blog', '/about', '/contact'];
+        navigate(routes[newValue]);
     };
     return (
-        <><div style={{ boxShadow: "0px 5px 14px 0px rgba(0, 0, 0, 0.16)" }}>
+        <><div style={{ background:"#FFF" }}>
             <div className="topContainer">
                 <div className="topLeft">
                     <bold className="text">Helpline</bold>
@@ -87,27 +103,22 @@ export default function TopNavbar() {
                         <div sx={{ p: 2 }} />
                     </div>
                     <div style={{ display: "flex" }}>
-                        {/* <div style={{borderRight:"2px solid #d9d9d9"}}>
-                            <img src={navBanner.icons.search} />
-                        </div>
-                        <Divider orientation="vertical" variant="middle"  />
-                        <div style={{borderRight:"2px solid #d9d9d9"}}>
-                            <img src={navBanner.icons.user} />
-                        </div>
-                        <Divider orientation="vertical" variant="middle"  />
-                        <div>
-                            <img src={navBanner.icons.cart} />
-                        </div> */}
 
-                        <Button variant="test" startIcon={<img src={navBanner.icons.search} />}>
+        
+                        <Button variant="test" sx={{textTransform:"none", fontWeight: 600, fontSize:"0.75rem"}} startIcon={<img src={navBanner.icons.search} style={{ width:"0.9rem"}}/>}>
                             Search
                         </Button>
-                        <Button variant="test" startIcon={<img src={navBanner.icons.user} />}>
+                        <Button onClick={()=>{navigate('/login')}} variant="test" sx={{textTransform:"none", fontWeight: 600, fontSize:"0.75rem"}} startIcon={<img src={navBanner.icons.user} style={{ width:"0.9rem"}} />}>
                             Login
                         </Button>
-                        <Button variant="test" startIcon={<img src={navBanner.icons.cart} />}>
-                            Cart
+                        <Button variant="test" sx={{textTransform:"none", gap:"0.8rem", fontWeight: 600, fontSize:"0.75rem"}}>
+                        <StyledBadge badgeContent={4}>
+                        <img src={navBanner.icons.cart} style={{ width:"1rem"}}/> 
+                        </StyledBadge>
+                        Cart
                         </Button>
+
+                        
                     </div>
                 </div>
             </div>
