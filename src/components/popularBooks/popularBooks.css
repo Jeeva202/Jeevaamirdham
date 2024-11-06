@@ -1,0 +1,31 @@
+.book-cards{
+    display: flex;
+}
+.book-cards > .card{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.book-cards .content > * {
+    padding-bottom: 10px;
+}
+.book-cards .image{
+    width:85%
+}
+.book-cards .title{
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.desc{
+    font-size: 1rem;
+    font-weight: 400;
+}
+.cost{
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #F09300;
+}
+.buyButton{
+    width: 100%;
+}

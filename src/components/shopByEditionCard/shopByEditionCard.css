@@ -1,0 +1,32 @@
+
+.Cards{
+    display: flex;
+    height: 100%;
+    background-color: #F6F4FF;
+    padding: 15px 30px 15px 30px;
+    gap: 15px;
+    border-radius: 15px;
+    flex-direction: column;
+}
+.card{
+    /* padding-left: 30px; */
+    display:flex;
+    align-items: center;
+    gap:30px;
+}
+.card-img{
+    width: 4vw;
+    height: 8vh;
+}
+.card-text{
+    font-size: 1rem;
+    color: #F09300;
+}
+.card-text::after {
+    content: '\003E';  /* Unicode for '>' */
+    margin-left: 5px;
+}
+
+a {
+    text-decoration: none;  /* Removes the underline */
+}

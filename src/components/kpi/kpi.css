@@ -1,0 +1,38 @@
+.kpis {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.kpis>* {
+    border: 1px solid #000000;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: row;
+    width: 25%;
+    margin: 30px 0;
+    padding: 10px;
+    padding: 50px 10px;
+    align-items: center;
+}
+
+.kpis>* img {
+    width: 15%;
+    padding-right: 20px;
+}
+
+.kpi {
+    display: flex;
+    flex-direction: column;
+}
+
+.kpi .number {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.kpi .text{
+    color: #999999;
+    font-size: 0.6rem;
+    font-weight: 400;
+}

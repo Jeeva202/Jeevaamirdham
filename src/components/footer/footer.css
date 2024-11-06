@@ -1,0 +1,42 @@
+.footer{
+    display: flex;
+    gap: 30px;
+    padding: 25px;
+    background: #282828;
+    justify-content: center;
+}
+
+.footer .about, .address, .time{
+    font-size: 0.8rem;
+    color: #999999;
+}
+.footer .title{
+    font-size: 1rem;
+    color: #ffffff;
+    padding-bottom: 15px;
+}
+.contact{
+    line-height: 24px;
+}
+.contact .phNumber{
+    color: #F09300;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.contact a{
+    color: #ffffff;
+    font-size: 0.7rem;
+}
+.contact .email{
+    color: #ffffff;
+    font-size: 1.1rem;
+}
+.explore .sections, .service .policies, .categ .book-cat{
+    display: flex;
+    flex-direction: column;
+    /* gap: 2px; */
+}
+.explore a, .service a, .categ a{
+    color: #999999;
+    font-size: 0.8rem;
+}

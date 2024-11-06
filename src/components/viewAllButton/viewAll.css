@@ -1,0 +1,17 @@
+.viewAll button{
+    font-size: 1rem;
+    font-weight: 600;
+    width: 100%;
+    background-color: #F09300;
+    padding: 10px 30px 10px 30px;
+    border-radius: 50px;
+    border: None;
+
+}
+
+/* width: Hug (134px)px;
+height: Hug (42px)px;
+padding: 12px 30px 12px 30px;
+gap: 0px;
+border-radius: 50px 0px 0px 0px;
+opacity: 0px; */
