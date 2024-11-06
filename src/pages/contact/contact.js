@@ -25,7 +25,7 @@ export default function Contact() {
                     title="Map"
                     referrerPolicy="no-referrer-when-downgrade"
                 ></iframe>
-                <div>
+                <div style={{display:"flex", flexDirection:"column", justifyContent:"space-between"}}>
                     <div style={{ fontSize: "1.5rem", fontWeight: "bold", textAlign: "left" }}>We Would Love To Hear From You</div>
                     <div style={{ fontSize: "0.8rem", textAlign: "left" }}>Your email address will not be published. Required fields are marked *</div>
                     <input type="text" name="" id="" placeholder="Name*" style={{
@@ -54,7 +54,7 @@ export default function Contact() {
                 </div>
             </div>
 
-            <div style={{ fontSize: "2rem", fontWeight: "bold", textAlign: "center", paddingTop: "6rem", paddingBottom: "3rem" }}>Our Trusted Dealers</div>
+            <div style={{ fontSize: "2rem", fontWeight: "bold", textAlign: "center", paddingTop: "8rem", paddingBottom: "3rem" }}>Our Trusted Dealers</div>
             <div style={{ display: "flex", justifyContent:"space-between" }}>
                 <div>
                     <img src={contactPage.images.newYork} alt="las vegas" style={{ borderRadius: "8px", width: "20rem", height: "10rem" }} />

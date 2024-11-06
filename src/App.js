@@ -7,6 +7,7 @@ import UserLogin from './components/userLogin/userLogin';
 import About from './pages/about/about';
 import Contact from './pages/contact/contact';
 import Login from './pages/login/login';
+import Footer from './components/footer/footer';
 
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
               </Routes>
             </Container>
-
+            <Footer/>
           </BrowserRouter>
         </Box>
       </Box>

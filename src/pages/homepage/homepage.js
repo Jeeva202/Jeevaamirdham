@@ -25,7 +25,6 @@ export default function HomePage(){
 
             <NewsLetter/>
             <KPI/>
-            <Footer/>
         </div>
 
     )
