@@ -2,9 +2,12 @@ import React from 'react'
 import "./about.css"
 import NewsLetter from '../../components/newsLetter/newsletter'
 import KPI from '../../components/kpi/kpi'
+import { Container } from '@mui/material'
 export default function About() {
     return (
         <div style={{ background: "#F9E2BE" }}>
+            <Container maxWidth="lg">
+
             <div style={{ fontSize: "2rem", fontWeight: "bold", textAlign: "center", paddingTop: "6rem", paddingBottom: "2rem" }}>About Us</div>
             <div style={{ color: "#444", lineHeight: "30px" }}>
                 Jeeva Amirdham is a spiritual sanctuary dedicated to promoting the essence of self-realization, inner peace, and universal harmony. Located in a serene environment, Jeeva Amirdham offers a haven for those seeking deeper spiritual connections, holistic well-being, and a transformative journey towards enlightenment.
@@ -40,6 +43,8 @@ export default function About() {
             <NewsLetter/>
             <div style={{marginTop:"4rem"}}></div>
             <KPI/>
+            </Container>
+
         </div>
     )
 }

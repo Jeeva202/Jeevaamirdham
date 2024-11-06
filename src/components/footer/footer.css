@@ -1,9 +1,9 @@
 .footer{
     display: flex;
     gap: 30px;
-    padding: 25px;
-    background: #282828;
-    justify-content: center;
+    padding: 25px 0px;
+    /* background: #282828; */
+    justify-content: space-between;
 }
 
 .footer .about, .address, .time{
