@@ -1,6 +1,6 @@
 import React from 'react'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { Button } from '@mui/material';
+import { Button, Container } from '@mui/material';
 import { contactPage } from '../../constants/screenData';
 import NewsLetter from '../../components/newsLetter/newsletter'
 import KPI from '../../components/kpi/kpi'
@@ -8,6 +8,8 @@ import KPI from '../../components/kpi/kpi'
 export default function Contact() {
     return (
         <div style={{ background: "#F9E2BE" }}>
+            <Container maxWidth="lg">
+
             <div style={{ fontSize: "2rem", fontWeight: "bold", textAlign: "center", paddingTop: "6rem", paddingBottom: "3rem" }}>Contact</div>
             <div style={{
                 display: "flex", flexDirection: "row",
@@ -115,6 +117,7 @@ export default function Contact() {
             <NewsLetter/>
             <div style={{marginTop:"4rem"}}></div>
             <KPI/>
+            </Container>
         </div>
 
     )

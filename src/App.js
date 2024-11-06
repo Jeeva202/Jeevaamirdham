@@ -8,29 +8,27 @@ import About from './pages/about/about';
 import Contact from './pages/contact/contact';
 import Login from './pages/login/login';
 import Footer from './components/footer/footer';
+import LoginWithOTP from './pages/loginWithOtp.js/loginWithOTP';
+import CreateNewAccount from './pages/createNewAccount/createNewAccount';
 
 
 function App() {
   return (
     <>
       <Box sx={{ backgroundColor: "#F9E2BE" }}>
-        {/* <CssBaseline /> */}
         <Box>
           <BrowserRouter>
-            <Box sx={{ background: "#FFF" }}>
-              <Container maxWidth="lg"><TopNavbar /></Container>
-            </Box>
-            <Container maxWidth="lg">
-
-              <Routes>
-                <Route path="/" element={<Navigate to={"/home"} replace />} />
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/login" element={<Login />} />
-              </Routes>
-            </Container>
-            <Footer/>
+            <TopNavbar />
+            <Routes>
+              <Route path="/" element={<Navigate to={"/home"} replace />} />
+              <Route path="/home" element={<HomePage />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/login/loginWithOtp" element={<LoginWithOTP />} />
+              <Route path="/createNewUser" element={<CreateNewAccount />} />
+            </Routes>
+            <Footer />
           </BrowserRouter>
         </Box>
       </Box>
