@@ -106,13 +106,20 @@ export default function TopNavbar() {
                             <div sx={{ p: 2 }} />
                         </div>
                         <div style={{ display: "flex" }}>
-                            <Button variant="test" sx={{ textTransform: "none", fontWeight: 600, fontSize: "0.75rem" }} startIcon={<img src={navBanner.icons.search} style={{ width: "0.9rem" }} />}>
+                            <Button disableRipple variant="text" 
+                            sx={{ 
+                                textTransform: "none", 
+                            fontWeight: 600, 
+                            fontSize: "0.75rem",
+                            color: "#444" 
+                            }} 
+                            startIcon={<img src={navBanner.icons.search} style={{ width: "0.9rem" }} />}>
                                 Search
                             </Button>
-                            <Button onClick={() => { navigate('/login') }} variant="test" sx={{ textTransform: "none", fontWeight: 600, fontSize: "0.75rem" }} startIcon={<img src={navBanner.icons.user} style={{ width: "0.9rem" }} />}>
+                            <Button disableRipple onClick={() => { navigate('/login') }} variant="text" sx={{ textTransform: "none", fontWeight: 600, fontSize: "0.75rem", color: "#444" }} startIcon={<img src={navBanner.icons.user} style={{ width: "0.9rem" }} />}>
                                 Login
                             </Button>
-                            <Button variant="test" sx={{ textTransform: "none", gap: "0.8rem", fontWeight: 600, fontSize: "0.75rem" }}>
+                            <Button disableRipple variant="text" sx={{ textTransform: "none", gap: "0.8rem", fontWeight: 600, fontSize: "0.75rem", color: "#444" }}>
                                 <StyledBadge badgeContent={4}>
                                     <img src={navBanner.icons.cart} style={{ width: "1rem" }} />
                                 </StyledBadge>

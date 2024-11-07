@@ -3,7 +3,6 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import TopNavbar from './components/topNavbar/topNavbar';
 import HomePage from './pages/homepage/homepage';
 import { Box, Container, CssBaseline } from '@mui/material';
-import UserLogin from './components/userLogin/userLogin';
 import About from './pages/about/about';
 import Contact from './pages/contact/contact';
 import Login from './pages/login/login';
@@ -15,7 +14,7 @@ import CreateNewAccount from './pages/createNewAccount/createNewAccount';
 function App() {
   return (
     <>
-      <Box sx={{ backgroundColor: "#F9E2BE" }}>
+      <Box sx={{ backgroundColor: "#FEF7F7" }}>
         <Box>
           <BrowserRouter>
             <TopNavbar />

@@ -6,7 +6,7 @@ export default function Login() {
     const navigate = useNavigate();
     return (
 
-        <div style={{ background: "#FEF7F7" }}>
+        <div >
             <Container maxWidth="sm">
 
                 <div>
