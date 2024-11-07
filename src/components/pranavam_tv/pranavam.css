@@ -1,0 +1,75 @@
+.PranavamTV {
+    width: 100%;
+    padding-bottom: 30px;
+}
+
+.PranavamTV .title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.PranavamTV .video-section iframe {
+    width: 100%;
+    height: 45vh;
+    border-radius: 10px;
+}
+
+.video-section {
+    display: flex;
+    flex-direction: row;
+    gap: 8%;
+}
+
+.PranavamTV .main {
+    width: 60%;
+}
+
+.PranavamTV .other {
+    display: flex;
+    flex-direction: column;
+    gap: 7%;
+    width: 30%;
+}
+
+.PranavamTV .video-section .embed {
+    display: flex;
+    font-size: 0.8rem;
+    gap: 5px;
+}
+
+.PranavamTV .video-section .embed .video-title {
+    flex: 0 0 35%;
+}
+
+.youtubeEmbed {
+    border-radius: 10px;
+    flex: 1;
+    width: 9vw;
+    height: 10vh;
+    padding: 10px;
+    position: relative;
+    filter: blur(2px);  /* Apply blur effect */
+    transition: filter 0.3s ease;  /* Smooth transition for hover effect */
+}
+
+.youtubeEmbed:hover {
+    filter: blur(0);  /* Remove blur on hover */
+}
+
+.PranavamTV .embed .add-info {
+    font-size: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.PranavamTV .embed .add-info .comment,
+.PranavamTV .embed .add-info .views {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

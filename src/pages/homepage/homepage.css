@@ -1,0 +1,17 @@
+.PopBooks,
+.YouTube,
+.News,
+.playStore,
+.newsletter,
+.kpi,
+.ft {
+    display: flex;
+    justify-content: center;
+}
+.ft{
+    background: #282828;
+}
+
+.kpi {
+    align-items: center;
+}

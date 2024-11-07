@@ -1,6 +1,7 @@
 .kpis {
+    /* width: 80%; */
     display: flex;
-    width: 100%;
+    /* width: 100%; */
     justify-content: space-between;
 }
 
