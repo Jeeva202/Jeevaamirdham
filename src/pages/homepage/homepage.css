@@ -8,16 +8,6 @@
     display: flex;
     justify-content: center;
 }
-
-.PopBooks,
-.YouTube,
-.News,
-.playStore,
-.newsletter,
-.kpi {
-
-    background: #F9E2BE;
-}
 .ft{
     background: #282828;
 }

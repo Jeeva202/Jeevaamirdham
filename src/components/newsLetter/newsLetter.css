@@ -1,5 +1,5 @@
 .NewsLetter{
-    width: 80%;
+    border-radius: 20px;
     background-color: #FCCC4D;
     color: #363636;
     display: flex;

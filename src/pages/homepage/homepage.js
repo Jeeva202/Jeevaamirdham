@@ -1,41 +1,38 @@
 import BooksSection from "../../components/booksSection/booksSection"
 import NewsLetter from "../../components/newsLetter/newsletter"
 import KPI from "../../components/kpi/kpi"
+import PranavamTV from "../../components/pranavam_tv/pranavamtv"
 import Footer from "../../components/footer/footer"
 import "./homepage.css"
-import PranavamTV from "../../components/pranavam_tv/pranavamtv"
-export default function HomePage(){
+import { Container } from "@mui/material"
+import Playstore from "../../components/playstore/playstore"
+export default function HomePage() {
 
     return (
-        <div className="Container">
-            <div className="NavBar">
-            
-            </div>
-            <div className="PopBooks">
-                <BooksSection/>
-            </div> 
-            <div className="YouTube">
-            <PranavamTV/>
-            </div>
-            <div className="News">
-            
-            </div>
-            <div className="playStore">
+        <Container maxWidth="lg">
 
-            </div>  
-            <div className="newsletter">
-                <NewsLetter/>
+            <div className="Container">
+                <div className="NavBar">
 
-            </div>
-            <div className="kpi">
-            <KPI/>
+                </div>
+                <div className="PopBooks">
+                    <BooksSection />
+                </div>
+                <div className="YouTube">
+                    <PranavamTV/>
+                </div>
+                <div className="News">
 
-            </div>
-            <div className="ft">
-            <Footer/>
+                </div>
+                <div className="playStore">
+                    <Playstore/>
+                </div>
+
+                <NewsLetter />
+                <KPI />
 
             </div>
-        </div>
+        </Container>
 
     )
 }

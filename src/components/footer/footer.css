@@ -1,20 +1,18 @@
 .foot-section{
     display: flex;
     flex-direction: column;
-    width: 80%;
+    /* width: 80%; */
 }
 .footer{
     width: 100%;
     display: flex;
     gap: 30px;
-    padding: 25px;
-    background: #282828;
-    justify-content: center;
+    padding: 25px 0px;
+    justify-content: space-between;
 }
 .copyright{
     font-size: 0.8rem;
     border-top: 1px solid #9999;
-    background: #282828;
     display: flex;
     color: #ffff;
     justify-content: space-around;

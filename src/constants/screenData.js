@@ -9,9 +9,17 @@ import SearchIcon from '../assets/icons/search.svg'
 import userIcon from '../assets/icons/user.svg'
 import cartIcon from '../assets/icons/cart.svg'
 
-import Cart from "../assets/icons/cart1.svg"
-import Emoji from "../assets/icons/emoji.svg"
-import Book from "../assets/icons/book.svg"
+import kpiCart from "../assets/icons/kpi_cart.svg"
+import kpiEmoji from "../assets/icons/kpi_emoji.svg"
+import kpiBook from "../assets/icons/kpi_book.svg"
+
+import newYork from '../assets/images/contact_newyork.png'
+import lasVegas from '../assets/images/contact_lasvegas.png'
+import losAngeles from '../assets/images/contact_losangeles.png'
+import PlaystoreBanner from "../assets/images/playstore_banner.svg"
+import CommentIcon from "../assets/icons/comment.svg"
+import ViewIcon from "../assets/icons/eye.svg"
+
 export const navBanner = {
     icons:{
         phone: phoneIcon,
@@ -23,9 +31,29 @@ export const navBanner = {
         search: SearchIcon,
         user: userIcon,
         cart: cartIcon
-    },
+    }, 
     logo: appLogo,
-        Cart,
-        Emoji,
-        Book
     }
+export const kpiCard = {
+    icons:{
+        cart: kpiCart,
+        emoji: kpiEmoji,
+        book: kpiBook,
+    }
+};
+export const contactPage = {
+    images: {
+        newYork: newYork,
+        lasVegas: lasVegas,
+        losAngeles: losAngeles,
+    }
+}
+export const homePage = {
+    images: {
+        playstore:PlaystoreBanner,
+    },
+    icons:{
+        CommentIcon,
+        ViewIcon
+    }
+}
