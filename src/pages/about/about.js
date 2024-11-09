@@ -5,7 +5,7 @@ import KPI from '../../components/kpi/kpi'
 import { Container } from '@mui/material'
 export default function About() {
     return (
-        <div style={{ background: "#F9E2BE" }}>
+        <div >
             <Container maxWidth="lg">
 
             <div style={{ fontSize: "2rem", fontWeight: "bold", textAlign: "center", paddingTop: "6rem", paddingBottom: "2rem" }}>About Us</div>
@@ -41,7 +41,6 @@ export default function About() {
             </div>
             <div style={{marginTop:"4rem"}}></div>
             <NewsLetter/>
-            <div style={{marginTop:"4rem"}}></div>
             <KPI/>
             </Container>
 

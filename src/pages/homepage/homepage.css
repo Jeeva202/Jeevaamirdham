@@ -1,0 +1,28 @@
+.PopBooks,
+.YouTube,
+.News,
+.playStore,
+.newsletter,
+.kpi,
+.ft {
+    display: flex;
+    justify-content: center;
+}
+
+.ft {
+    background: #282828;
+}
+
+.kpi {
+    align-items: center;
+}
+
+.carousel {
+    margin-top: 30px;
+    background-color: #FCEDEC;
+}
+
+.carousel .css-cce6m-MuiCardContent-root:last-child {
+    padding-top: 32px !important;
+    padding-bottom: 16px !important;
+}

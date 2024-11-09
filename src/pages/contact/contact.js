@@ -7,7 +7,7 @@ import KPI from '../../components/kpi/kpi'
 
 export default function Contact() {
     return (
-        <div style={{ background: "#F9E2BE" }}>
+        <div>
             <Container maxWidth="lg">
 
             <div style={{ fontSize: "2rem", fontWeight: "bold", textAlign: "center", paddingTop: "6rem", paddingBottom: "3rem" }}>Contact</div>

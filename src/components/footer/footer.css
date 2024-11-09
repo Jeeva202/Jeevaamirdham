@@ -1,11 +1,27 @@
+.foot-section{
+    display: flex;
+    flex-direction: column;
+    /* width: 80%; */
+}
 .footer{
+    width: 100%;
     display: flex;
     gap: 30px;
     padding: 25px 0px;
-    /* background: #282828; */
     justify-content: space-between;
 }
-
+.copyright{
+    font-size: 0.8rem;
+    border-top: 1px solid #9999;
+    display: flex;
+    color: #ffff;
+    justify-content: space-around;
+    padding: 40px 0;
+    letter-spacing: 2px;
+}
+.copyright .text span{
+    color: #F09300;
+}
 .footer .about, .address, .time{
     font-size: 0.8rem;
     color: #999999;
@@ -39,4 +55,18 @@
 .explore a, .service a, .categ a{
     color: #999999;
     font-size: 0.8rem;
+}
+
+.copyright{
+    font-size: 0.8rem;
+    border-top: 1px solid #9999;
+    background: #282828;
+    display: flex;
+    color: #ffff;
+    justify-content: space-around;
+    padding: 40px 0;
+    letter-spacing: 2px;
+}
+.copyright .text span{
+    color: #F09300;
 }
