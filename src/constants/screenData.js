@@ -19,7 +19,8 @@ import losAngeles from '../assets/images/contact_losangeles.png'
 import PlaystoreBanner from "../assets/images/playstore_banner.svg"
 import CommentIcon from "../assets/icons/comment.svg"
 import ViewIcon from "../assets/icons/eye.svg"
-
+import HorizontalDivider from "../assets/icons/Horizontal Divider.svg"
+import RightArrow from "../assets/icons/right_arrow.svg"
 export const navBanner = {
     icons:{
         phone: phoneIcon,
@@ -54,6 +55,8 @@ export const homePage = {
     },
     icons:{
         CommentIcon,
-        ViewIcon
+        ViewIcon,
+        HorizontalDivider,
+        RightArrow
     }
 }

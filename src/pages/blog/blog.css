@@ -1,0 +1,140 @@
+.blog-page > .title{
+    margin: 30px 0;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+.blog-page > .content{
+    display: flex;
+    gap: 50px;
+}
+.blog-page .left-side{
+    flex: 1;
+}
+.blog-content .subtext{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: #999999;
+}
+.blog-content .title{
+    padding: 15px 0;
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+.blog-content .content{
+    font-size: 0.8rem;
+    /* font-weight: 300; */
+    color: #444444;
+    line-height: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E6E6E6;
+}
+.blog-content .blog-footer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 50px;
+}
+.blog-content .blog-footer .categ{
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+.blog-content .blog-footer .categ span{
+    color: #F09300;
+}
+.blog-content .blog-footer .readmore{
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+.blog-page .right-side {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    flex: 0 0 25%;
+    justify-content: flex-start;
+}
+.blog-page .right-side .Categories .MuiCardContent-root{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.blog-page .right-side .categ {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.blog-page .right-side .categ .text{
+    color: #444444;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.blog-page .right-side .categ {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.blog-page .right-side .recent-posts .MuiCardContent-root{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.blog-page .right-side .recent-posts .post-card {
+    display: flex;
+    gap: 5px;
+    height: 11vh;
+}
+.blog-page .right-side .recent-posts .post-card img{
+    flex: 2;
+}
+.blog-page .right-side .recent-posts .post-card .text{
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.blog-page .right-side .recent-posts .post-card .add-info, .left-side .blog-content .viewAndComment {
+    font-size: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.blog-page .right-side .recent-posts .post-card .post-title{
+    font-size: 1rem;
+    font-weight: 600;
+}
+.blog-page .right-side .recent-posts .post-card .post-date{
+    font-size: 0.6rem;
+    color: #999999;
+    font-weight: 300;
+}
+.blog-page  .comment,
+.blog-page .views {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #999999;
+}
+.blog-page .right-side  .comment,
+.blog-page .right-side .views {
+    font-size: 0.5rem;
+    font-weight: 300;
+}
+
+.blog-page .left-side  .comment,
+.blog-page .left-side .views {
+    font-size: 0.8rem;
+    font-weight: 300;
+}
+.blog-page .right-side .tags .MuiCardContent-root {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    flex-direction: row;
+    font-size: 0.8rem;
+}
