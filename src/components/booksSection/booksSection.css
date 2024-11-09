@@ -42,7 +42,7 @@
 
 .subtitle-row {
     display: flex;
-    align-items: center;
+    align-items: baseline;
     justify-content: space-between;
     margin-bottom: 16px;
 }
@@ -57,6 +57,13 @@
 .viewAll {
     display: flex;
     align-items: center;
+}
+
+.hdivider{
+    width: 50%;
+}
+.hdivider img{
+    width: 100%;
 }
 
 /* Optional: Adjustments for responsive design */
