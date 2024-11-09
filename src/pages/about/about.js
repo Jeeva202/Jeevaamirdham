@@ -41,7 +41,6 @@ export default function About() {
             </div>
             <div style={{marginTop:"4rem"}}></div>
             <NewsLetter/>
-            <div style={{marginTop:"4rem"}}></div>
             <KPI/>
             </Container>
 

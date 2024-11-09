@@ -41,7 +41,7 @@ export default function HomePage() {
                 </div>
                 <div className="carousel">
                     <Card sx={{
-                        // background: "rgba(255, 255, 255, 0.15)",
+                        background: "#fbf1e6",
                         // backdropFilter: "blur(7.5px)",
                         width: "100%",
                         // maxWidth: "37rem",
@@ -52,11 +52,11 @@ export default function HomePage() {
                         <CardContent sx={{ padding: "16px", borderRadius: "5px" }}>
                             <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                 <IconButton onClick={handlePreviousStep} disabled={step === 0}>
-                                    <ArrowBackIosNewRoundedIcon sx={{ color: '#8C7ED7', fontSize: "1.5rem" }} />
+                                    <ArrowBackIosNewRoundedIcon sx={{ color: '#F09300', fontSize: "1.5rem" }} />
                                 </IconButton>
                                 <Box component="img" src={carouselImages[step]} alt="carousel" sx={{ width:"95%",height: "100%", borderRadius: "10px" }} />
                                 <IconButton onClick={handleNextStep} disabled={step === numSteps - 1}>
-                                    <ArrowForwardIosRoundedIcon sx={{ color: '#8C7ED7', fontSize: "1.5rem" }} />
+                                    <ArrowForwardIosRoundedIcon sx={{ color: '#F09300', fontSize: "1.5rem" }} />
                                 </IconButton>
                             </Box>
                             <Box sx={{ display: 'flex', justifyContent: "center", marginTop: "1rem" }}>
@@ -67,7 +67,7 @@ export default function HomePage() {
                                             width: 8,
                                             height: 8,
                                             borderRadius: '50%',
-                                            backgroundColor: index === step ? '#fff' : '#8C7ED7',
+                                            backgroundColor: index === step ? '#d9d9d9' : '#F09300',
                                             margin: '0 4px',
                                             cursor: 'pointer',
                                         }}
