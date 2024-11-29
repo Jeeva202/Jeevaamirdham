@@ -63,7 +63,7 @@ export default function TopNavbar() {
         setValue(newValue);
 
 
-        const routes = ['/', '/shop', '/pranavam-tv', '/blog', '/about', '/contact'];
+        const routes = ['/', '/ebooks', '/pranavam-tv', '/blog', '/about', '/contact'];
         navigate(routes[newValue]);
     };
     return (
@@ -97,7 +97,7 @@ export default function TopNavbar() {
                                 aria-label="styled tabs example"
                             >
                                 <StyledTab label="Home" />
-                                <StyledTab label="Shop" />
+                                <StyledTab label="E-books" />
                                 <StyledTab label="Pranavam TV" />
                                 <StyledTab label="Blog" />
                                 <StyledTab label="About" />

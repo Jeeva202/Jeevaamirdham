@@ -1,0 +1,49 @@
+.ebook .title, .shop-section .title{
+    padding: 20px 0;
+    display: flex;
+    flex-direction: row;
+    /* gap: 20px; */
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.ebook .hdivider, .shop-section .hdivider{
+    transform: scaleY(0.5);
+}
+.ebook .year-wise, .ebooks-one-year .month-wise {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 items per row */
+    gap: 30px;
+}
+
+.ebook .year-wrapper,  .ebooks-one-year .month-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.ebook .year-wrapper img, .ebooks-one-year .month-wrapper img {
+    width: 9rem;
+    height: 10rem; 
+    object-fit: cover;
+}
+.ebook .year-wrapper button, .ebooks-one-year .month-wrapper button{
+    margin: 0 !important;
+}
+.navigation{
+    display: inline-flex;
+    gap: 5px;
+    padding: 20px 0;
+    font-size: 12px;
+}
+@media (max-width: 768px) {
+    .ebook .year-wise, .ebooks-one-year .month-wise {
+        grid-template-columns: repeat(2, 1fr); /* 2 items per row on small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .ebook .year-wise, .ebooks-one-year .month-wise {
+        grid-template-columns: 1fr; /* 1 item per row on very small screens */
+    }
+}

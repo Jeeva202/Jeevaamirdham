@@ -54,7 +54,7 @@ export default function PranavamTV() {
                     Pranavam TV
                 </div>
                 <div className="viewAll">
-                    <ViewAll />
+                    <ViewAll text="View All" width="7rem" padding={"0.8rem 4rem"}/>
                 </div>
             </div>
             <div className="video-section">
