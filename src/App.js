@@ -2,6 +2,7 @@ import './App.css';
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import TopNavbar from './components/topNavbar/topNavbar';
 import HomePage from './pages/homepage/homepage';
+import Ebooks from './pages/ebooks/ebooks';
 import { Box, Container, CssBaseline } from '@mui/material';
 import About from './pages/about/about';
 import Contact from './pages/contact/contact';
@@ -21,6 +22,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Navigate to={"/home"} replace />} />
               <Route path="/home" element={<HomePage />} />
+              <Route path="/ebooks" element={<Ebooks />} />
               <Route path='/blog' element={<Blog/>} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />

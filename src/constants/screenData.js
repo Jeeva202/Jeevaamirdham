@@ -21,6 +21,9 @@ import CommentIcon from "../assets/icons/comment.svg"
 import ViewIcon from "../assets/icons/eye.svg"
 import HorizontalDivider from "../assets/icons/Horizontal Divider.svg"
 import RightArrow from "../assets/icons/right_arrow.svg"
+import RightArrowStroke from "../assets/icons/right_arrow_stroke.svg"
+import Previous from "../assets/icons/Previous Arrow.svg"
+import Next from "../assets/icons/Next Arrow.svg"
 export const navBanner = {
     icons:{
         phone: phoneIcon,
@@ -58,5 +61,14 @@ export const homePage = {
         ViewIcon,
         HorizontalDivider,
         RightArrow
+    }
+}
+export const ebooks = {
+    icons:{
+        HorizontalDivider,
+        RightArrowStroke,
+        Previous,
+        Next,
+        cart: cartIcon
     }
 }

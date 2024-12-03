@@ -1,0 +1,165 @@
+.ebook .title, .shop-section .title{
+    padding: 20px 0;
+    display: flex;
+    flex-direction: row;
+    /* gap: 20px; */
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 40px 0px 10px 0px;
+}
+
+.ebook .hdivider, .shop-section .hdivider{
+    transform: scaleY(0.5);
+}
+.ebook .year-wise, .ebooks-one-year .month-wise {
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 items per row */
+    gap: 30px;
+}
+
+.ebook .year-wrapper,  .ebooks-one-year .month-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.ebook .year-wrapper img, .ebooks-one-year .month-wrapper img {
+    width: 9rem;
+    height: 10rem; 
+    object-fit: cover;
+}
+.ebook .year-wrapper button, .ebooks-one-year .month-wrapper button{
+    margin: 0 !important;
+}
+.navigation{
+    display: inline-flex;
+    gap: 5px;
+    padding: 20px 0;
+    font-size: 12px;
+}
+
+.shop-section .genre{
+    flex: 1;
+}
+.shop-section .buy-section{
+    flex: 4;
+}
+.shop-section .genre .MuiCardContent-root{
+    display: flex;
+    font-size: 0.8rem;
+    flex-direction: column;
+    color: #0A0A0A;
+    gap: 30px;
+}
+.shop-section .categ {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.shop-section .categ .text{
+    color: #444444;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.shop-section .categ {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    cursor: pointer;
+}
+.shop-section .categ input[type="checkbox"] {
+    accent-color: black;
+}
+.shop-section .title{
+    color: #000000;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+.shop-section .content-section > *{
+    margin-bottom: 10px;
+}
+.shop-section .subtitle, .shop-section .desc{
+    font-size: 1rem;
+    font-weight: 100;
+    color: #444444;
+}
+.shop-section .price {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #F09300;
+}
+.buy-section .book{
+    display: flex;
+    flex-direction: row;
+    padding: 20px 0;
+    margin: 10px 0 0px 0;
+    border-bottom: 1px solid #E6E6E6;
+}
+.shop-section .price span{
+    padding-left: 5px;
+    text-decoration: line-through;
+    color: #444444;
+    font-weight: 100;
+    font-size: 1rem;
+}
+.shop-section .shopcontent{
+    display: flex;
+    flex-direction: row;
+}
+.shop-section .content-section button{
+    display: flex;
+    margin-top: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    gap: 8px;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+ .pagination .MuiPagination-ul{
+    color: #667085 !important;
+ }
+ .pagination li:nth-child(n+2):nth-last-child(n+2) button {
+    color: #667085;
+}
+.pagination li:first-child button, .pagination li:last-child button{
+    font-family:'Sora', sans-serif;
+    line-height: 20px;
+    font-weight: 500;
+    color: #344054;
+    border: 1px solid #D0D5DD;
+    gap: 10px;
+
+}
+.pagination li:first-child{
+    position: absolute;
+    left:13lvw;
+}
+.pagination li:last-child{
+    position: absolute;
+    right:13lvw;
+}
+
+.pagination .Mui-selected {
+    background-color: #FCCC4D !important; /* Highlight color */
+    color: #7F56D9 !important; /* Text color */
+    font-weight: bold; /* Optional for better emphasis */
+    border-radius: 50%; /* Optional: To make it more visually distinct */
+}
+
+@media (max-width: 768px) {
+    .ebook .year-wise, .ebooks-one-year .month-wise {
+        grid-template-columns: repeat(2, 1fr); /* 2 items per row on small screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .ebook .year-wise, .ebooks-one-year .month-wise {
+        grid-template-columns: 1fr; /* 1 item per row on very small screens */
+    }
+}

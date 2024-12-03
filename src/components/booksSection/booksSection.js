@@ -21,7 +21,7 @@ export default function BooksSection() {
                         <img src={homePage.icons.HorizontalDivider} alt=""/>
                     </div>
                     <div className="viewAll">
-                        <ViewAll/>
+                        <ViewAll text="View All"  width="7rem" padding="0.8rem 4rem" />
                     </div>
                 </div>
                 <div className="popular">
