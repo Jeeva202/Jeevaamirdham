@@ -3,7 +3,10 @@ import "./ebooks.css"
 import ViewAll from "../../components/viewAllButton/viewAll"
 import { useState } from "react";
 import { styled } from '@mui/material/styles';
-import { Pagination, Badge, Container, Card, CardContent, CardHeader, Divider, Button, Tabs, Tab, Box } from "@mui/material";
+import { Pagination, Badge, Container, Card, CardContent, CardHeader, Divider, Button, Modal, Typography, Box, List, ListItem, ListItemIcon, ListItemText, IconButton } from "@mui/material";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CloseIcon from '@mui/icons-material/Close';
+import InfoIcon from '@mui/icons-material/Info';
 export default function Ebooks() {
     const [allYears, setAllYears] = useState(true);
     const [selectedYear, setSelectedYear] = useState(NaN);
@@ -16,6 +19,14 @@ export default function Ebooks() {
     const [noOfYear, setNoOfYear] = useState(1);
     const [noOfMonth, setNoOfMonth] = useState(1)
     const [quantity, setQuantity] = useState(1)
+    const [descTab, setDescTab] = useState("Description")
+    const [whichBook, setWhichBook] = useState("0");
+    const [openModal, setOpenModal] = useState(false);
+    const [paid, setPaid] = useState(false)
+
+    const handleOpen = () => setOpenModal(true);
+    const handleClose = () => setOpenModal(false);
+
     const YearWiseEbooks = [
         {
             year: 2024,
@@ -159,6 +170,8 @@ export default function Ebooks() {
         },
     ]
 
+
+
     const bookData = [
         {
             availability: "IN STOCK",
@@ -169,10 +182,91 @@ export default function Ebooks() {
             category: "Action & Adventure, Activity Books",
             tag: "Books, Fiction, Romance - Contemporary",
             img: "/assets/images/2024_January_book1.svg",
+            cost: "₹ 1000",
             desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: ""
-        }
+            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+        },
+        {
+            availability: "IN STOCK",
+            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+            id: "SKU: INT280",
+            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary",
+            img: "/assets/images/2024_January_book2.svg",
+            cost: "₹ 1000",
+            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+        },
+        {
+            availability: "IN STOCK",
+            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+            id: "SKU: INT280",
+            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary",
+            img: "/assets/images/2024_January_book3.svg",
+            cost: "₹ 1000",
+            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+        },
+        {
+            availability: "IN STOCK",
+            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+            id: "SKU: INT280",
+            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary",
+            img: "/assets/images/2024_January_book4.svg",
+            cost: "₹ 1000",
+            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+        },
+        {
+            availability: "IN STOCK",
+            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+            id: "SKU: INT280",
+            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary",
+            img: "/assets/images/2024_January_book5.svg",
+            cost: "₹ 1000",
+            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+        },
+        {
+            availability: "IN STOCK",
+            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+            id: "SKU: INT280",
+            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary",
+            img: "/assets/images/2024_January_book6.svg",
+            cost: "₹ 1000",
+            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+        },
+        {
+            availability: "OUT OF STOCK",
+            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+            id: "SKU: INT280",
+            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary",
+            img: "/assets/images/2024_January_book7.svg",
+            cost: "₹ 1000",
+            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+        },
+
     ]
+
     const StyledBadge = styled(Badge)(({ theme }) => ({
         '& .MuiBadge-badge': {
             right: "22vw",
@@ -200,11 +294,19 @@ export default function Ebooks() {
     };
     const backToYearPage = () => {
         setSelectedMonth(null)
+        setWhichBook("0")
+        setActiveTab("AUDIO")
+        setPeriodTab("MONTHLY")
+        setDescTab("Description")
     }
     const backToAllYearPage = () => {
         setAllYears(true)
         setSelectedMonth(null)
         setSelectedYear(NaN)
+        setWhichBook("0")
+        setActiveTab("AUDIO")
+        setPeriodTab("MONTHLY")
+        setDescTab("Description")
     }
     const handleCategoryClick = (categoryId) => {
         setSelectedCategory([...selectedCategory, categoryId]);
@@ -219,6 +321,36 @@ export default function Ebooks() {
     }
     const increase = (x) => {
         setQuantity(x + 1)
+    }
+
+    const changeBook = (e) => {
+        console.log("e", e);
+
+        if (e == "prev") {
+
+            if (parseInt(whichBook) > 0) {
+                setWhichBook((parseInt(whichBook) - 1).toString())
+            }
+        }
+        else if (e == "nxt") {
+
+            console.log("Before", "whichbook", whichBook, "length", bookData.length);
+            if (parseInt(whichBook) < bookData.length - 1) {
+                setWhichBook((parseInt(whichBook) + 1).toString())
+            }
+            console.log("After", "whichbook", whichBook, "length", bookData.length);
+        }
+        else {
+            setWhichBook(e)
+        }
+
+
+    }
+
+    const payNow = (money) => {
+        handleClose();
+        setPaid(true)
+
     }
     return (
         <Container maxWidth="lg">
@@ -399,16 +531,16 @@ export default function Ebooks() {
                         </div>
                         <div className="monthlybook-buysection">
                             <div className="book-imagesection">
-                                <img src={bookData[0].img} alt="" />
+                                <img src={bookData[whichBook].img} alt="" />
                             </div>
                             <div className="book-contentsection">
                                 <div className="book-navigator">
-                                    <div className="stock" style={bookData[0].availability == 'IN STOCK' ? { backgroundColor: "#24FF0033" } : {}}>
-                                        {bookData[0].availability}
+                                    <div className="stock" style={bookData[whichBook].availability == 'IN STOCK' ? { backgroundColor: "#24FF0033" } : { backgroundColor: "red" }}>
+                                        {bookData[whichBook].availability}
                                     </div>
                                     <div className="prev-next">
-                                        <div className="prev">
-                                            <img src={ebooks.icons.Previous} alt="Left Arrow" />
+                                        <div className="prev" >
+                                            <img src={ebooks.icons.Previous} alt="Left Arrow" disabled={whichBook === "0"} onClick={() => changeBook("prev")} />
                                             &nbsp;
                                             Previous
                                         </div>
@@ -416,24 +548,24 @@ export default function Ebooks() {
 
                                             Next
                                             &nbsp;
-                                            <img src={ebooks.icons.Next} alt="Right Arrow" />
+                                            <img src={ebooks.icons.Next} alt="Right Arrow" disabled={parseInt(whichBook) === bookData.length - 1} onClick={() => changeBook("nxt")} />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="title-section">
                                     <div className="title">
-                                        {bookData[0].title}
+                                        {bookData[whichBook].title}
                                     </div>
                                     <div className="subtext">
                                         <div className="author">
-                                            Author: {bookData[0].author}
+                                            Author: {bookData[whichBook].author}
                                         </div>
                                         <div className="id">
-                                            {bookData[0].id}
+                                            {bookData[whichBook].id}
                                         </div>
                                     </div>
                                     <div className="shortdesc">
-                                        {bookData[0].shortDesc}
+                                        {bookData[whichBook].shortDesc}
                                     </div>
                                     <div className="listen-copy-buy-section">
                                         Select Format : {activeTab}
@@ -454,26 +586,171 @@ export default function Ebooks() {
                                         <div className="tab-content">
                                             {activeTab === "AUDIO" && <div className="audio">
                                                 <div className="audio-buy">
-                                                    <div className="plans">
-                                                        Please subscribe to hear the audio <a> View Plan</a>
-                                                    </div>
-                                                    <div className="subscribe-section">
-                                                        <Button variant="text" sx={{
-                                                            borderRadius: "40px",
-                                                            width: "10rem",
-                                                            p: "10px",
-                                                            background: "#999999",
-                                                            textTransform: "none",
-                                                            marginTop: "2rem",
-                                                            color: "#444444",
-                                                            fontWeight: "700",
-                                                            justifyContent: "space-evenly"
-                                                        }} disabled >
 
-                                                            <img src={ebooks.icons.Lock} style={{ width: "1rem", height: "1.5rem" }} />
-                                                            Listen Now
-                                                        </Button>
-                                                    </div>
+                                                    {/* {paid == false ? */}
+                                                    <>
+                                                        <div className="plans">
+                                                            Please subscribe to hear the audio
+                                                            &nbsp;
+                                                            <a onClick={handleOpen} style={{ cursor: "pointer" }}>
+                                                                View Plan</a>
+                                                        </div>
+                                                        <div className="subscribe-section">
+                                                            <Button variant="text" sx={{
+                                                                borderRadius: "40px",
+                                                                width: "10rem",
+                                                                p: "10px",
+                                                                background: "#999999",
+                                                                textTransform: "none",
+                                                                marginTop: "2rem",
+                                                                color: "#444444",
+                                                                fontWeight: "700",
+                                                                justifyContent: "space-evenly"
+                                                            }} disabled >
+
+
+                                                                <img src={ebooks.icons.Lock} style={{ width: "1rem", height: "1.5rem" }} />
+                                                                Listen Now
+                                                            </Button>
+                                                        </div>
+                                                        <Modal open={openModal} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
+                                                            <Box
+                                                                sx={{
+                                                                    position: 'absolute',
+                                                                    top: '50%',
+                                                                    left: '50%',
+                                                                    transform: 'translate(-50%, -50%)',
+                                                                    width: 1000,
+                                                                    bgcolor: 'background.paper',
+                                                                    boxShadow: 24,
+                                                                    borderRadius: '8px',
+                                                                    p: 4,
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                    gap: 3,
+                                                                }}
+                                                            >
+                                                                <IconButton
+                                                                    onClick={handleClose}
+                                                                    sx={{
+                                                                        position: 'absolute',
+                                                                        top: 10,
+                                                                        right: 10,
+                                                                        color: 'gray',
+                                                                    }}
+                                                                >
+                                                                    <CloseIcon />
+                                                                </IconButton>
+                                                                <Typography id="modal-title" variant="h5" sx={{ fontWeight: '400', lineHeight: "30px", fontSize: "1.5rem", fontFamily: "Sora,'san-serif'" }}>
+                                                                    View our Plans
+                                                                </Typography>
+
+                                                                <Box display="flex" justifyContent="space-between">
+                                                                    {/* Features List */}
+                                                                    <Box
+                                                                        sx={{
+                                                                            display: 'grid',
+                                                                            gridTemplateColumns: '1fr 1fr',
+                                                                            gap: "10px",
+                                                                            width: '65%',
+                                                                            alignContent: "space-evenly"
+                                                                        }}
+                                                                    >
+                                                                        {[
+                                                                            'Full Access to Landingfolio',
+                                                                            '100 GB Free Storage',
+                                                                            'Unlimited Visitors',
+                                                                            '10 Agents',
+                                                                            'Live Chat Support',
+                                                                            'Live Chat Support',
+                                                                            'Live Chat Support',
+                                                                            'Live Chat Support',
+                                                                        ].map((item, index) => (
+                                                                            <ListItem key={index} sx={{ p: 0 }}>
+                                                                                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                                                                    <ListItemIcon>
+                                                                                        <CheckCircleIcon color="#71717A" />
+                                                                                    </ListItemIcon>
+                                                                                    <ListItemText primary={item} sx={{ color: "#12121299", fontFamily: "Sora, 'san-serif", fontSize: "1rem", fontWeight: "500" }} />
+                                                                                </Box>
+                                                                                <IconButton
+                                                                                    sx={{
+                                                                                        margin: "5px",
+                                                                                        color: 'white',
+                                                                                        backgroundColor: 'grey',
+                                                                                        borderRadius: '50%',
+                                                                                        padding: '0.5px',
+                                                                                        '&:hover': {
+                                                                                            backgroundColor: 'grey',
+                                                                                        }
+                                                                                    }}
+                                                                                    aria-label="info">
+                                                                                    <InfoIcon sx={{ fontSize: '1.25rem' }} />
+                                                                                </IconButton>
+                                                                            </ListItem>
+
+                                                                        ))}
+                                                                    </Box>
+
+                                                                    {/* Plan Details */}
+                                                                    <Box
+                                                                        sx={{
+                                                                            width: '35%',
+                                                                            borderLeft: '1px solid #99999999',
+                                                                            borderRadius: '8px',
+                                                                            p: 2,
+                                                                            textAlign: 'center',
+                                                                        }}
+                                                                    >
+                                                                        <Typography variant="h6" sx={{ fontWeight: '400', fontSize: "1.1rem", fontFamily: "Sora, 'sans-serif'" }}>
+                                                                            Lifetime Plan
+                                                                        </Typography>
+                                                                        <Typography
+                                                                            sx={{ fontWeight: '400', fontSize: "3.5rem", fontFamily: "Sora, 'sans-serif'", color: '#000000', lineHeight: "66px", mt: 1 }}
+                                                                        >
+                                                                            {bookData[whichBook].cost}
+                                                                        </Typography>
+                                                                        <Typography sx={{ mt: 1, fontSize: '0.9rem', color: '#a1a1a1', fontWeight: '400', fontFamily: "Sora, 'sans-serif'", lineHeight: "24px" }}>
+                                                                            All the features to boost your career
+                                                                        </Typography>
+                                                                        <Button
+                                                                            variant="contained"
+                                                                            sx={{
+                                                                                backgroundColor: '#F09300',
+                                                                                color: '#fff',
+                                                                                textTransform: 'none',
+                                                                                fontWeight: 'bold',
+                                                                                mt: 2,
+                                                                                padding: "10px",
+                                                                                width: '100%',
+                                                                            }}
+                                                                            onClick={() => payNow(bookData[whichBook].cost)}
+                                                                        >
+                                                                            Pay Now
+                                                                        </Button>
+                                                                    </Box>
+                                                                </Box>
+                                                            </Box>
+                                                        </Modal> </>
+                                                    {/* :
+                                                        <div className="subscribe-section">
+                                                            <Button variant="text" sx={{
+                                                                borderRadius: "40px",
+                                                                width: "10rem",
+                                                                p: "10px",
+                                                                background: "#F09300",
+                                                                textTransform: "none",
+                                                                marginTop: "2rem",
+                                                                color: "#FFFFFF",
+                                                                fontWeight: "700",
+                                                                justifyContent: "space-evenly"
+                                                            }}  >
+                                                                Listen Now
+                                                            </Button>
+                                                        </div>
+                                                    } */}
+
+
                                                 </div>
                                             </div>}
                                             {activeTab === "HARDCOPY" && <div className="hardcopy">
@@ -560,13 +837,71 @@ export default function Ebooks() {
                                             }
 
                                             <div className="cat-tag">
-                                                Categories: {bookData[0].category}
+                                                Categories: {bookData[whichBook].category}
                                                 <br></br>
-                                                Tags: {bookData[0].tag}
+                                                Tags: {bookData[whichBook].tag}
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div className="desc-info">
+                            <div className="desc-info-tabs">
+                                <button
+                                    className={`tab-underscore ${descTab === "Description" ? "active" : ""}`}
+                                    onClick={() => setDescTab("Description")}
+                                >
+                                    Description
+                                </button>
+                                <button
+                                    className={`tab-underscore ${descTab === "add-info" ? "active" : ""}`}
+                                    onClick={() => setDescTab("add-info")}
+                                >
+                                    Additional information
+                                </button>
+                            </div>
+
+                            <div className="desc-tab-content">
+                                {descTab === "Description" &&
+                                    <div className="desc">
+                                        {bookData[whichBook].desc}
+                                    </div>}
+                                {descTab === "add-info" && <div>
+                                    {bookData[whichBook].additionalInfo}
+                                </div>}
+                            </div>
+
+                        </div>
+                        <div className="otherbooks">
+                            <div className="otherbooks-title">
+                                <div className="text">
+                                    Other Ebooks
+
+                                </div>
+                                <div className="hdivider">
+                                    <img src={ebooks.icons.HorizontalDivider} alt="" />
+                                </div>
+                            </div>
+                            <div className="book-cards">
+                                {bookData.map((e, i) => {
+
+                                    if (i != whichBook) {
+                                        return (
+
+                                            <div className="book-card">
+                                                <img src={e.img} alt="" />
+                                                <div className="text">
+                                                    {e.title}
+                                                    <br />
+                                                    {e.author}
+                                                </div>
+                                                <button className="read-now" value={i} onClick={(e) => changeBook(e.target.value)}>Read now</button>
+                                            </div>
+
+                                        )
+                                    }
+                                })}
                             </div>
                         </div>
                     </>

@@ -11,7 +11,7 @@
 }
 
 .ebook .hdivider,
-.shop-section .hdivider {
+.shop-section .hdivider, .otherbooks .hdivider {
     transform: scaleY(0.5);
 }
 
@@ -68,6 +68,10 @@
 .nxt {
     display: inline-flex;
 }
+.prev,
+.nxt{
+    cursor: pointer;
+}
 
 .book-navigator {
     justify-content: space-between;
@@ -122,10 +126,18 @@ font-weight: 100;
 .buttons button{
     font-size: 0.8rem;
 }
-.tab-button {
+.desc-info-tabs{
+    display: flex;
+    justify-content: center;
+    gap: 5lvw;
+}
+.desc-info-tabs > button{
+    font-size: 1.2rem;
+    border: none;
+}
+
+.tab-button, .desc-info-tabs .tab-underscore {
     padding: 5px;
-    border: 2px solid #ccc;
-    border-radius: 10px;
     background-color: white;
     color: #333;
     cursor: pointer;
@@ -133,17 +145,17 @@ font-weight: 100;
     font-weight: 100;
     line-height: 20px;
 }
-
-
-.tab-button.active {
+.tab-button{
+    border-radius: 10px;
+    border: 2px solid #ccc;
+}
+.tab-button.active{
     color: #000000;
     border-color: #F09300;
 }
 
 .tab-content {
     margin-top: 20px;
-    /* padding: 20px; */
-    /* border: 1px solid #ddd; */
     border-radius: 10px;
     width: 80%;
     background-color: #f9f9f9;
@@ -203,7 +215,7 @@ padding: 10px 0;
 }
 
 .month-selection input[type="number"]:hover , .year-selection input[type="number"]:hover {
-    border-color: #007BFF; /* Optional: Add hover effect */
+    border-color: #007BFF; 
 }
 .quantity-select{
     padding: 10px 0;
@@ -236,8 +248,76 @@ color: #E2401C;
     cursor: pointer;
 }
 
+.tab-underscore.active {
+    color: #000000;
+    border-bottom: 2.5px solid #F09300;
+}
 
+.desc-tab-content >*{
+    padding: 20px 10%;
+    font-size: 0.8rem;
+    font-weight: 100;
+    color: #444444;
+    display: flex;
+    flex-wrap: wrap;
+    line-height: 24px;
+}
 
+.otherbooks-title{
+    display: flex;
+    gap: 50px;
+    color: #000000;
+
+}
+.otherbooks-title .hdivider{
+    color: #E6E6E6;
+}
+.otherbooks-title .text{
+    font-size: 1.4rem;
+    font-weight: 100;
+}
+.otherbooks-title .hdivider img{
+    width: 100%;
+    filter: invert(88%) sepia(11%) saturate(0%) hue-rotate(0deg) brightness(91%) contrast(93%);
+}
+.book-cards{
+    padding: 20px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.book-card{
+   width: 10vw;
+   display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+
+}
+.book-card .text {
+    font-size: 0.7rem;
+    font-weight: 100;
+    line-height: 24px;
+    color: #000000;
+    white-space: nowrap; 
+    overflow: hidden;   
+    text-overflow: ellipsis; 
+    width: 100%;         
+    display: block;
+}
+
+.book-card img {
+    width: 100%; 
+}
+.book-card button{
+    cursor: pointer;
+    border: none;
+    color: #F09300;
+    font-weight: 700;
+    font-size: 1.2rem;
+    background: none;
+    padding: 0;
+}
 
 .shop-section .genre {
     flex: 1;
