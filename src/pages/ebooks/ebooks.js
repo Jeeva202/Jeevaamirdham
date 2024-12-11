@@ -7,6 +7,10 @@ import { Pagination, Badge, Container, Card, CardContent, CardHeader, Divider, B
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import InfoIcon from '@mui/icons-material/Info';
+import CartModal from "../../components/cart/cartModal";
+import { useDispatch, useSelector } from "react-redux";
+import { openCart, selectIsCartOpen } from "../../redux/cartSlice";
+
 export default function Ebooks() {
     const [allYears, setAllYears] = useState(true);
     const [selectedYear, setSelectedYear] = useState(NaN);
@@ -24,6 +28,11 @@ export default function Ebooks() {
     const [openModal, setOpenModal] = useState(false);
     const [paid, setPaid] = useState(false)
 
+    const dispatch = useDispatch();
+    const isOpen = useSelector(selectIsCartOpen)
+    const handleAddToCart = () => {
+        dispatch(openCart());
+    };
     const handleOpen = () => setOpenModal(true);
     const handleClose = () => setOpenModal(false);
 
@@ -435,11 +444,12 @@ export default function Ebooks() {
                                                 textTransform: "none",
                                                 marginTop: "2rem",
                                                 color: "black"
-                                            }} >
+                                            }} onClick={handleAddToCart}>
 
                                                 <img src={ebooks.icons.cart} style={{ width: "1rem" }} />
                                                 Add to Cart
                                             </Button>
+                                            <CartModal open={isOpen} />
                                         </div>
                                     </div>
 

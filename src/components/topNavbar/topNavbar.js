@@ -63,7 +63,7 @@ export default function TopNavbar() {
         setValue(newValue);
 
 
-        const routes = ['/', '/ebooks', '/pranavam-tv', '/blog', '/about', '/contact'];
+        const routes = ['/', '/ebooks', '/audio_video', '/blog', '/about', '/contact'];
         navigate(routes[newValue]);
     };
     return (
@@ -98,7 +98,7 @@ export default function TopNavbar() {
                             >
                                 <StyledTab label="Home" />
                                 <StyledTab label="E-books" />
-                                <StyledTab label="Pranavam TV" />
+                                <StyledTab label="Audio & Video" />
                                 <StyledTab label="Blog" />
                                 <StyledTab label="About" />
                                 <StyledTab label="Contact" />
