@@ -1,0 +1,9 @@
+.counter{
+    display: inline-flex;
+    gap: 10px;
+    font-size: 1rem;
+    border: 1px solid #E6E6E6;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #fff;
+}

@@ -11,6 +11,9 @@ import Footer from './components/footer/footer';
 import LoginWithOTP from './pages/loginWithOtp.js/loginWithOTP';
 import CreateNewAccount from './pages/createNewAccount/createNewAccount';
 import Blog from './pages/blog/blog';
+import Audio_video from './pages/audio_video/audio_video';
+import ViewCart from './components/cart/cart';
+import Checkout from './components/checkout/checkout';
 
 function App() {
   return (
@@ -23,12 +26,15 @@ function App() {
               <Route path="/" element={<Navigate to={"/home"} replace />} />
               <Route path="/home" element={<HomePage />} />
               <Route path="/ebooks" element={<Ebooks />} />
+              <Route path="/audio_video" element={<Audio_video />} />
               <Route path='/blog' element={<Blog/>} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
               <Route path="/login/loginWithOtp" element={<LoginWithOTP />} />
               <Route path="/createNewUser" element={<CreateNewAccount />} />
+              <Route path="/cart" element={<ViewCart />} />
+              <Route path="/checkout" element={<Checkout />} />
             </Routes>
             <Footer />
           </BrowserRouter>

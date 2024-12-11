@@ -24,6 +24,7 @@ import RightArrow from "../assets/icons/right_arrow.svg"
 import RightArrowStroke from "../assets/icons/right_arrow_stroke.svg"
 import Previous from "../assets/icons/Previous Arrow.svg"
 import Next from "../assets/icons/Next Arrow.svg"
+import Lock from "../assets/icons/lock.svg"
 export const navBanner = {
     icons:{
         phone: phoneIcon,
@@ -69,6 +70,7 @@ export const ebooks = {
         RightArrowStroke,
         Previous,
         Next,
+        Lock,
         cart: cartIcon
     }
 }
