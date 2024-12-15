@@ -13,9 +13,11 @@ import { openCart, selectIsCartOpen } from "../../redux/cartSlice";
 
 export default function Ebooks() {
     const [allYears, setAllYears] = useState(true);
+    const [categoryCartFlag, setCategoryCartFlag] = useState(false)
     const [selectedYear, setSelectedYear] = useState(NaN);
     const [selectedMonth, setSelectedMonth] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(["GNANAM"]);
+    const [catSelectedBook, setCatSelectedBook] = useState("0")
     const [activeTab, setActiveTab] = useState("AUDIO");
     const [periodTab, setPeriodTab] = useState("MONTHLY")
     const itemsPerPage = 3; // Items per page for the buy section
@@ -89,95 +91,132 @@ export default function Ebooks() {
             category: "GNANAM",
             title: "Gnana Amirtham",
             subtitle: "Siddharth Thoughts",
-            desc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
             discount: "30%",
             orgPrice: "$814.66",
             offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png"
+            img: "/assets/images/Gnana_Amirtham.png",
+            availability: "IN STOCK",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary"
         },
         {
             category: "GNANAM",
             title: "Gnana Amirtham",
             subtitle: "Siddharth Thoughts",
-            desc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
             discount: "30%",
             orgPrice: "$814.66",
             offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png"
-        }, {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            desc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png"
-        }, {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            desc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png"
-        }, {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            desc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png"
-        }, {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            desc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png"
-        }, {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            desc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png"
-        }, {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            desc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png"
-        }, {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            desc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png"
-        }, {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            desc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png"
+            img: "/assets/images/Gnana_Amirtham.png",
+            availability: "IN STOCK",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary"
         },
-    ]
+        {
+            category: "GNANAM",
+            title: "Gnana Amirtham",
+            subtitle: "Siddharth Thoughts",
+            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            discount: "30%",
+            orgPrice: "$814.66",
+            offPrice: "₹450.00",
+            img: "/assets/images/Gnana_Amirtham.png",
+            availability: "IN STOCK",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary"
+        },
+        {
+            category: "GNANAM",
+            title: "Gnana Amirtham",
+            subtitle: "Siddharth Thoughts",
+            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            discount: "30%",
+            orgPrice: "$814.66",
+            offPrice: "₹450.00",
+            img: "/assets/images/Gnana_Amirtham.png",
+            availability: "IN STOCK",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary"
+        },
+        {
+            category: "GNANAM",
+            title: "Gnana Amirtham",
+            subtitle: "Siddharth Thoughts",
+            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            discount: "30%",
+            orgPrice: "$814.66",
+            offPrice: "₹450.00",
+            img: "/assets/images/Gnana_Amirtham.png",
+            availability: "IN STOCK",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary"
+        },
+        {
+            category: "GNANAM",
+            title: "Gnana Amirtham",
+            subtitle: "Siddharth Thoughts",
+            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            discount: "30%",
+            orgPrice: "$814.66",
+            offPrice: "₹450.00",
+            img: "/assets/images/Gnana_Amirtham.png",
+            availability: "IN STOCK",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary"
+        },
+        {
+            category: "GNANAM",
+            title: "Gnana Amirtham",
+            subtitle: "Siddharth Thoughts",
+            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            discount: "30%",
+            orgPrice: "$814.66",
+            offPrice: "₹450.00",
+            img: "/assets/images/Gnana_Amirtham.png",
+            availability: "IN STOCK",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary"
+        },
+        {
+            category: "GNANAM",
+            title: "Gnana Amirtham",
+            subtitle: "Siddharth Thoughts",
+            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+            discount: "30%",
+            orgPrice: "$814.66",
+            offPrice: "₹450.00",
+            img: "/assets/images/Gnana_Amirtham.png",
+            availability: "IN STOCK",
+            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+            category: "Action & Adventure, Activity Books",
+            tag: "Books, Fiction, Romance - Contemporary"
+        }
+    ];
+    
 
 
 
@@ -332,7 +371,7 @@ export default function Ebooks() {
         setQuantity(x + 1)
     }
 
-    const changeBook = (e) => {
+    const changeBook = (e, page="monthly") => {
         console.log("e", e);
 
         if (e == "prev") {
@@ -349,17 +388,40 @@ export default function Ebooks() {
             }
             console.log("After", "whichbook", whichBook, "length", bookData.length);
         }
+        else if(e=="cat-prev"){
+            if (parseInt(catSelectedBook) > 0) {
+                setCatSelectedBook((parseInt(catSelectedBook) - 1).toString())
+            }
+        }
+        else if(e=="cat-nxt"){
+            if (parseInt(catSelectedBook) < shopBooksData.length - 1) {
+                setCatSelectedBook((parseInt(catSelectedBook) + 1).toString())
+            }
+        }
+        else if (page =="catgeorypage"){
+            setCatSelectedBook(e)
+        }
         else {
             setWhichBook(e)
         }
 
 
     }
+    const backToHomePage =()=>{
+        setAllYears(true);
+        setCatSelectedBook("0")
+        setCategoryCartFlag(false)
+    }
 
     const payNow = (money) => {
         handleClose();
         setPaid(true)
 
+    }
+    const navigateToProductSpecificPage = (i) =>{
+        setCatSelectedBook(i)
+        setCategoryCartFlag(true)
+        setAllYears(false)
     }
     return (
         <Container maxWidth="lg">
@@ -421,7 +483,7 @@ export default function Ebooks() {
                                 </Card>
                             </div>
                             <div className="buy-section">
-                                {currentItems.map((e) => (
+                                {currentItems.map((e, i) => (
                                     <div className="book">
                                         <div className="img-section">
                                             <StyledBadge badgeContent={e.discount}>
@@ -429,7 +491,7 @@ export default function Ebooks() {
                                             </StyledBadge>
                                         </div>
                                         <div className="content-section">
-                                            <div className="title">{e.title}</div>
+                                            <div className="title"  onClick={()=> navigateToProductSpecificPage(i)}>{e.title}</div>
                                             <div className="subtitle">{e.subtitle}</div>
                                             <div className="desc">{e.desc}</div>
                                             <div className="price">
@@ -499,7 +561,159 @@ export default function Ebooks() {
                         </div>
                     </div>
                 </div>
-            )
+            ) : (categoryCartFlag) ? <>
+                                    <div className="category-navigation">
+                            <a className="back" onClick={() =>backToHomePage()}>
+                                Home
+                            </a>
+                            <img src={ebooks.icons.RightArrowStroke} alt="" />
+                            <div className="nav-category" onClick={() => {}}>
+                                CATEGORY
+                            </div>
+                            <img src={ebooks.icons.RightArrowStroke} alt="" />
+                            <div className="nav-book">
+                                {shopBooksData[catSelectedBook].title}
+                            </div>
+                        </div>
+                        <div className="categorybook-buysection">
+                            <div className="book-imagesection">
+                                <img src={shopBooksData[catSelectedBook].img} alt="" />
+                            </div>
+                            <div className="book-contentsection">
+                                <div className="book-navigator">
+                                    <div className="stock" style={shopBooksData[catSelectedBook].availability == 'IN STOCK' ? { backgroundColor: "#24FF0033" } : { backgroundColor: "red" }}>
+                                        {shopBooksData[catSelectedBook].availability}
+                                    </div>
+                                    <div className="prev-next">
+                                        <div className="prev" >
+                                            <img src={ebooks.icons.Previous} alt="Left Arrow" disabled={catSelectedBook === "0"} onClick={() => changeBook("cat-prev")} />
+                                            &nbsp;
+                                            PREV
+                                        </div>
+                                        <div className="nxt">
+
+                                            NEXT
+                                            &nbsp;
+                                            <img src={ebooks.icons.Next} alt="Right Arrow" disabled={parseInt(catSelectedBook) === shopBooksData.length - 1} onClick={() => changeBook("cat-nxt")} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="title-section">
+                                    <div className="title">
+                                        {shopBooksData[catSelectedBook].title}
+                                    </div>
+                                    <div className="subtext">
+                                        <div className="author">
+                                            Author: {shopBooksData[catSelectedBook].author}
+                                        </div>
+                                        <div className="id">
+                                            {shopBooksData[catSelectedBook].id}
+                                        </div>
+                                    </div>
+                                    <div className="shortdesc">
+                                        {shopBooksData[catSelectedBook].shortDesc}
+                                    </div>
+                                    <div className="category-buy-section">
+                                        <div className="tab-content">
+                                                    <div className="quantity-select">
+                                                        <div className="count-subscribe">
+                                                            Quantity
+                                                            <br />
+                                                            <br />
+                                                            <div className="counter">
+                                                                <span className="decrease" onClick={() => { decrease(quantity) }}> - </span>
+                                                                &nbsp;
+                                                                <span className="quantity"> {quantity} </span>
+                                                                &nbsp;
+                                                                <span className="increase" onClick={() => { increase(quantity) }}> + </span>
+                                                            </div>
+                                                        </div>
+                                                        <Button variant="text" sx={{
+                                                            borderRadius: "40px",
+                                                            width: "10rem",
+                                                            p: "10px",
+                                                            background: "#F09300",
+                                                            textTransform: "none",
+                                                            marginTop: "2rem",
+                                                            color: "#ffffff",
+                                                            fontWeight: "700",
+                                                            justifyContent: "space-evenly"
+                                                        }} onClick={handleAddToCart}>
+
+                                                            <img src={ebooks.icons.cart} style={{ width: "1rem", height: "1.5rem", filter: "invert(100%)" }} />
+                                                            Add to cart
+                                                        </Button>
+                                                        <CartModal open={isOpen} />
+                                                    </div> 
+
+                                            <div className="cat-tag">
+                                                Categories: {shopBooksData[catSelectedBook].category}
+                                                <br></br>
+                                                Tags: {shopBooksData[catSelectedBook].tag}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="desc-info">
+                            <div className="desc-info-tabs">
+                                <button
+                                    className={`tab-underscore ${descTab === "Description" ? "active" : ""}`}
+                                    onClick={() => setDescTab("Description")}
+                                >
+                                    Description
+                                </button>
+                                <button
+                                    className={`tab-underscore ${descTab === "add-info" ? "active" : ""}`}
+                                    onClick={() => setDescTab("add-info")}
+                                >
+                                    Additional information
+                                </button>
+                            </div>
+
+                            <div className="desc-tab-content">
+                                {descTab === "Description" &&
+                                    <div className="desc">
+                                        {shopBooksData[catSelectedBook].desc}
+                                    </div>}
+                                {descTab === "add-info" && <div>
+                                    {shopBooksData[catSelectedBook].additionalInfo}
+                                </div>}
+                            </div>
+
+                        </div>
+                        <div className="otherbooks">
+                            <div className="otherbooks-title">
+                                <div className="text">
+                                    Related products
+                                </div>
+                                <div className="hdivider">
+                                    <img src={ebooks.icons.HorizontalDivider} alt="" />
+                                </div>
+                            </div>
+                            <div className="book-cards">
+                                {shopBooksData.map((e, i) => {
+
+                                    if (i != catSelectedBook) {
+                                        return (
+
+                                            <div className="cat-book-card" onClick={(e) => changeBook(i, "catgeorypage")}>
+                                                <img src={e.img} alt="" />
+                                                <div className="text">
+                                                    {e.title}
+                                                    <br />
+                                                    {e.author}
+                                                </div>
+                                                <button className="read-now" value={i} >{e.offPrice}</button>
+                                            </div>
+
+                                        )
+                                    }
+                                })}
+                            </div>
+                        </div>
+            </>
                 : (selectedMonth === null) && (!isNaN(selectedYear)) ?
                     <>
                         <div className="Year-navigation">
