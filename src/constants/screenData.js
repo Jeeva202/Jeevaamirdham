@@ -71,6 +71,7 @@ export const ebooks = {
         Previous,
         Next,
         Lock,
-        cart: cartIcon
+        cart: cartIcon,
+        view:ViewIcon
     }
 }
