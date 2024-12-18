@@ -72,6 +72,7 @@ export const ebooks = {
         Next,
         Lock,
         cart: cartIcon,
-        view:ViewIcon
+        view:ViewIcon,
+        comment: CommentIcon
     }
 }

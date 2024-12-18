@@ -189,6 +189,8 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    padding-bottom: 30px;
+
 }
 
 .audio-play-section .player-transcript-section p {
@@ -250,6 +252,50 @@
 
 }
 
+.audio-prev-nxt {
+    display: flex;
+    justify-content: space-between;
+    border-width: 1px 0px 1px 0px;
+    border-style: solid;
+    border-color: #E6E6E6;
+    padding: 10px 0;
+}
+
+.audio-prev,
+.audio-nxt {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.audio-prev,
+.audio-nxt img {
+    max-width: 5vw;
+}
+
+.audio-prev-text,
+.audio-nxt-text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.audio-nxt-text .nxt,
+.audio-prev-text .prev {
+    color: #999999;
+    font-weight: 400;
+    font-size: 0.8rem;
+    line-height: 20px;
+}
+
+.prev-title,
+.nxt-title {
+    color: #000000;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 24px;
+}
 
 .monthlybook-buysection>.book-imagesection,
 .categorybook-buysection>.book-imagesection {
@@ -269,6 +315,60 @@
 .prev-next {
     gap: 10px;
 }
+.other-ebooks{
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.other-ebook-subtext,.comments-views, .other-book-desc{
+    color: #999999;
+    font-size: 0.8rem;
+    line-height: 14px;
+    font-weight: 400;
+}
+.other-book-desc{
+    padding-bottom: 10px;
+}
+.comments-views{
+    display: inline-flex;
+    gap: 2px;
+    align-items: center;
+}
+.comments-views> .comments, .comments-views>.views{
+    display: inline-flex;
+    gap: 2px;
+    align-items: center;
+}
+.other-book-title{
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 24px;
+    color: #000000;
+}
+.other-book-cat-read-more{
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid #E6E6E6;
+    padding-top: 10px;
+}
+.other-book-cat{
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 13.66px;
+    text-align: left;
+}
+.other-book-cat span{
+    color:#f09300
+}
+.other-book-read-more{
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 12.29px;
+    text-align: left;
+    color: #000000;
+}
+
 
 .monthlybook-buysection .title-section,
 .categorybook-buysection .title-section {

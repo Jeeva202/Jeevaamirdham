@@ -765,6 +765,12 @@ export default function Ebooks() {
     const backToBookBuySection = () => {
         setListenPage(false)
     }
+    const openPreviousAudioBook = () => {
+        if (parseInt(whichBook) != 0) {
+
+        }
+    }
+
     return (
         <Container maxWidth="lg">
             {allYears ? (
@@ -1158,7 +1164,7 @@ export default function Ebooks() {
                                                                 <p className="audio-author">{audioData[whichBook].author}</p>
                                                                 {/* Audio Player */}
                                                                 <audio controls
-                                                                    
+
                                                                     disablepictureinpicture
                                                                     controlslist="nodownload noplaybackrate" className="audio-element">
                                                                     <source
@@ -1188,6 +1194,87 @@ export default function Ebooks() {
                                         </Accordion>
                                     ))}
 
+                                </div>
+                                <div className="audio-prev-nxt">
+                                    <div className="audio-prev" onClick={() => openPreviousAudioBook()}>
+
+                                        {parseInt(whichBook) != 0 ?
+                                            <>
+                                                <img src={audioData[(parseInt(whichBook) - 1).toString()].img} alt="" />
+                                                <div className="audio-prev-text">
+                                                    <div className="prev">
+                                                        PREV
+                                                    </div>
+                                                    <div className="prev-title">
+                                                        {audioData[(parseInt(whichBook) - 1).toString()].title}
+                                                    </div>
+                                                </div>
+                                            </>
+                                            :
+                                            <></>
+                                        }
+                                    </div>
+
+
+                                    <div className="audio-nxt">
+
+                                        {parseInt(whichBook) < audioData.length ?
+                                            <>
+                                                <div className="audio-nxt-text">
+                                                    <div className="nxt">
+                                                        NEXT
+                                                    </div>
+                                                    <div className="nxt-title">
+                                                        {audioData[(parseInt(whichBook) + 1).toString()].title}
+                                                    </div>
+                                                </div>
+                                                <img src={audioData[(parseInt(whichBook) + 1).toString()].img} alt="" />
+
+                                            </>
+                                            :
+                                            <></>
+                                        }
+                                    </div>
+                                </div>
+                                <div className="other-ebooks">
+                                    {[1, 2, 3].map((e, i) => (
+                                        <div className="other-b0ok">
+                                        <img src="/assets/images/other-ebooks.svg" alt=""/>
+                                        <div className="other-ebook-subtext">
+
+                                            November 14, 2022 / BY ADMIN
+                                        </div>
+                                        <div className="comments-views">
+                                            <div className="comments">
+                                                <img src={ebooks.icons.comment} alt=""/>
+                                                <div className="comment-num">
+                                                    200
+                                                </div>
+                                            </div>
+                                            <div className="views">
+                                                <img src={ebooks.icons.view} alt=""/>
+                                                <div className="view-num">
+                                                    800
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div className="other-book-title">
+                                        Bow down to the universe 
+                                        </div>
+                                        <div className="other-book-desc">
+                                        The universe constantly teaches you what is needed and what is not. It is true that this immensely compassionate universe offers such guidance. Bow down and revere this natural cosmos.
+                                        </div>
+                                        <div className="other-book-cat-read-more">
+                                            <div className="other-book-cat">
+                                                IN <span>GNANAM</span>
+                                            </div>
+                                            <div className="other-book-read-more">
+                                                Read More
+                                            </div>
+                                        </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </> :
