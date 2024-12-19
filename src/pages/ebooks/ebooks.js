@@ -15,6 +15,9 @@ import CartModal from "../../components/cart/cartModal";
 import { useDispatch, useSelector } from "react-redux";
 import { openCart, selectIsCartOpen } from "../../redux/cartSlice";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import Playstore from "../../components/playstore/playstore"
+import NewsLetter from "../../components/newsLetter/newsletter"
+import KPI from "../../components/kpi/kpi"
 export default function Ebooks() {
     const [allYears, setAllYears] = useState(true);
     const [listenPage, setListenPage] = useState(false)
@@ -1277,6 +1280,9 @@ export default function Ebooks() {
                                     ))}
                                 </div>
                             </div>
+                            <Playstore/>
+                            <NewsLetter/>
+                            <KPI/>
                         </> :
                         <>
                             <div className="Month-navigation">
