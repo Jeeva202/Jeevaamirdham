@@ -10,7 +10,7 @@ const cartReducer = createSlice({
       state.isCartOpen = true;
     },
     closeCart: (state) => {
-      state.isCartOpen = false;
+      state.isCartOpen = false; 
     },
   },
 });

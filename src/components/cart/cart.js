@@ -46,7 +46,7 @@ export default function ViewCart() {
   return (
     <Container maxWidth="lg">
       <div style={{ fontSize: "2rem", fontWeight: "bold", textAlign: "center", paddingTop: "4rem", paddingBottom: "2rem" }}>Cart</div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "2rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "2rem" }}>
         <TableContainer>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>

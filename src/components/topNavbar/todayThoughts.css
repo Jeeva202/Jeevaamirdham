@@ -1,0 +1,58 @@
+.today-thoughts-container {
+    background: #FCCC4D;
+  }
+  
+  .today-thoughts-content {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    background: #FFFAEB;
+    padding: 0 0.8rem;
+    border-radius: 30px;
+    flex-wrap: wrap; /* Allows wrapping for small screens */
+  }
+  
+  .today-thoughts-chip {
+    background: #DC6803;
+    color: #fff;
+  }
+  
+  .today-thoughts-text {
+    color: #B54708;
+    font-size: 0.78rem;
+    margin: 5px;
+    flex: 1;
+    word-break: break-word; /* Prevents overflow */
+  }
+  
+  @media (max-width: 768px) {
+    .today-thoughts-container {
+      padding: 0.5rem;
+    }
+  
+    .today-thoughts-text {
+      font-size: 0.7rem; /* Adjust font size on smaller screens */
+    }
+  
+    .MuiChip-root {
+      font-size: 0.7rem; /* Adjust chip font size */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .today-thoughts-content {
+      flex-direction: column;
+      align-items: center;
+      padding: 0.4rem; /* Smaller padding */
+    }
+  
+    .today-thoughts-text {
+      font-size: 0.65rem; /* Smaller font size for very small screens */
+      text-align: center;
+    }
+  
+    .MuiChip-root {
+      font-size: 0.65rem;
+    }
+  }
+  

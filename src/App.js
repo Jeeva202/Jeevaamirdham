@@ -14,6 +14,7 @@ import Blog from './pages/blog/blog';
 import Audio_video from './pages/audio_video/audio_video';
 import ViewCart from './components/cart/cart';
 import Checkout from './components/checkout/checkout';
+import UserDashboard from './pages/userDashboard/userDashboard';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
               <Route path="/createNewUser" element={<CreateNewAccount />} />
               <Route path="/cart" element={<ViewCart />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/dashboard" element={<UserDashboard />} />
             </Routes>
             <Footer />
           </BrowserRouter>
