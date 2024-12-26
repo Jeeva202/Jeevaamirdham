@@ -6,6 +6,7 @@ import { styled } from '@mui/material/styles';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { useNavigate } from 'react-router-dom';
+import TodayThoughts from './todayThoughts';
 
 const StyledTabs = styled((props) => (
     <Tabs
@@ -63,7 +64,7 @@ export default function TopNavbar() {
         setValue(newValue);
 
 
-        const routes = ['/', '/ebooks', '/audio_video', '/blog', '/about', '/contact'];
+        const routes = ['/', '/ebooks', '/audio_video', '/blog', '/about', '/contact', '/dashboard',];
         navigate(routes[newValue]);
     };
     return (
@@ -102,6 +103,7 @@ export default function TopNavbar() {
                                 <StyledTab label="Blog" />
                                 <StyledTab label="About" />
                                 <StyledTab label="Contact" />
+                                <StyledTab label="Dashboard" />
                             </StyledTabs>
                             <div sx={{ p: 2 }} />
                         </div>
@@ -119,7 +121,8 @@ export default function TopNavbar() {
                             <Button disableRipple onClick={() => { navigate('/login') }} variant="text" sx={{ textTransform: "none", fontWeight: 600, fontSize: "0.75rem", color: "#444" }} startIcon={<img src={navBanner.icons.user} style={{ width: "0.9rem" }} />}>
                                 Login
                             </Button>
-                            <Button disableRipple variant="text" sx={{ textTransform: "none", gap: "0.8rem", fontWeight: 600, fontSize: "0.75rem", color: "#444" }}>
+                            <Button disableRipple variant="text" sx={{ textTransform: "none", gap: "0.8rem", fontWeight: 600, fontSize: "0.75rem", color: "#444" }}
+                            onClick={() => { navigate('/cart') }}>
                                 <StyledBadge badgeContent={4}>
                                     <img src={navBanner.icons.cart} style={{ width: "1rem" }} />
                                 </StyledBadge>
@@ -128,6 +131,8 @@ export default function TopNavbar() {
                         </div>
                     </div>
                 </Container>
+                <TodayThoughts/>
+
         </div>
 
         </>
