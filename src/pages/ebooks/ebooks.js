@@ -1,12 +1,12 @@
 import { ebooks } from "../../constants/screenData"
 import "./ebooks.css"
 import ViewAll from "../../components/viewAllButton/viewAll"
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { styled } from '@mui/material/styles';
 import {
     Pagination, Badge, Container, Card, CardContent, CardHeader, Divider, Button, Modal, Typography,
     Box, List, ListItem, ListItemIcon, ListItemText, IconButton,
-    Accordion, AccordionSummary, AccordionDetails
+    Accordion, AccordionSummary, AccordionDetails, Grid, Alert
 } from "@mui/material";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
@@ -18,7 +18,9 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import Playstore from "../../components/playstore/playstore"
 import NewsLetter from "../../components/newsLetter/newsletter"
 import KPI from "../../components/kpi/kpi"
-export default function Ebooks() {
+import { useQuery } from "react-query";
+import axios from "axios";
+export default function Ebooks({ isUserLoggedIn, loginPopup }) {
     const [allYears, setAllYears] = useState(true);
     const [listenPage, setListenPage] = useState(false)
     const [categoryCartFlag, setCategoryCartFlag] = useState(false)
@@ -37,6 +39,46 @@ export default function Ebooks() {
     const [whichBook, setWhichBook] = useState("0");
     const [openModal, setOpenModal] = useState(false);
     const [paid, setPaid] = useState(false)
+    const [freePlanChosed, setFreePlanChosed] = useState(false)
+    const [expanded, setExpanded] = useState(0); // Always open the first panel by default
+    const [alertOpen, setAlertOpen] = useState(false); // State to control the alert visibility
+    const audioRef = useRef(null); // Reference to the audio player
+    const [hasTriggeredAlert, setHasTriggeredAlert] = useState(false); // Track if alert has been triggered
+
+    const handleChange = (panel) => (event, isExpanded) => {
+        setExpanded(isExpanded ? panel : false);
+    };
+
+    useEffect(() => {
+        // Reset the alert trigger state when the component is mounted or audio is changed
+        setHasTriggeredAlert(false);
+    }, [whichBook]);
+
+    useEffect(() => {
+        if (audioRef.current && !isUserLoggedIn) {
+            // Add event listener to track when the audio reaches 5 minutes
+            const audioElement = audioRef.current;
+
+            // Function to check if audio has been played for 5 minutes or more
+            const checkFiveMinutes = () => {
+                if (audioElement.currentTime >= 300 && !hasTriggeredAlert) {  // 300 seconds is 5 minutes
+                    setHasTriggeredAlert(true); // Ensure the alert only triggers once
+                    setAlertOpen(true); // Show the alert
+                    audioElement.pause(); // Pause the audio
+                    audioElement.currentTime = 0; // Reset the audio to the start
+                }
+            };
+
+            // Attach timeupdate event listener to check playback time
+            audioElement.addEventListener("timeupdate", checkFiveMinutes);
+
+            // Cleanup event listener when the component is unmounted or audio changes
+            return () => {
+                audioElement.removeEventListener("timeupdate", checkFiveMinutes);
+            };
+        }
+    }, [isUserLoggedIn, hasTriggeredAlert]);
+
 
     const dispatch = useDispatch();
     const isOpen = useSelector(selectIsCartOpen)
@@ -45,7 +87,54 @@ export default function Ebooks() {
     };
     const handleOpen = () => setOpenModal(true);
     const handleClose = () => setOpenModal(false);
-
+    const plans = [
+        {
+            name: "Jeevaamirdham Basic Plan",
+            price: "₹0",
+            features: [
+                "Access to one chapter of E-magazine",
+                "One audio content",
+                "One video content",
+                "Ability to shop for books",
+            ],
+            buttonLabel: "Free",
+            buttonStyle: {
+                backgroundColor: "#E6E6E6",
+                color: "#000",
+            },
+        },
+        {
+            name: "Jeevaamirdham Elite Plan",
+            price: "₹599/year",
+            features: [
+                "Access to all E-magazine content",
+                "All audio content",
+                "All video content",
+                "Ability to shop for books",
+            ],
+            buttonLabel: "Purchase Now",
+            buttonStyle: {
+                backgroundColor: "#F09300",
+                color: "#fff",
+            },
+        },
+        {
+            name: "Jeevaamirdham Premium Plan",
+            price: "₹999/year",
+            features: [
+                "Access to all E-magazine content",
+                "All audio content",
+                "All video content",
+                "Ability to shop for books",
+                "Hard copy subscription of E-magazine",
+            ],
+            buttonLabel: "Purchase Now",
+            buttonStyle: {
+                backgroundColor: "#F09300",
+                color: "#fff",
+            },
+        },
+    ];
     const YearWiseEbooks = [
         {
             year: 2024,
@@ -653,6 +742,49 @@ export default function Ebooks() {
 
     ]
 
+    /**
+     *  Data fetching for the Ebooks section starts here 
+     * ==================================================
+     * ==================================================*/
+
+    const { data: APIBookData, BookStatus, isBookLoading, Bookerror } = useQuery({
+        queryFn: async () => {
+            const { data } = await axios.get(`http://localhost:3001/emagazine-page/magazine-details`, {
+                params: { year: selectedYear, month: selectedMonth },
+            });
+            return data;
+        },
+        queryKey: ["megazine-details", selectedYear, selectedMonth, allYears], // Include parameters in the key
+        enabled: !!selectedYear && !!selectedMonth && !allYears
+    });
+
+
+    const { data: APIYearBookImages, status: YearImagestatus, isLoading: isYearImageLoading, error: YearImageError } = useQuery({
+        queryFn: async () => {
+            const { data } = await axios.get(`http://localhost:3001/emagazine-page/magazine-yearwise`)
+            return data
+        },
+        queryKey: ["magazine-yearwise", selectedYear, selectedMonth, allYears],
+        enabled: !selectedYear && !selectedMonth && allYears
+    })
+
+
+    const { data: APIMonthBookImages, status: MonthImagestatus, isLoading: isMonthImageLoading, error: MonthImageError } = useQuery({
+        queryFn: async () => {
+            const { data } = await axios.get(`http://localhost:3001/emagazine-page/magazine-monthwise`)
+            return data
+        },
+        queryKey: ["magazine-monthwise", selectedYear, selectedMonth, allYears],
+        enabled: !!selectedYear && !selectedMonth && !allYears
+    })
+
+    /**
+     * ==================================================
+     * ==================================================
+     *  Data fetching for the Ebooks section ends here 
+    */
+
+
     const StyledBadge = styled(Badge)(({ theme }) => ({
         '& .MuiBadge-badge': {
             right: "22vw",
@@ -752,11 +884,88 @@ export default function Ebooks() {
         setCategoryCartFlag(false)
     }
 
-    const payNow = (money) => {
-        handleClose();
-        setPaid(true)
+    // const handlePurchase = async (amount, planName) => {
+    //     // Initialize Razorpay payment
+    //     const options = {
+    //       key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+    //       amount: amount * 100, // Amount in paise
+    //       currency: "INR",
+    //       name: "Jeevaamirdham",
+    //       description: "Subscription Payment",
+    //       handler: async function (response) {
+    //         console.log("Payment successful:", response);
 
-    }
+    //         // Call your backend to update the database with payment details
+    //         try {
+    //           const res = await fetch("/api/payment-success", {
+    //             method: "POST",
+    //             headers: {
+    //               "Content-Type": "application/json",
+    //             },
+    //             body: JSON.stringify({
+    //               razorpay_payment_id: response.razorpay_payment_id,
+    //               plan: planName,
+    //               amount,
+    //             }),
+    //           });
+
+    //           if (res.ok) {
+    //             const data = await res.json();
+    //             console.log("Backend updated successfully:", data);
+    //             alert("Payment successful and subscription activated!");
+    //           } else {
+    //             console.error("Failed to update backend");
+    //             alert("Payment was successful but could not update subscription. Please contact support.");
+    //           }
+    //         } catch (error) {
+    //           console.error("Error while updating backend:", error);
+    //           alert("An error occurred. Please contact support.");
+    //         }
+    //       },
+    //       prefill: {
+    //         name: "Your Name", // Replace with logged-in user's name
+    //         email: "your-email@example.com", // Replace with logged-in user's email
+    //         contact: "9999999999", // Replace with logged-in user's contact
+    //       },
+    //       theme: {
+    //         color: "#7C3AED",
+    //       },
+    //     };
+
+    //     const razorpay = new window.Razorpay(options);
+    //     razorpay.open();
+    //   };
+
+    const payNow = (plan) => {
+
+        /** Use this code once the login page is set and the plan selection functionalities are created*/
+
+
+        // if (isUserLoggedIn) {
+        //   if (plan === "Jeevaamirdham Elite Plan") {
+        //     // handlePurchase(599, plan);
+        //   } else if (plan === "Jeevaamirdham Premium Plan") {
+        //     // handlePurchase(999, plan);
+        //   } else {
+        //     console.log("Free plan selected");
+        //     setFreePlanChosed(true)
+        //     handleClose();
+        //     setPaid(true)
+        //   }
+        // } else {
+        //   setAllYears(true);
+        //   setCatSelectedBook("0");
+        //   setCategoryCartFlag(false);
+        //   handleClose();
+        //   window.location.href = "/login";
+        // }
+
+        if (plan === 'Jeevaamirdham Basic Plan') {
+            handleClose()
+            setPaid(true)
+        }
+
+    };
     const navigateToProductSpecificPage = (i) => {
         setCatSelectedBook(i)
         setCategoryCartFlag(true)
@@ -773,6 +982,9 @@ export default function Ebooks() {
 
         }
     }
+
+
+
 
     return (
         <Container maxWidth="lg">
@@ -1132,27 +1344,38 @@ export default function Ebooks() {
                                     <div className="audio-title">
                                         {audioData[whichBook].title}
                                     </div>
-                                    <button className="audio-playall">
+                                    <button className="audio-playall" disabled={!isUserLoggedIn} style={{ backgroundColor: isUserLoggedIn ? '#F09300' : '#E6E6E6' }} >
                                         Play All
                                     </button>
                                 </div>
                                 <div className="audio-play-section">
-
                                     {audioData[whichBook].audio_content.map((audio, index) => (
-                                        <Accordion sx={{ boxShadow: "none", background: "#FCCC4D", borderRadius: "10px" }}>
-                                            <AccordionSummary sx={{}}
+                                        <Accordion
+                                            key={index}
+                                            sx={{
+                                                boxShadow: "none",
+                                                background: index === 0 ? "#FCCC4D" : isUserLoggedIn ? "#FCCC4D" : "#E6E6E6",
+                                                borderRadius: "10px",
+                                            }}
+                                            expanded={expanded === index || (index === 0 && !isUserLoggedIn)} // Always open the first panel
+                                            onChange={handleChange(index)}
+                                            disabled={isUserLoggedIn ? false : index !== 0} // Disable expansion for non-first panels if not logged in
+                                        >
+                                            <AccordionSummary
                                                 expandIcon={<ArrowDropDownIcon />}
-                                                aria-controls="panel2-content"
-                                                id="panel2-header"
+                                                aria-controls={`panel${index}-content`}
+                                                id={`panel${index}-header`}
                                             >
                                                 <div className="audio-play-title">
-                                                    <div className="index">
-                                                        {index + 1}
-                                                    </div>
+                                                    <div className="index">{index + 1}</div>
                                                     <Typography className="audio-play-title">{audio.title}</Typography>
                                                 </div>
                                             </AccordionSummary>
-                                            <AccordionDetails>
+                                            <AccordionDetails
+                                                sx={{
+                                                    background: isUserLoggedIn ? "#FCCC4D" : "#E6E6E6", // Change background based on login status
+                                                }}
+                                            >
                                                 <div className="player-transcript-section">
                                                     <div className="player">
                                                         {/* Header */}
@@ -1166,37 +1389,46 @@ export default function Ebooks() {
                                                                 <h3 className="audio-title">{audioData[whichBook].title}</h3>
                                                                 <p className="audio-author">{audioData[whichBook].author}</p>
                                                                 {/* Audio Player */}
-                                                                <audio controls
-
-                                                                    disablepictureinpicture
-                                                                    controlslist="nodownload noplaybackrate" className="audio-element">
-                                                                    <source
-                                                                        src={audio.audio} // Replace with actual audio source
-                                                                        type="audio/mpeg"
-                                                                    />
-                                                                    Your browser does not support the audio element.
-                                                                </audio>
+                                                                {index === 0 && !isUserLoggedIn && (
+                                                                    <audio
+                                                                        ref={audioRef}
+                                                                        controls
+                                                                        disablepictureinpicture
+                                                                        controlslist="nodownload noplaybackrate"
+                                                                        className="audio-element"
+                                                                    >
+                                                                        <source src={audio.audio} type="audio/mpeg" />
+                                                                        Your browser does not support the audio element.
+                                                                    </audio>
+                                                                )}
                                                             </div>
                                                         </div>
 
-
-
                                                         {/* Transcript */}
                                                         <div className="audio-transcript">
-                                                            <p>
-                                                                {audio.transcript}
-                                                            </p>
+                                                            <p>{audio.transcript}</p>
                                                         </div>
                                                     </div>
-                                                    {/* <Typography>
-                                                        {audio.transcript}
-                                                    </Typography> */}
                                                 </div>
-
                                             </AccordionDetails>
                                         </Accordion>
                                     ))}
 
+                                    {/* Display Alert after 5 minutes of playing the first audio if the user is not logged in */}
+                                    {alertOpen && (
+                                        <Alert
+                                            severity="info"
+                                            onClose={() => setAlertOpen(false)}
+                                            sx={{
+                                                position: "absolute",
+                                                top: "10%",
+                                                left: "50%",
+                                                transform: "translateX(-50%)",
+                                            }}
+                                        >
+                                            You have played the audio for more than 5 minutes. Please log in to continue.
+                                        </Alert>
+                                    )}
                                 </div>
                                 <div className="audio-prev-nxt">
                                     <div className="audio-prev" onClick={() => openPreviousAudioBook()}>
@@ -1242,47 +1474,47 @@ export default function Ebooks() {
                                 <div className="other-ebooks">
                                     {[1, 2, 3].map((e, i) => (
                                         <div className="other-b0ok">
-                                        <img src="/assets/images/other-ebooks.svg" alt=""/>
-                                        <div className="other-ebook-subtext">
+                                            <img src="/assets/images/other-ebooks.svg" alt="" />
+                                            <div className="other-ebook-subtext">
 
-                                            November 14, 2022 / BY ADMIN
-                                        </div>
-                                        <div className="comments-views">
-                                            <div className="comments">
-                                                <img src={ebooks.icons.comment} alt=""/>
-                                                <div className="comment-num">
-                                                    200
+                                                November 14, 2022 / BY ADMIN
+                                            </div>
+                                            <div className="comments-views">
+                                                <div className="comments">
+                                                    <img src={ebooks.icons.comment} alt="" />
+                                                    <div className="comment-num">
+                                                        200
+                                                    </div>
+                                                </div>
+                                                <div className="views">
+                                                    <img src={ebooks.icons.view} alt="" />
+                                                    <div className="view-num">
+                                                        800
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div className="other-book-title">
+                                                Bow down to the universe
+                                            </div>
+                                            <div className="other-book-desc">
+                                                The universe constantly teaches you what is needed and what is not. It is true that this immensely compassionate universe offers such guidance. Bow down and revere this natural cosmos.
+                                            </div>
+                                            <div className="other-book-cat-read-more">
+                                                <div className="other-book-cat">
+                                                    IN <span>GNANAM</span>
+                                                </div>
+                                                <div className="other-book-read-more">
+                                                    Read More
                                                 </div>
                                             </div>
-                                            <div className="views">
-                                                <img src={ebooks.icons.view} alt=""/>
-                                                <div className="view-num">
-                                                    800
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                        <div className="other-book-title">
-                                        Bow down to the universe 
-                                        </div>
-                                        <div className="other-book-desc">
-                                        The universe constantly teaches you what is needed and what is not. It is true that this immensely compassionate universe offers such guidance. Bow down and revere this natural cosmos.
-                                        </div>
-                                        <div className="other-book-cat-read-more">
-                                            <div className="other-book-cat">
-                                                IN <span>GNANAM</span>
-                                            </div>
-                                            <div className="other-book-read-more">
-                                                Read More
-                                            </div>
-                                        </div>
                                         </div>
                                     ))}
                                 </div>
                             </div>
-                            <Playstore/>
-                            <NewsLetter/>
-                            <KPI/>
+                            <Playstore />
+                            <NewsLetter />
+                            <KPI />
                         </> :
                         <>
                             <div className="Month-navigation">
@@ -1337,8 +1569,8 @@ export default function Ebooks() {
                                             {bookData[whichBook].shortDesc}
                                         </div>
                                         <div className="listen-copy-buy-section">
-                                            Select Format : {activeTab}
-                                            <div className="tabs">
+                                            {/* Select Format : {activeTab} */}
+                                            {/* <div className="tabs">
                                                 <button
                                                     className={`tab-button ${activeTab === "AUDIO" ? "active" : ""}`}
                                                     onClick={() => setActiveTab("AUDIO")}
@@ -1351,9 +1583,10 @@ export default function Ebooks() {
                                                 >
                                                     HARDCOPY
                                                 </button>
-                                            </div>
+                                            </div> */}
                                             <div className="tab-content">
-                                                {activeTab === "AUDIO" && <div className="audio">
+                                                {/* {activeTab === "AUDIO" &&  */}
+                                                <div className="audio">
                                                     <div className="audio-buy">
 
                                                         {paid == false ?
@@ -1375,7 +1608,7 @@ export default function Ebooks() {
                                                                         color: "#444444",
                                                                         fontWeight: "700",
                                                                         justifyContent: "space-evenly"
-                                                                    }} disabled >
+                                                                    }} onClick={()=>loginPopup()} >
 
 
                                                                         <img src={ebooks.icons.Lock} style={{ width: "1rem", height: "1.5rem" }} />
@@ -1410,95 +1643,59 @@ export default function Ebooks() {
                                                                         >
                                                                             <CloseIcon />
                                                                         </IconButton>
-                                                                        <Typography id="modal-title" variant="h5" sx={{ fontWeight: '400', lineHeight: "30px", fontSize: "1.5rem", fontFamily: "Sora,'san-serif'" }}>
-                                                                            View our Plans
-                                                                        </Typography>
-
-                                                                        <Box display="flex" justifyContent="space-between">
-                                                                            {/* Features List */}
-                                                                            <Box
-                                                                                sx={{
-                                                                                    display: 'grid',
-                                                                                    gridTemplateColumns: '1fr 1fr',
-                                                                                    gap: "10px",
-                                                                                    width: '65%',
-                                                                                    alignContent: "space-evenly"
-                                                                                }}
-                                                                            >
-                                                                                {[
-                                                                                    'Full Access to Landingfolio',
-                                                                                    '100 GB Free Storage',
-                                                                                    'Unlimited Visitors',
-                                                                                    '10 Agents',
-                                                                                    'Live Chat Support',
-                                                                                    'Live Chat Support',
-                                                                                    'Live Chat Support',
-                                                                                    'Live Chat Support',
-                                                                                ].map((item, index) => (
-                                                                                    <ListItem key={index} sx={{ p: 0 }}>
-                                                                                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                                                                            <ListItemIcon>
-                                                                                                <CheckCircleIcon color="#71717A" />
-                                                                                            </ListItemIcon>
-                                                                                            <ListItemText primary={item} sx={{ color: "#12121299", fontFamily: "Sora, 'san-serif", fontSize: "1rem", fontWeight: "500" }} />
-                                                                                        </Box>
-                                                                                        <IconButton
+                                                                        <Container maxWidth="md">
+                                                                            <Box textAlign="center" my={4}>
+                                                                                <Typography variant="h4" gutterBottom>
+                                                                                    Choose Your Plan
+                                                                                </Typography>
+                                                                                <Typography variant="subtitle1">
+                                                                                    Select the perfect subscription plan for your needs
+                                                                                </Typography>
+                                                                            </Box>
+                                                                            <Grid container spacing={2}>
+                                                                                {plans.map((plan, index) => (
+                                                                                    <Grid item xs={12} sm={6} md={4} key={index}>
+                                                                                        <Card
+                                                                                            variant="outlined"
                                                                                             sx={{
-                                                                                                margin: "5px",
-                                                                                                color: 'white',
-                                                                                                backgroundColor: 'grey',
-                                                                                                borderRadius: '50%',
-                                                                                                padding: '0.5px',
-                                                                                                '&:hover': {
-                                                                                                    backgroundColor: 'grey',
-                                                                                                }
+                                                                                                display: "flex",
+                                                                                                flexDirection: "column",
+                                                                                                height: "100%",
                                                                                             }}
-                                                                                            aria-label="info">
-                                                                                            <InfoIcon sx={{ fontSize: '1.25rem' }} />
-                                                                                        </IconButton>
-                                                                                    </ListItem>
-
+                                                                                        >
+                                                                                            <CardContent sx={{ flexGrow: 1, fontWeight: 600 }}>
+                                                                                                <Typography sx={{ fontSize: "1.2rem" }} variant="h6" gutterBottom>
+                                                                                                    {plan.name}
+                                                                                                </Typography>
+                                                                                                <Typography sx={{ fontSize: '2rem', fontWeight: 500, color: "black" }} variant="h4" color="primary" gutterBottom>
+                                                                                                    {plan.price}
+                                                                                                </Typography>
+                                                                                                <List>
+                                                                                                    {plan.features.map((feature, idx) => (
+                                                                                                        <ListItem key={idx} disableGutters>
+                                                                                                            <ListItemIcon>
+                                                                                                                <ListItemIcon>
+                                                                                                                    <CheckCircleIcon sx={{ color: "rgb(34 197 94)" }} />
+                                                                                                                </ListItemIcon>
+                                                                                                            </ListItemIcon>
+                                                                                                            <ListItemText primary={feature} />
+                                                                                                        </ListItem>
+                                                                                                    ))}
+                                                                                                </List>
+                                                                                            </CardContent>
+                                                                                            <Box textAlign="center" mb={2} sx={{ px: 2 }}>
+                                                                                                <Button onClick={() => payNow(plan.name)}
+                                                                                                    variant="contained"
+                                                                                                    style={{ ...plan.buttonStyle, width: "100%", padding: "10px 0" }}
+                                                                                                >
+                                                                                                    {plan.buttonLabel}
+                                                                                                </Button>
+                                                                                            </Box>
+                                                                                        </Card>
+                                                                                    </Grid>
                                                                                 ))}
-                                                                            </Box>
-
-                                                                            {/* Plan Details */}
-                                                                            <Box
-                                                                                sx={{
-                                                                                    width: '35%',
-                                                                                    borderLeft: '1px solid #99999999',
-                                                                                    borderRadius: '8px',
-                                                                                    p: 2,
-                                                                                    textAlign: 'center',
-                                                                                }}
-                                                                            >
-                                                                                <Typography variant="h6" sx={{ fontWeight: '400', fontSize: "1.1rem", fontFamily: "Sora, 'sans-serif'" }}>
-                                                                                    Lifetime Plan
-                                                                                </Typography>
-                                                                                <Typography
-                                                                                    sx={{ fontWeight: '400', fontSize: "3.5rem", fontFamily: "Sora, 'sans-serif'", color: '#000000', lineHeight: "66px", mt: 1 }}
-                                                                                >
-                                                                                    {bookData[whichBook].cost}
-                                                                                </Typography>
-                                                                                <Typography sx={{ mt: 1, fontSize: '0.9rem', color: '#a1a1a1', fontWeight: '400', fontFamily: "Sora, 'sans-serif'", lineHeight: "24px" }}>
-                                                                                    All the features to boost your career
-                                                                                </Typography>
-                                                                                <Button
-                                                                                    variant="contained"
-                                                                                    sx={{
-                                                                                        backgroundColor: '#F09300',
-                                                                                        color: '#fff',
-                                                                                        textTransform: 'none',
-                                                                                        fontWeight: 'bold',
-                                                                                        mt: 2,
-                                                                                        padding: "10px",
-                                                                                        width: '100%',
-                                                                                    }}
-                                                                                    onClick={() => payNow(bookData[whichBook].cost)}
-                                                                                >
-                                                                                    Pay Now
-                                                                                </Button>
-                                                                            </Box>
-                                                                        </Box>
+                                                                            </Grid>
+                                                                        </Container>
                                                                     </Box>
                                                                 </Modal> </>
                                                             :
@@ -1521,8 +1718,9 @@ export default function Ebooks() {
 
 
                                                     </div>
-                                                </div>}
-                                                {activeTab === "HARDCOPY" && <div className="hardcopy">
+                                                </div>
+                                                {/* } */}
+                                                {/* {activeTab === "HARDCOPY" && <div className="hardcopy">
                                                     Please select subscription
                                                     <div className="period-tabs">
                                                         <div className="buttons">
@@ -1603,7 +1801,7 @@ export default function Ebooks() {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                }
+                                                } */}
 
                                                 <div className="cat-tag">
                                                     Categories: {bookData[whichBook].category}
