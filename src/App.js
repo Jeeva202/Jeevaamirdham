@@ -16,37 +16,65 @@ import ViewCart from './components/cart/cart';
 import Checkout from './components/checkout/checkout';
 import UserDashboard from './pages/userDashboard/userDashboard';
 import AdminPanel from './pages/admin/AdminPanel';
+import LoginModal from './pages/login/loginModal';
+import { QueryClient, QueryClientProvider } from "react-query";
+import { useState } from 'react';
+const queryClient = new QueryClient();
+let isUserLoggedIn = false
 
 function App() {
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+
+  const loginPopup = () => {
+    setIsLoginOpen(true); // Open the modal
+  };
+
+  const closeLoginPopup = () => {
+    setIsLoginOpen(false); // Close the modal
+  };
   return (
-    <>
-      <Box sx={{ backgroundColor: "#FEF7F7" }}>
-        <Box>
-          <BrowserRouter>
-            <TopNavbar />
-            <Routes>
-              <Route path="/" element={<Navigate to={"/home"} replace />} />
-              <Route path="/home" element={<HomePage />} />
-              <Route path="/ebooks" element={<Ebooks />} />
-              <Route path="/audio_video" element={<Audio_video />} />
-              <Route path='/blog' element={<Blog/>} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/login/loginWithOtp" element={<LoginWithOTP />} />
-              <Route path="/createNewUser" element={<CreateNewAccount />} />
-              <Route path="/cart" element={<ViewCart />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/dashboard" element={<UserDashboard />} />
-              <Route path="/admin/overview" element={<AdminPanel />} />
-            </Routes>
-            <Footer />
-          </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <>
+        <Box sx={{ backgroundColor: "#FEF7F7" }}>
+          <Box>
+            <BrowserRouter>
+              <TopNavbar />
+              <Routes>
+                <Route path="/" element={<Navigate to={"/home"} replace />} />
+                <Route path="/home" element={<HomePage />} />
+                <Route
+                  path="/ebooks"
+                  element={
+                    <>
+                      <Ebooks
+                        isUserLoggedIn={isUserLoggedIn}
+                        loginPopup={loginPopup}
+                      />
+                      {isLoginOpen && <LoginModal onClose={closeLoginPopup} />}
+                    </>
+                  }
+                />
+
+                <Route path="/audio_video" element={<Audio_video />} />
+                <Route path='/blog' element={<Blog />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                {/* <Route path="/login" element={<Login />} />  */}
+                <Route path="/login/loginWithOtp" element={<LoginWithOTP />} />
+                <Route path="/createNewUser" element={<CreateNewAccount />} />
+                <Route path="/cart" element={<ViewCart />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/dashboard" element={<UserDashboard />} />
+                <Route path="/admin/overview" element={<AdminPanel />} />
+              </Routes>
+              <Footer />
+            </BrowserRouter>
+          </Box>
         </Box>
-      </Box>
 
 
-    </>
+      </>
+    </QueryClientProvider>
   );
 }
 
