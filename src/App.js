@@ -15,6 +15,7 @@ import Audio_video from './pages/audio_video/audio_video';
 import ViewCart from './components/cart/cart';
 import Checkout from './components/checkout/checkout';
 import UserDashboard from './pages/userDashboard/userDashboard';
+import AdminPanel from './pages/admin/AdminPanel';
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
               <Route path="/cart" element={<ViewCart />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/dashboard" element={<UserDashboard />} />
+              <Route path="/admin/overview" element={<AdminPanel />} />
             </Routes>
             <Footer />
           </BrowserRouter>

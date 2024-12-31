@@ -68,7 +68,8 @@ export default function TopNavbar() {
         navigate(routes[newValue]);
     };
     return (
-        <><div style={{ background: "#FFF", boxShadow: "0px 5px 14px 0px rgba(0, 0, 0, 0.16)", zIndex:"1", position:"relative" }}>
+        // boxShadow: "0px 5px 14px 0px rgba(0, 0, 0, 0.16)",
+        <><div style={{ background: "#FFF", zIndex:"1", position:"relative" }}>
             <Container maxWidth="lg">
                 <div className="topContainer">
                     <div className="topLeft">
