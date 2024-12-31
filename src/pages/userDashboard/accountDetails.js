@@ -8,7 +8,7 @@ export default function AccountDetails() {
       <Typography variant="h5" sx={{ marginBottom: "1.5rem", fontWeight: "bold" }}>
         Basic Information
       </Typography>
-      <Button disableElevation variant="contained" color="black" sx={{ float: "right", textTransform:'none', background:"#f09300", fontWeight:"bold", borderRadius:"30px", padding:"0rem 3rem" }}>
+      <Button disableElevation variant="contained" color="black" sx={{ float: "right", textTransform:'none', background:"#f09300", fontWeight:"bold", borderRadius:"30px", padding:"0.8rem 3rem" }}>
             Edit
           </Button>
       </Box>
