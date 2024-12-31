@@ -1,5 +1,5 @@
-import { Divider, Typography, Button, Badge, Container } from '@mui/material'
-import React from 'react'
+import { Divider, Typography, Button, Badge, Container, Menu, MenuItem, ListItemIcon } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import { navBanner } from '../../constants/screenData'
 import "./topNavbar.css"
 import { styled } from '@mui/material/styles';
@@ -7,6 +7,9 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { useNavigate } from 'react-router-dom';
 import TodayThoughts from './todayThoughts';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import LogoutIcon from '@mui/icons-material/Logout';
+import EmailIcon from '@mui/icons-material/Email';
 
 const StyledTabs = styled((props) => (
     <Tabs
@@ -57,19 +60,73 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     },
 }));
 export default function TopNavbar() {
-    const [value, setValue] = React.useState(0);
+    const [value, setValue] = React.useState(false);
+    const [username, setUsername] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const storedUsername = localStorage.getItem('username');
+        const storedEmail = localStorage.getItem('email');
+        if (storedUsername) {
+            setUsername(storedUsername);
+        }
+        if (storedEmail) {
+            setEmail(storedEmail);
+        }
+
+        const handleStorageChange = () => {
+            const updatedUsername = localStorage.getItem('username');
+            const updatedEmail = localStorage.getItem('email');
+            setUsername(updatedUsername);
+            setEmail(updatedEmail);
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+    }, []);
+
+    useEffect(() => {
+        const routes = ['/', '/ebooks', '/audio_video', '/blog', '/about', '/contact'];
+        const currentPath = window.location.pathname;
+        const currentIndex = routes.indexOf(currentPath);
+        if (currentIndex !== -1) {
+            setValue(currentIndex);
+        } else {
+            setValue(false);
+        }
+    }, []);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
-
-
-        const routes = ['/', '/ebooks', '/audio_video', '/blog', '/about', '/contact', '/dashboard',];
+        const routes = ['/', '/ebooks', '/audio_video', '/blog', '/about', '/contact'];
         navigate(routes[newValue]);
     };
+
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleLogout = () => {
+        localStorage.removeItem('username');
+        localStorage.removeItem('email');
+        setUsername(null);
+        setEmail(null);
+        handleMenuClose();
+        navigate('/home')
+    };
+
     return (
         // boxShadow: "0px 5px 14px 0px rgba(0, 0, 0, 0.16)",
-        <><div style={{ background: "#FFF", zIndex:"1", position:"relative" }}>
+        <><div style={{ background: "#FFF", zIndex: "1", position: "relative" }}>
             <Container maxWidth="lg">
                 <div className="topContainer">
                     <div className="topLeft">
@@ -89,53 +146,79 @@ export default function TopNavbar() {
                 </div>
             </Container>
             <div style={{ borderBottom: "1px solid #E6E6E6" }}></div>
-                <Container maxWidth="lg">
-                    <div className='navContainer'>
-                        <img src={navBanner.logo} alt='logo' style={{ width: "10rem", cursor:"pointer" }} onClick={() => { navigate('/home') }}/>
-                        <div >
-                            <StyledTabs
-                                value={value}
-                                onChange={handleChange}
-                                aria-label="styled tabs example"
-                            >
-                                <StyledTab label="Home" />
-                                <StyledTab label="E-books" />
-                                <StyledTab label="Audio & Video" />
-                                <StyledTab label="Blog" />
-                                <StyledTab label="About" />
-                                <StyledTab label="Contact" />
-                                <StyledTab label="Dashboard" />
-                            </StyledTabs>
-                            <div sx={{ p: 2 }} />
-                        </div>
-                        <div style={{ display: "flex" }}>
-                            <Button disableRipple variant="text" 
-                            sx={{ 
-                                textTransform: "none", 
-                            fontWeight: 600, 
-                            fontSize: "0.75rem",
-                            color: "#444" 
-                            }} 
-                            startIcon={<img src={navBanner.icons.search} style={{ width: "0.9rem" }} />}>
-                                Search
-                            </Button>
+            <Container maxWidth="lg">
+                <div className='navContainer'>
+                    <img src={navBanner.logo} alt='logo' style={{ width: "10rem", cursor: "pointer" }} onClick={() => { navigate('/home') }} />
+                    <div >
+                        <StyledTabs
+                            value={value}
+                            onChange={handleChange}
+                            aria-label="styled tabs example"
+                        >
+                            <StyledTab label="Home" />
+                            <StyledTab label="E-books" />
+                            <StyledTab label="Audio & Video" />
+                            <StyledTab label="Blog" />
+                            <StyledTab label="About" />
+                            <StyledTab label="Contact" />
+                            {/* <StyledTab label="Dashboard" /> */}
+                        </StyledTabs>
+                        <div sx={{ p: 2 }} />
+                    </div>
+                    <div style={{ display: "flex", gap: "1rem" }}>
+                        {username ? (
+                            <>
+                                <div style={{ display: "flex", alignItems: "center", gap: "5px", cursor: "pointer" }} onClick={handleMenuOpen}>
+                                    <img src={navBanner.icons.user} style={{ width: "0.9rem" }} />
+                                    <Typography variant="h6" sx={{ fontWeight: 600, fontSize: "0.75rem", color: "#444" }}>
+                                        {username.charAt(0).toUpperCase() + username.slice(1)}
+                                    </Typography>
+                                </div>
+                                <Menu
+                                    anchorEl={anchorEl}
+                                    open={Boolean(anchorEl)}
+                                    onClose={handleMenuClose}
+                                >
+                                    <MenuItem sx={{fontSize:"14px", padding:"1rem 1rem", pointerEvents:"none"}}>
+                                        <ListItemIcon>
+                                            <EmailIcon />
+                                        </ListItemIcon>
+                                        {email}
+                                    </MenuItem>
+                                    <Divider />
+                                    <MenuItem sx={{fontSize:"14px"}} onClick={() => { navigate('/dashboard'); handleMenuClose(); }}>
+                                        <ListItemIcon>
+                                            <AccountCircleIcon fontSize="small" />
+                                        </ListItemIcon>
+                                        My Profile
+                                    </MenuItem>
+                                    <MenuItem sx={{fontSize:"14px"}} onClick={handleLogout}>
+                                        <ListItemIcon>
+                                            <LogoutIcon fontSize="small" />
+                                        </ListItemIcon>
+                                        Logout
+                                    </MenuItem>
+                                </Menu>
+                            </>
+                        ) : (
                             <Button disableRipple onClick={() => { navigate('/login') }} variant="text" sx={{ textTransform: "none", fontWeight: 600, fontSize: "0.75rem", color: "#444" }} startIcon={<img src={navBanner.icons.user} style={{ width: "0.9rem" }} />}>
                                 Login
                             </Button>
-                            <Button disableRipple variant="text" sx={{ textTransform: "none", gap: "0.8rem", fontWeight: 600, fontSize: "0.75rem", color: "#444" }}
+                        )}
+                        <Button disableRipple variant="text" sx={{ textTransform: "none", gap: "0.8rem", fontWeight: 600, fontSize: "0.75rem", color: "#444" }}
                             onClick={() => { navigate('/cart') }}>
-                                <StyledBadge badgeContent={4}>
-                                    <img src={navBanner.icons.cart} style={{ width: "1rem" }} />
-                                </StyledBadge>
-                                Cart
-                            </Button>
-                        </div>
+                            <StyledBadge badgeContent={4}>
+                                <img src={navBanner.icons.cart} style={{ width: "1rem" }} />
+                            </StyledBadge>
+                            Cart
+                        </Button>
                     </div>
-                </Container>
-                <TodayThoughts/>
+                </div>
+            </Container>
+            <TodayThoughts />
 
         </div>
 
         </>
     )
-} 
+}
