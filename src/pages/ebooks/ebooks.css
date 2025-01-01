@@ -318,6 +318,7 @@
     display: flex;
     flex-direction: row;
     gap: 15px;
+    padding: 20px 0
 }
 
 .other-ebook-subtext,.comments-views, .other-book-desc{

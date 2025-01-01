@@ -11,7 +11,7 @@ import {
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CloseIcon from '@mui/icons-material/Close';
 import InfoIcon from '@mui/icons-material/Info';
-import CartModal from "../../components/cart/cartModal";
+
 import { useDispatch, useSelector } from "react-redux";
 import { openCart, selectIsCartOpen } from "../../redux/cartSlice";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -20,6 +20,11 @@ import NewsLetter from "../../components/newsLetter/newsletter"
 import KPI from "../../components/kpi/kpi"
 import { useQuery } from "react-query";
 import axios from "axios";
+import YearNavigation from "./yearNavigation";
+import BuyBook from "./buyBook";
+import MonthNavigation from "./monthNavigation";
+import BookDetails from "./bookDetails";
+import AudioPlayer from "./audioPlayer";
 export default function Ebooks({ isUserLoggedIn, loginPopup }) {
     const [allYears, setAllYears] = useState(true);
     const [listenPage, setListenPage] = useState(false)
@@ -28,56 +33,55 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
     const [selectedMonth, setSelectedMonth] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(["GNANAM"]);
     const [catSelectedBook, setCatSelectedBook] = useState("0")
-    const [activeTab, setActiveTab] = useState("AUDIO");
-    const [periodTab, setPeriodTab] = useState("MONTHLY")
+    // const [activeTab, setActiveTab] = useState("AUDIO");
+    // const [periodTab, setPeriodTab] = useState("MONTHLY")
     const itemsPerPage = 3; // Items per page for the buy section
     const [currentPage, setCurrentPage] = useState(1);
     const [noOfYear, setNoOfYear] = useState(1);
     const [noOfMonth, setNoOfMonth] = useState(1)
-    const [quantity, setQuantity] = useState(1)
     const [descTab, setDescTab] = useState("Description")
     const [whichBook, setWhichBook] = useState("0");
     const [openModal, setOpenModal] = useState(false);
     const [paid, setPaid] = useState(false)
-    const [freePlanChosed, setFreePlanChosed] = useState(false)
+    const [plan, setPlan] = useState('basic')
     const [expanded, setExpanded] = useState(0); // Always open the first panel by default
-    const [alertOpen, setAlertOpen] = useState(false); // State to control the alert visibility
+    // const [alertOpen, setAlertOpen] = useState(false); // State to control the alert visibility
     const audioRef = useRef(null); // Reference to the audio player
-    const [hasTriggeredAlert, setHasTriggeredAlert] = useState(false); // Track if alert has been triggered
+    // const [hasTriggeredAlert, setHasTriggeredAlert] = useState(false); // Track if alert has been triggered
 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
-    useEffect(() => {
-        // Reset the alert trigger state when the component is mounted or audio is changed
-        setHasTriggeredAlert(false);
-    }, [whichBook]);
+    // useEffect(() => {
+    //     // Reset the alert trigger state when the component is mounted or audio is changed
+    //     setHasTriggeredAlert(false);
+    // }, [whichBook]);
 
-    useEffect(() => {
-        if (audioRef.current && !isUserLoggedIn) {
-            // Add event listener to track when the audio reaches 5 minutes
-            const audioElement = audioRef.current;
+    // useEffect(() => {
+    //     if (audioRef.current && !isUserLoggedIn) {
+    //         // Add event listener to track when the audio reaches 5 minutes
+    //         const audioElement = audioRef.current;
 
-            // Function to check if audio has been played for 5 minutes or more
-            const checkFiveMinutes = () => {
-                if (audioElement.currentTime >= 300 && !hasTriggeredAlert) {  // 300 seconds is 5 minutes
-                    setHasTriggeredAlert(true); // Ensure the alert only triggers once
-                    setAlertOpen(true); // Show the alert
-                    audioElement.pause(); // Pause the audio
-                    audioElement.currentTime = 0; // Reset the audio to the start
-                }
-            };
+    //         // Function to check if audio has been played for 5 minutes or more
+    //         const checkFiveMinutes = () => {
+    //             if (audioElement.currentTime >= 300 && !hasTriggeredAlert) {  // 300 seconds is 5 minutes
+    //                 setHasTriggeredAlert(true); // Ensure the alert only triggers once
+    //                 setAlertOpen(true); // Show the alert
+    //                 audioElement.pause(); // Pause the audio
+    //                 audioElement.currentTime = 0; // Reset the audio to the start
+    //             }
+    //         };
 
-            // Attach timeupdate event listener to check playback time
-            audioElement.addEventListener("timeupdate", checkFiveMinutes);
+    //         // Attach timeupdate event listener to check playback time
+    //         audioElement.addEventListener("timeupdate", checkFiveMinutes);
 
-            // Cleanup event listener when the component is unmounted or audio changes
-            return () => {
-                audioElement.removeEventListener("timeupdate", checkFiveMinutes);
-            };
-        }
-    }, [isUserLoggedIn, hasTriggeredAlert]);
+    //         // Cleanup event listener when the component is unmounted or audio changes
+    //         return () => {
+    //             audioElement.removeEventListener("timeupdate", checkFiveMinutes);
+    //         };
+    //     }
+    // }, [isUserLoggedIn, hasTriggeredAlert]);
 
 
     const dispatch = useDispatch();
@@ -89,7 +93,7 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
     const handleClose = () => setOpenModal(false);
     const plans = [
         {
-            name: "Jeevaamirdham Basic Plan",
+            name: "basic",
             price: "₹0",
             features: [
                 "Access to one chapter of E-magazine",
@@ -104,7 +108,7 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
             },
         },
         {
-            name: "Jeevaamirdham Elite Plan",
+            name: "elite",
             price: "₹599/year",
             features: [
                 "Access to all E-magazine content",
@@ -119,7 +123,7 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
             },
         },
         {
-            name: "Jeevaamirdham Premium Plan",
+            name: "premium",
             price: "₹999/year",
             features: [
                 "Access to all E-magazine content",
@@ -778,6 +782,61 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
         enabled: !!selectedYear && !selectedMonth && !allYears
     })
 
+
+    const { data: prevNxtAudioData, status: prevNxtAudioStatus, isLoading: prevNxtAudioLoading, error: prevNxtAudioError } = useQuery({
+        queryFn: async () => {
+            const { data } = await axios.get(`http://localhost:3001/emagazine-page/audio-prev-nxt-details`, {
+                params: {
+                    bid: "book_id"
+                }
+            }
+
+            )
+            return data
+        },
+        queryKey: ["prev-and-next-audio", listenPage],
+        enabled: !!listenPage
+    })
+
+    const {data:planData, status:planStatus, isLoading:planIsLoading, error:planError} = useQuery({
+        queryFn: async ()=>{
+            const {data} = await axios.get(`http://localhost:3001/getPlan`,{
+                params:{
+                    id:""
+                }
+            })
+            return data
+        },
+        queryKey:["plan-detail", isUserLoggedIn]
+
+    })
+
+    const {data:createUser, isLoading:createUserLoading} = useQuery({
+        queryFn: async ()=>{
+            const {data} = await axios.get(`http://localhost:3001/createUser`, {
+                params:{
+                    id:"",
+                    name:"",
+                    email:"",
+                    plan:"basic"
+                }
+            })
+            return data
+        }
+    })
+
+    const {data:setPlanData} = useQuery({
+        queryFn: async ()=>{
+            const {data} = await axios.get(`http://localhost:3001/setPlan`,{
+                params:{
+                    id:"",
+                    plan: plan ? plan : "basic"
+                }
+            })
+            return data
+        },
+    })
+
     /**
      * ==================================================
      * ==================================================
@@ -785,17 +844,7 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
     */
 
 
-    const StyledBadge = styled(Badge)(({ theme }) => ({
-        '& .MuiBadge-badge': {
-            right: "22vw",
-            top: "0vh",
-            border: `2px solid ${theme.palette.background.paper}`,
-            padding: '25px 13px',
-            background: "#F09300",
-            color: "white",
-            borderRadius: "50%",
-        },
-    }));
+
     const totalPages = Math.ceil(shopBooksData.length / itemsPerPage);
     const currentItems = shopBooksData.slice(
         (currentPage - 1) * itemsPerPage,
@@ -814,8 +863,8 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
     const backToYearPage = () => {
         setSelectedMonth(null)
         setWhichBook("0")
-        setActiveTab("AUDIO")
-        setPeriodTab("MONTHLY")
+        // setActiveTab("AUDIO")
+        // setPeriodTab("MONTHLY")
         setDescTab("Description")
     }
     const backToAllYearPage = () => {
@@ -823,8 +872,8 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
         setSelectedMonth(null)
         setSelectedYear(NaN)
         setWhichBook("0")
-        setActiveTab("AUDIO")
-        setPeriodTab("MONTHLY")
+        // setActiveTab("AUDIO")
+        // setPeriodTab("MONTHLY")
         setDescTab("Description")
     }
     const handleCategoryClick = (categoryId) => {
@@ -833,14 +882,7 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
     const redirectToMonthPage = (month) => {
         setSelectedMonth(month)
     }
-    const decrease = (x) => {
-        if (x != 1) {
-            setQuantity(x - 1)
-        }
-    }
-    const increase = (x) => {
-        setQuantity(x + 1)
-    }
+
 
     const changeBook = (e, page = "monthly") => {
         console.log("e", e);
@@ -884,59 +926,61 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
         setCategoryCartFlag(false)
     }
 
-    // const handlePurchase = async (amount, planName) => {
-    //     // Initialize Razorpay payment
-    //     const options = {
-    //       key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-    //       amount: amount * 100, // Amount in paise
-    //       currency: "INR",
-    //       name: "Jeevaamirdham",
-    //       description: "Subscription Payment",
-    //       handler: async function (response) {
-    //         console.log("Payment successful:", response);
+    const handlePurchase = async (amount, planName) => {
+        // Initialize Razorpay payment
+        const options = {
+            key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+            amount: amount * 100, // Amount in paise
+            currency: "INR",
+            name: "Jeevaamirdham",
+            description: "Subscription Payment",
+            handler: async function (response) {
+                console.log("Payment successful:", response);
 
-    //         // Call your backend to update the database with payment details
-    //         try {
-    //           const res = await fetch("/api/payment-success", {
-    //             method: "POST",
-    //             headers: {
-    //               "Content-Type": "application/json",
-    //             },
-    //             body: JSON.stringify({
-    //               razorpay_payment_id: response.razorpay_payment_id,
-    //               plan: planName,
-    //               amount,
-    //             }),
-    //           });
+                // Call your backend to update the database with payment details
+                // try {
+                //     const res = await fetch("/api/payment-success", {
+                //         method: "POST",
+                //         headers: {
+                //             "Content-Type": "application/json",
+                //         },
+                //         body: JSON.stringify({
+                //             razorpay_payment_id: response.razorpay_payment_id,
+                //             plan: planName,
+                //             amount,
+                //         }),
+                //     });
 
-    //           if (res.ok) {
-    //             const data = await res.json();
-    //             console.log("Backend updated successfully:", data);
-    //             alert("Payment successful and subscription activated!");
-    //           } else {
-    //             console.error("Failed to update backend");
-    //             alert("Payment was successful but could not update subscription. Please contact support.");
-    //           }
-    //         } catch (error) {
-    //           console.error("Error while updating backend:", error);
-    //           alert("An error occurred. Please contact support.");
-    //         }
-    //       },
-    //       prefill: {
-    //         name: "Your Name", // Replace with logged-in user's name
-    //         email: "your-email@example.com", // Replace with logged-in user's email
-    //         contact: "9999999999", // Replace with logged-in user's contact
-    //       },
-    //       theme: {
-    //         color: "#7C3AED",
-    //       },
-    //     };
+                //     if (res.ok) {
+                //         const data = await res.json();
+                //         console.log("Backend updated successfully:", data);
+                //         alert("Payment successful and subscription activated!");
+                //     } else {
+                //         console.error("Failed to update backend");
+                //         alert("Payment was successful but could not update subscription. Please contact support.");
+                //     }
+                // } catch (error) {
+                //     console.error("Error while updating backend:", error);
+                //     alert("An error occurred. Please contact support.");
+                // }
+            },
+            prefill: {
+                name: "Your Name", // Replace with logged-in user's name
+                email: "your-email@example.com", // Replace with logged-in user's email
+                contact: "9999999999", // Replace with logged-in user's contact
+            },
+            theme: {
+                color: "#7C3AED",
+            },
+        };
 
-    //     const razorpay = new window.Razorpay(options);
-    //     razorpay.open();
-    //   };
+        const razorpay = new window.Razorpay(options);
+        razorpay.open();
+    };
 
     const payNow = (plan) => {
+
+
 
         /** Use this code once the login page is set and the plan selection functionalities are created*/
 
@@ -960,9 +1004,12 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
         //   window.location.href = "/login";
         // }
 
-        if (plan === 'Jeevaamirdham Basic Plan') {
+        if (plan === 'basic') {
             handleClose()
             setPaid(true)
+        }
+        else{
+            handlePurchase(599, plan)
         }
 
     };
@@ -990,532 +1037,29 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
         <Container maxWidth="lg">
             {allYears ? (
                 <div className="ebook-section">
-                    <div className="ebook">
-                        <div className="title">
-                            <div className="emagazine">
-                                E-Magazine
-                            </div>
-                            <div className="hdivider">
-                                <img src={ebooks.icons.HorizontalDivider} alt="" />
-                            </div>
-                        </div>
-                        <div className="year-wise">
-                            {YearWiseEbooks.map((e) => (
-                                <div className="year-wrapper">
-                                    <img src={e.img} alt="" />
-                                    <ViewAll text={e.year} width="10rem" padding={"0.4rem 2rem"} onClick={() => redirectToYearPage(e.year)} />
-                                </div>
-
-                            ))}
-                        </div>
-                    </div>
-                    <div className="shop-section">
-                        <div className="title">
-                            <div className="shop-book">
-                                Shop Books
-                            </div>
-                            <div className="hdivider">
-                                <img src={ebooks.icons.HorizontalDivider} alt="" />
-                            </div>
-                        </div>
-                        <div className="shopcontent">
-                            <div className="genre">
-                                <Card sx={{ maxWidth: 400, borderRadius: "10px", border: "1px solid #ccc" }} variant="outlined">
-                                    <CardHeader
-                                        title="Genre"
-                                        titleTypographyProps={{
-                                            variant: "h6",
-                                            align: "left",
-                                            sx: { fontFamily: "Sora, sans-serif", fontSize: "1.2rem", fontWeight: 600 }
-                                        }}
-                                        sx={{ paddingBottom: 0 }}
-                                    />
-                                    <Divider />
-                                    <CardContent className="categ-content" sx={{ paddingTop: 2 }}>
-                                        {categories.map((category) => (
-                                            <div
-                                                key={category.id}
-                                                className="categ"
-                                                onClick={() => handleCategoryClick(category.id)}
-                                            >
-                                                <input type="checkbox" id={category.id} name="checkbox" value={category.id} />
-                                                <label for={category.id}> {category.label}</label>
-                                            </div>
-                                        ))}
-                                    </CardContent>
-                                </Card>
-                            </div>
-                            <div className="buy-section">
-                                {currentItems.map((e, i) => (
-                                    <div className="book">
-                                        <div className="img-section">
-                                            <StyledBadge badgeContent={e.discount}>
-                                                <img src={e.img} alt="" />
-                                            </StyledBadge>
-                                        </div>
-                                        <div className="content-section">
-                                            <div className="title" onClick={() => navigateToProductSpecificPage(i)}>{e.title}</div>
-                                            <div className="subtitle">{e.subtitle}</div>
-                                            <div className="desc">{e.desc}</div>
-                                            <div className="price">
-                                                {e.offPrice}
-                                                <span>{e.orgPrice}</span>
-                                            </div>
-                                            <Button variant="text" sx={{
-                                                borderRadius: "40px",
-                                                width: "10rem",
-                                                p: "10px",
-                                                background: "#F09300",
-                                                textTransform: "none",
-                                                marginTop: "2rem",
-                                                color: "black"
-                                            }} onClick={handleAddToCart}>
-
-                                                <img src={ebooks.icons.cart} style={{ width: "1rem" }} />
-                                                Add to Cart
-                                            </Button>
-                                            <CartModal open={isOpen} />
-                                        </div>
-                                    </div>
-
-                                ))}
-
-                            </div>
-
-                        </div>
-                        <div className="pagination">
-                            <Pagination
-                                count={totalPages}
-                                page={currentPage}
-                                onChange={handlePageChange}
-                                siblingCount={0} // Adjust sibling count if needed
-                                boundaryCount={1}
-                                renderItem={(item) => (
-                                    <Button
-                                        variant="text"
-                                        onClick={() => handlePageChange(null, item.page)}
-                                        sx={{
-                                            ...(item.page === currentPage && {
-                                                backgroundColor: "#FCCC4D",
-                                                color: "#7F56D9",
-                                            }),
-                                        }}
-                                        disabled={
-                                            (item.type === "previous" && currentPage === 1) ||
-                                            (item.type === "next" && currentPage === totalPages)
-                                        } // Disable when on first or last page
-                                    >
-                                        {item.type === "previous" ? (
-                                            <>
-                                                <img src={ebooks.icons.Previous} alt="Left Arrow" />
-                                                Previous
-                                            </>
-                                        ) : item.type === "next" ? (
-                                            <>
-                                                Next
-                                                <img src={ebooks.icons.Next} alt="Right Arrow" />
-                                            </>
-                                        ) : (
-                                            item.page
-                                        )}
-                                    </Button>
-                                )}
-                            />
-                        </div>
-                    </div>
+                    <YearNavigation redirectToYearPage={redirectToYearPage} books={YearWiseEbooks} />
+                    <BuyBook categories={categories} handleCategoryClick={handleCategoryClick} currentItems={currentItems} navigateToProductSpecificPage={navigateToProductSpecificPage} handlePageChange={handlePageChange} currentPage={currentPage} isOpen={isOpen} totalPages={totalPages} handleAddToCart={handleAddToCart} />
                 </div>
             ) : (categoryCartFlag) ?
-                <>
-                    <div className="category-navigation">
-                        <a className="back" onClick={() => backToHomePage()}>
-                            Home
-                        </a>
-                        <img src={ebooks.icons.RightArrowStroke} alt="" />
-                        <div className="nav-category" onClick={() => { }}>
-                            CATEGORY
-                        </div>
-                        <img src={ebooks.icons.RightArrowStroke} alt="" />
-                        <div className="nav-book">
-                            {shopBooksData[catSelectedBook].title}
-                        </div>
-                    </div>
-                    <div className="categorybook-buysection">
-                        <div className="book-imagesection">
-                            <img src={shopBooksData[catSelectedBook].img} alt="" />
-                        </div>
-                        <div className="book-contentsection">
-                            <div className="book-navigator">
-                                <div className="stock" style={shopBooksData[catSelectedBook].availability == 'IN STOCK' ? { backgroundColor: "#24FF0033" } : { backgroundColor: "red" }}>
-                                    {shopBooksData[catSelectedBook].availability}
-                                </div>
-                                <div className="prev-next">
-                                    <div className="prev" >
-                                        <img src={ebooks.icons.Previous} alt="Left Arrow" disabled={catSelectedBook === "0"} onClick={() => changeBook("cat-prev")} />
-                                        &nbsp;
-                                        PREV
-                                    </div>
-                                    <div className="nxt">
-
-                                        NEXT
-                                        &nbsp;
-                                        <img src={ebooks.icons.Next} alt="Right Arrow" disabled={parseInt(catSelectedBook) === shopBooksData.length - 1} onClick={() => changeBook("cat-nxt")} />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="title-section">
-                                <div className="title">
-                                    {shopBooksData[catSelectedBook].title}
-                                </div>
-                                <div className="subtext">
-                                    <div className="author">
-                                        Author: {shopBooksData[catSelectedBook].author}
-                                    </div>
-                                    <div className="id">
-                                        {shopBooksData[catSelectedBook].id}
-                                    </div>
-                                </div>
-                                <div className="shortdesc">
-                                    {shopBooksData[catSelectedBook].shortDesc}
-                                </div>
-                                <div className="category-buy-section">
-                                    <div className="tab-content">
-                                        <div className="quantity-select">
-                                            <div className="count-subscribe">
-                                                Quantity
-                                                <br />
-                                                <br />
-                                                <div className="counter">
-                                                    <span className="decrease" onClick={() => { decrease(quantity) }}> - </span>
-                                                    &nbsp;
-                                                    <span className="quantity"> {quantity} </span>
-                                                    &nbsp;
-                                                    <span className="increase" onClick={() => { increase(quantity) }}> + </span>
-                                                </div>
-                                            </div>
-                                            <Button variant="text" sx={{
-                                                borderRadius: "40px",
-                                                width: "10rem",
-                                                p: "10px",
-                                                background: "#F09300",
-                                                textTransform: "none",
-                                                marginTop: "2rem",
-                                                color: "#ffffff",
-                                                fontWeight: "700",
-                                                justifyContent: "space-evenly"
-                                            }} onClick={handleAddToCart}>
-
-                                                <img src={ebooks.icons.cart} style={{ width: "1rem", height: "1.5rem", filter: "invert(100%)" }} />
-                                                Add to cart
-                                            </Button>
-                                            <CartModal open={isOpen} />
-                                        </div>
-
-                                        <div className="cat-tag">
-                                            Categories: {shopBooksData[catSelectedBook].category_tag}
-                                            <br></br>
-                                            Tags: {shopBooksData[catSelectedBook].tag}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="desc-info">
-                        <div className="desc-info-tabs">
-                            <button
-                                className={`tab-underscore ${descTab === "Description" ? "active" : ""}`}
-                                onClick={() => setDescTab("Description")}
-                            >
-                                Description
-                            </button>
-                            <button
-                                className={`tab-underscore ${descTab === "add-info" ? "active" : ""}`}
-                                onClick={() => setDescTab("add-info")}
-                            >
-                                Additional information
-                            </button>
-                        </div>
-
-                        <div className="desc-tab-content">
-                            {descTab === "Description" &&
-                                <div className="desc">
-                                    {shopBooksData[catSelectedBook].desc}
-                                </div>}
-                            {descTab === "add-info" && <div>
-                                {shopBooksData[catSelectedBook].additionalInfo}
-                            </div>}
-                        </div>
-
-                    </div>
-                    <div className="otherbooks">
-                        <div className="otherbooks-title">
-                            <div className="text">
-                                Related products
-                            </div>
-                            <div className="hdivider">
-                                <img src={ebooks.icons.HorizontalDivider} alt="" />
-                            </div>
-                        </div>
-                        <div className="book-cards">
-                            {shopBooksData.map((e, i) => {
-
-                                if (i != catSelectedBook) {
-                                    return (
-
-                                        <div className="cat-book-card" onClick={(e) => changeBook(i, "catgeorypage")}>
-                                            <img src={e.img} alt="" />
-                                            <div className="text">
-                                                {e.title}
-                                                <br />
-                                                {e.author}
-                                            </div>
-                                            <button className="read-now" value={i} >{e.offPrice}</button>
-                                        </div>
-
-                                    )
-                                }
-                            })}
-                        </div>
-                    </div>
-                </>
+                <BookDetails backToHomePage={backToHomePage} catSelectedBook={catSelectedBook} shopBooksData={shopBooksData} changeBook={changeBook} handleAddToCart={handleAddToCart} setDescTab={setDescTab} descTab={descTab} isOpen={isOpen} />
                 : (selectedMonth === null) && (!isNaN(selectedYear)) ?
-                    <>
-                        <div className="Year-navigation">
-                            <a className="back" onClick={() => backToAllYearPage()}>
-                                E-MAGAZINE
-                            </a>
-                            <img src={ebooks.icons.RightArrowStroke} alt="" />
-                            <div className="year">
-                                {selectedYear}
-                            </div>
-                        </div>
-                        <div className="ebooks-one-year">
-                            <div className="month-wise">
-                                {oneYearBook.map((e) => (
-                                    <div className="month-wrapper">
-                                        <img src={e.img} alt="" />
-                                        <ViewAll text={e.month + " " + selectedYear} width="11rem"
-                                            onClick={() => redirectToMonthPage(e.month)}
-                                        />
-                                    </div>
-
-                                ))}
-                            </div>
-                        </div>
-                    </>
+                    <MonthNavigation backToAllYearPage={backToAllYearPage} selectedYear={selectedYear} oneYearBook={oneYearBook} redirectToMonthPage={redirectToMonthPage} />
                     : (listenPage)
                         ?
-                        <>
-                            <div className="home-navigation">
-                                <a className="back" onClick={() => backToAllYearPage()}>
-                                    Home
-                                </a>
-                                <img src={ebooks.icons.RightArrowStroke} alt="" />
-                                <div className="nav-buy-book" onClick={() => backToBookBuySection()}>
-                                    {bookData[whichBook].genre}
-                                </div>
-                                <img src={ebooks.icons.RightArrowStroke} alt="" />
-                                <div className="nav-title">
-                                    {bookData[whichBook].title}
-                                </div>
-                            </div>
-                            <div className="img-details-section">
-                                <img src={audioData[whichBook].img} alt="" />
-                                <div className="details">
-                                    {audioData[whichBook].details}
-                                </div>
-                            </div>
-                            <div className="audio-section">
-                                <div className="audio-cat">
-                                    {audioData[whichBook].genre}
-                                </div>
-                                <div className="audio-subtext">
-                                    <div className="audio-date">
-                                        {audioData[whichBook].date} / {audioData[whichBook].by}
-                                    </div>
-                                    <div className="views">
-                                        <img src={ebooks.icons.view} alt="" />
-                                        <div className="view-number">
-                                            200
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="audio-title-section">
-                                    <div className="audio-title">
-                                        {audioData[whichBook].title}
-                                    </div>
-                                    <button className="audio-playall" disabled={!isUserLoggedIn} style={{ backgroundColor: isUserLoggedIn ? '#F09300' : '#E6E6E6' }} >
-                                        Play All
-                                    </button>
-                                </div>
-                                <div className="audio-play-section">
-                                    {audioData[whichBook].audio_content.map((audio, index) => (
-                                        <Accordion
-                                            key={index}
-                                            sx={{
-                                                boxShadow: "none",
-                                                background: index === 0 ? "#FCCC4D" : isUserLoggedIn ? "#FCCC4D" : "#E6E6E6",
-                                                borderRadius: "10px",
-                                            }}
-                                            expanded={expanded === index || (index === 0 && !isUserLoggedIn)} // Always open the first panel
-                                            onChange={handleChange(index)}
-                                            disabled={isUserLoggedIn ? false : index !== 0} // Disable expansion for non-first panels if not logged in
-                                        >
-                                            <AccordionSummary
-                                                expandIcon={<ArrowDropDownIcon />}
-                                                aria-controls={`panel${index}-content`}
-                                                id={`panel${index}-header`}
-                                            >
-                                                <div className="audio-play-title">
-                                                    <div className="index">{index + 1}</div>
-                                                    <Typography className="audio-play-title">{audio.title}</Typography>
-                                                </div>
-                                            </AccordionSummary>
-                                            <AccordionDetails
-                                                sx={{
-                                                    background: isUserLoggedIn ? "#FCCC4D" : "#E6E6E6", // Change background based on login status
-                                                }}
-                                            >
-                                                <div className="player-transcript-section">
-                                                    <div className="player">
-                                                        {/* Header */}
-                                                        <div className="audio-header">
-                                                            <img
-                                                                src="/assets/images/audio.svg" // Replace with actual image URL
-                                                                alt="Audio Thumbnail"
-                                                                className="audio-image"
-                                                            />
-                                                            <div className="audio-details">
-                                                                <h3 className="audio-title">{audioData[whichBook].title}</h3>
-                                                                <p className="audio-author">{audioData[whichBook].author}</p>
-                                                                {/* Audio Player */}
-                                                                {index === 0 && !isUserLoggedIn && (
-                                                                    <audio
-                                                                        ref={audioRef}
-                                                                        controls
-                                                                        disablepictureinpicture
-                                                                        controlslist="nodownload noplaybackrate"
-                                                                        className="audio-element"
-                                                                    >
-                                                                        <source src={audio.audio} type="audio/mpeg" />
-                                                                        Your browser does not support the audio element.
-                                                                    </audio>
-                                                                )}
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Transcript */}
-                                                        <div className="audio-transcript">
-                                                            <p>{audio.transcript}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </AccordionDetails>
-                                        </Accordion>
-                                    ))}
-
-                                    {/* Display Alert after 5 minutes of playing the first audio if the user is not logged in */}
-                                    {alertOpen && (
-                                        <Alert
-                                            severity="info"
-                                            onClose={() => setAlertOpen(false)}
-                                            sx={{
-                                                position: "absolute",
-                                                top: "10%",
-                                                left: "50%",
-                                                transform: "translateX(-50%)",
-                                            }}
-                                        >
-                                            You have played the audio for more than 5 minutes. Please log in to continue.
-                                        </Alert>
-                                    )}
-                                </div>
-                                <div className="audio-prev-nxt">
-                                    <div className="audio-prev" onClick={() => openPreviousAudioBook()}>
-
-                                        {parseInt(whichBook) != 0 ?
-                                            <>
-                                                <img src={audioData[(parseInt(whichBook) - 1).toString()].img} alt="" />
-                                                <div className="audio-prev-text">
-                                                    <div className="prev">
-                                                        PREV
-                                                    </div>
-                                                    <div className="prev-title">
-                                                        {audioData[(parseInt(whichBook) - 1).toString()].title}
-                                                    </div>
-                                                </div>
-                                            </>
-                                            :
-                                            <></>
-                                        }
-                                    </div>
-
-
-                                    <div className="audio-nxt">
-
-                                        {parseInt(whichBook) < audioData.length ?
-                                            <>
-                                                <div className="audio-nxt-text">
-                                                    <div className="nxt">
-                                                        NEXT
-                                                    </div>
-                                                    <div className="nxt-title">
-                                                        {audioData[(parseInt(whichBook) + 1).toString()].title}
-                                                    </div>
-                                                </div>
-                                                <img src={audioData[(parseInt(whichBook) + 1).toString()].img} alt="" />
-
-                                            </>
-                                            :
-                                            <></>
-                                        }
-                                    </div>
-                                </div>
-                                <div className="other-ebooks">
-                                    {[1, 2, 3].map((e, i) => (
-                                        <div className="other-b0ok">
-                                            <img src="/assets/images/other-ebooks.svg" alt="" />
-                                            <div className="other-ebook-subtext">
-
-                                                November 14, 2022 / BY ADMIN
-                                            </div>
-                                            <div className="comments-views">
-                                                <div className="comments">
-                                                    <img src={ebooks.icons.comment} alt="" />
-                                                    <div className="comment-num">
-                                                        200
-                                                    </div>
-                                                </div>
-                                                <div className="views">
-                                                    <img src={ebooks.icons.view} alt="" />
-                                                    <div className="view-num">
-                                                        800
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <div className="other-book-title">
-                                                Bow down to the universe
-                                            </div>
-                                            <div className="other-book-desc">
-                                                The universe constantly teaches you what is needed and what is not. It is true that this immensely compassionate universe offers such guidance. Bow down and revere this natural cosmos.
-                                            </div>
-                                            <div className="other-book-cat-read-more">
-                                                <div className="other-book-cat">
-                                                    IN <span>GNANAM</span>
-                                                </div>
-                                                <div className="other-book-read-more">
-                                                    Read More
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                            <Playstore />
-                            <NewsLetter />
-                            <KPI />
-                        </> :
+                        <AudioPlayer
+                            audioData={audioData}
+                            whichBook={whichBook}
+                            isUserLoggedIn={isUserLoggedIn}
+                            backToAllYearPage={backToAllYearPage}
+                            backToBookBuySection={backToBookBuySection}
+                            handleChange={handleChange}
+                            expanded={expanded}
+                            handleAddToCart={handleAddToCart}
+                            openPreviousAudioBook={openPreviousAudioBook}
+                            plan={plan}
+                            setPlan={setPlan}
+                        />
+                        :
                         <>
                             <div className="Month-navigation">
                                 <a className="back" onClick={() => backToAllYearPage()}>
@@ -1569,27 +1113,12 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
                                             {bookData[whichBook].shortDesc}
                                         </div>
                                         <div className="listen-copy-buy-section">
-                                            {/* Select Format : {activeTab} */}
-                                            {/* <div className="tabs">
-                                                <button
-                                                    className={`tab-button ${activeTab === "AUDIO" ? "active" : ""}`}
-                                                    onClick={() => setActiveTab("AUDIO")}
-                                                >
-                                                    AUDIO
-                                                </button>
-                                                <button
-                                                    className={`tab-button ${activeTab === "HARDCOPY" ? "active" : ""}`}
-                                                    onClick={() => setActiveTab("HARDCOPY")}
-                                                >
-                                                    HARDCOPY
-                                                </button>
-                                            </div> */}
                                             <div className="tab-content">
                                                 {/* {activeTab === "AUDIO" &&  */}
                                                 <div className="audio">
                                                     <div className="audio-buy">
 
-                                                        {paid == false ?
+                                                        {!isUserLoggedIn ?
                                                             <>
                                                                 <div className="plans">
                                                                     Please subscribe to hear the audio
@@ -1608,7 +1137,9 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
                                                                         color: "#444444",
                                                                         fontWeight: "700",
                                                                         justifyContent: "space-evenly"
-                                                                    }} onClick={()=>loginPopup()} >
+                                                                    }}
+                                                                    // onClick={()=>loginPopup()} 
+                                                                    >
 
 
                                                                         <img src={ebooks.icons.Lock} style={{ width: "1rem", height: "1.5rem" }} />
@@ -1684,7 +1215,8 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
                                                                                                 </List>
                                                                                             </CardContent>
                                                                                             <Box textAlign="center" mb={2} sx={{ px: 2 }}>
-                                                                                                <Button onClick={() => payNow(plan.name)}
+                                                                                                <Button
+                                                                                                    onClick={() => payNow(plan.name)}
                                                                                                     variant="contained"
                                                                                                     style={{ ...plan.buttonStyle, width: "100%", padding: "10px 0" }}
                                                                                                 >
@@ -1719,89 +1251,6 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
 
                                                     </div>
                                                 </div>
-                                                {/* } */}
-                                                {/* {activeTab === "HARDCOPY" && <div className="hardcopy">
-                                                    Please select subscription
-                                                    <div className="period-tabs">
-                                                        <div className="buttons">
-                                                            <button
-                                                                className={`tab-button ${periodTab === "MONTHLY" ? "active" : ""}`}
-                                                                onClick={() => setPeriodTab("MONTHLY")}
-                                                            >
-                                                                MONTHLY
-                                                            </button>
-                                                            <button
-                                                                className={`tab-button ${periodTab === "YEARLY" ? "active" : ""}`}
-                                                                onClick={() => setPeriodTab("YEARLY")}
-                                                            >
-                                                                YEARLY
-                                                            </button>
-                                                            <div className="period-tab-content">
-                                                                {periodTab === "MONTHLY" && <div>
-                                                                    <div className="month-selection">
-                                                                        <label htmlFor="month">Select months</label>
-                                                                        <input type="number"
-                                                                            name="month"
-                                                                            id="month"
-                                                                            min="1"
-                                                                            step="1"
-                                                                            value={noOfMonth}
-                                                                            onChange={(e) => setNoOfMonth(e.target.value)}
-                                                                        />
-                                                                    </div>
-
-                                                                </div>}
-                                                                {periodTab === "YEARLY" && <div>
-                                                                    <div className="year-selection">
-                                                                        <label htmlFor="year">Select years</label>
-                                                                        <input type="number"
-                                                                            name="year"
-                                                                            id="year"
-                                                                            min="1"
-                                                                            step="1"
-                                                                            value={noOfYear}
-                                                                            onChange={(e) => setNoOfYear(e.target.value)}
-                                                                        />
-                                                                    </div>
-                                                                </div>}
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="note">
-                                                            <span>Please note</span>: Your subscription will commence with the next issue of the E-magazine, starting from the subscription date.
-                                                        </div>
-                                                        <div className="quantity-select">
-                                                            <div className="count-subscribe">
-                                                                Quantity
-                                                                <br />
-                                                                <br />
-                                                                <div className="counter">
-                                                                    <span className="decrease" onClick={() => { decrease(quantity) }}> - </span>
-                                                                    &nbsp;
-                                                                    <span className="quantity"> {quantity} </span>
-                                                                    &nbsp;
-                                                                    <span className="increase" onClick={() => { increase(quantity) }}> + </span>
-                                                                </div>
-                                                            </div>
-                                                            <Button variant="text" sx={{
-                                                                borderRadius: "40px",
-                                                                width: "10rem",
-                                                                p: "10px",
-                                                                background: "#F09300",
-                                                                textTransform: "none",
-                                                                marginTop: "2rem",
-                                                                color: "#ffffff",
-                                                                fontWeight: "700",
-                                                                justifyContent: "space-evenly"
-                                                            }} >
-
-                                                                <img src={ebooks.icons.cart} style={{ width: "1rem", height: "1.5rem", filter: "invert(100%)" }} />
-                                                                Subscribe
-                                                            </Button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                } */}
 
                                                 <div className="cat-tag">
                                                     Categories: {bookData[whichBook].category}
