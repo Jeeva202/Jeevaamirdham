@@ -10,7 +10,8 @@ import TodayThoughts from './todayThoughts';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import EmailIcon from '@mui/icons-material/Email';
-
+import { useDispatch } from "react-redux";
+import { closeLogin, openCart, openLogin } from '../../redux/cartSlice';
 const StyledTabs = styled((props) => (
     <Tabs
         {...props}
@@ -59,12 +60,13 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
         color: "white",
     },
 }));
-export default function TopNavbar() {
+export default function TopNavbar({setIsUserLoggedIn}) {
     const [value, setValue] = React.useState(false);
     const [username, setUsername] = useState(null);
     const [email, setEmail] = useState(null);
     const [anchorEl, setAnchorEl] = useState(null);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         const storedUsername = localStorage.getItem('username');
@@ -120,6 +122,7 @@ export default function TopNavbar() {
         localStorage.removeItem('email');
         setUsername(null);
         setEmail(null);
+        setIsUserLoggedIn(false)
         handleMenuClose();
         navigate('/home')
     };
@@ -201,7 +204,7 @@ export default function TopNavbar() {
                                 </Menu>
                             </>
                         ) : (
-                            <Button disableRipple onClick={() => { navigate('/login') }} variant="text" sx={{ textTransform: "none", fontWeight: 600, fontSize: "0.75rem", color: "#444" }} startIcon={<img src={navBanner.icons.user} style={{ width: "0.9rem" }} />}>
+                            <Button disableRipple onClick={() => dispatch(openLogin()) } variant="text" sx={{ textTransform: "none", fontWeight: 600, fontSize: "0.75rem", color: "#444" }} startIcon={<img src={navBanner.icons.user} style={{ width: "0.9rem" }} />}>
                                 Login
                             </Button>
                         )}

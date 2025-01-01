@@ -18,7 +18,7 @@ import { navBanner } from '../../constants/screenData'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
-
+import { openLogin } from "../../redux/cartSlice";
 const style = {
     position: "absolute",
     top: "50%",
@@ -31,8 +31,8 @@ const style = {
 
 };
 
-const LoginModal = () => {
-    const [open, setOpen] = useState(true);
+const LoginModal = ({ isUserLoggedIn, setIsUserLoggedIn }) => {
+    const [open, setOpen] = useState(openLogin);
     const [tabIndex, setTabIndex] = useState(0);
     const [email, setEmail] = useState("");
     const [mobile, setMobile] = useState("");
@@ -68,6 +68,7 @@ const LoginModal = () => {
         const token = credentialResponse.credential;
         const decoded = jwtDecode(token); // Decode token to get user info (optional)
         console.log("Google User Info:", decoded);
+        setIsUserLoggedIn(true)
         localStorage.setItem('username', decoded.name); // Store username in local storage
         localStorage.setItem('email', decoded.email); // Store email in local storage
         window.dispatchEvent(new Event('storage')); // Trigger storage event

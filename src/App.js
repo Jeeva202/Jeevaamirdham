@@ -23,10 +23,11 @@ import NewLogin from './pages/login/NewLogin';
 
 
 const queryClient = new QueryClient();
-let isUserLoggedIn = false
+
 
 function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
 
   const loginPopup = () => {
     setIsLoginOpen(true); // Open the modal
@@ -40,8 +41,10 @@ function App() {
       <>
         <Box sx={{ backgroundColor: "#FEF7F7" }}>
           <Box>
+
             <BrowserRouter>
-              <TopNavbar />
+              <TopNavbar setIsUserLoggedIn={setIsUserLoggedIn} />
+              <NewLogin isUserLoggedIn={isUserLoggedIn} setIsUserLoggedIn={setIsUserLoggedIn} /> 
               <Routes>
                 <Route path="/" element={<Navigate to={"/home"} replace />} />
                 <Route path="/home" element={<HomePage />} />
@@ -54,7 +57,7 @@ function App() {
                         loginPopup={loginPopup}
                       />
                       {/* {isLoginOpen && <LoginModal onClose={closeLoginPopup} />} */}
-                      {isLoginOpen && <NewLogin />}
+                      {isLoginOpen && <NewLogin isUserLoggedIn={isUserLoggedIn} setIsUserLoggedIn={setIsUserLoggedIn} />}
                     </>
                   }
                 />
@@ -63,7 +66,6 @@ function App() {
                 <Route path='/blog' element={<Blog />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
-                <Route path="/login" element={<NewLogin />} />  
                 <Route path="/login/loginWithOtp" element={<LoginWithOTP />} />
                 <Route path="/createNewUser" element={<CreateNewAccount />} />
                 <Route path="/cart" element={<ViewCart />} />
