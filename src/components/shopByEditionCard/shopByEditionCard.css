@@ -2,30 +2,33 @@
 .Cards{
     display: flex;
     height: 100%;
-    background-color: #F6F4FF;
+    background-color: #fbf1e6;
     padding: 15px 30px 15px 30px;
     gap: 15px;
     border-radius: 15px;
     flex-direction: column;
+    border: 1px solid #ccc;
 }
 .card{
     /* padding-left: 30px; */
     display:flex;
     align-items: center;
-    gap:30px;
+    gap:15px;
 }
 .card-img{
     width: 4vw;
     height: 8vh;
 }
 .card-text{
-    font-size: 1rem;
+    font-size: 14px;
     color: #F09300;
+    display: flex;
+    align-items: center;
 }
-.card-text::after {
-    content: '\003E';  /* Unicode for '>' */
+/* .card-text::after {
+    content: '\003E';  
     margin-left: 5px;
-}
+} */
 
 a {
     text-decoration: none;  /* Removes the underline */

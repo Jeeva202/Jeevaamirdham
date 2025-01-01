@@ -1,5 +1,5 @@
 import "./shopByEditionCard.css"
-
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 export default function ShopByEditionCard(){
     const Cards = [
         {
@@ -35,7 +35,8 @@ export default function ShopByEditionCard(){
                         <img style={{width:"100%",height:"100%"}}src={e.img} alt="" srcset="" />
                     </div>
                     <a className="card-text" href="">
-                        View {e.year} Edition
+                        <p>View {e.year} Edition </p>
+                        <KeyboardArrowRightIcon/>
                     </a>
                 </div>
             ))}

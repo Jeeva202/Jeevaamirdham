@@ -25,6 +25,8 @@ import BuyBook from "./buyBook";
 import MonthNavigation from "./monthNavigation";
 import BookDetails from "./bookDetails";
 import AudioPlayer from "./audioPlayer";
+import LoginModal from "../login/NewLogin";
+
 export default function Ebooks({ isUserLoggedIn, loginPopup }) {
     const [allYears, setAllYears] = useState(true);
     const [listenPage, setListenPage] = useState(false)
