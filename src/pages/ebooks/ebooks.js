@@ -27,7 +27,7 @@ import BookDetails from "./bookDetails";
 import AudioPlayer from "./audioPlayer";
 import LoginModal from "../login/NewLogin";
 
-export default function Ebooks({ isUserLoggedIn, loginPopup }) {
+export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
     const [allYears, setAllYears] = useState(true);
     const [listenPage, setListenPage] = useState(false)
     const [categoryCartFlag, setCategoryCartFlag] = useState(false)
@@ -929,9 +929,11 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
     }
 
     const handlePurchase = async (amount, planName) => {
+        const userData = []
         // Initialize Razorpay payment
         const options = {
-            key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+            // key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+            key: "rzp_live_tjwWB1t6xxjHG1",
             amount: amount * 100, // Amount in paise
             currency: "INR",
             name: "Jeevaamirdham",
@@ -967,9 +969,9 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
                 // }
             },
             prefill: {
-                name: "Your Name", // Replace with logged-in user's name
-                email: "your-email@example.com", // Replace with logged-in user's email
-                contact: "9999999999", // Replace with logged-in user's contact
+                name: userData?.name || "",
+                email: userData?.email || "",
+                contact: userData?.contact || "",
             },
             theme: {
                 color: "#7C3AED",
@@ -1009,9 +1011,13 @@ export default function Ebooks({ isUserLoggedIn, loginPopup }) {
         if (plan === 'basic') {
             handleClose()
             setPaid(true)
+            // setIsUserLoggedIn()
+        }
+        else if (plan === 'elite') {
+            handlePurchase(599, plan)
         }
         else{
-            handlePurchase(599, plan)
+            handlePurchase(999, plan)
         }
 
     };

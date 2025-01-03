@@ -8,7 +8,7 @@ export default function BooksSection() {
         <div className="container">
             <div className="left-side">
                 <div className="subtitle">
-                    Shop by Edition
+                    E-Magazine Edition
                 </div>
                 <ShopByEditionCard />
             </div>
@@ -17,9 +17,10 @@ export default function BooksSection() {
                     <div className="subtitle">
                         Popular Books
                     </div>
-                    <div className="hdivider">
+                    {/* <div className="hdivider">
                         <img src={homePage.icons.HorizontalDivider} alt=""/>
-                    </div>
+                    </div> */}
+                    <div style={{borderBottom:"1px solid #e6e6e6", width:"90%"}}></div>
                     <div className="viewAll">
                         <ViewAll text="View All"  width="7rem" padding="0.8rem 4rem" />
                     </div>

@@ -11,7 +11,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import EmailIcon from '@mui/icons-material/Email';
 import { useDispatch } from "react-redux";
-import { closeLogin, openCart, openLogin } from '../../redux/cartSlice';
+import { openLogin } from '../../redux/cartSlice';
 const StyledTabs = styled((props) => (
     <Tabs
         {...props}
@@ -124,9 +124,54 @@ export default function TopNavbar({setIsUserLoggedIn}) {
         setEmail(null);
         setIsUserLoggedIn(false)
         handleMenuClose();
-        navigate('/home')
+        // navigate('/home')
     };
-
+    useEffect(() => {
+        const addGoogleTranslateScript = () => {
+          const script = document.createElement('script');
+          script.src = `https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit`;
+          script.async = true;
+          script.onerror = () => {
+            console.error("Failed to load Google Translate script");
+          };
+          document.body.appendChild(script);
+        };
+    
+        window.googleTranslateElementInit = () => {
+          if (window.google && window.google.translate) {
+            new window.google.translate.TranslateElement(
+              {
+                pageLanguage: 'en',
+                includedLanguages: 'en,ta',
+                layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+              },
+              'google_translate_element'
+            );
+          } else {
+            console.error("Google Translate is not available");
+          }
+        };
+    
+        addGoogleTranslateScript();
+      }, []);
+    useEffect(() => {
+        const customizeGoogleTranslate = () => {
+          const translateElement = document.querySelector('#google_translate_element select');
+          if (translateElement) {
+            translateElement.style.backgroundColor = '#25D366';
+            translateElement.style.color = 'white';
+            translateElement.style.border = 'none';
+            translateElement.style.padding = '5px';
+            translateElement.style.borderRadius = '5px';
+          }
+        };
+    
+        const observer = new MutationObserver(customizeGoogleTranslate);
+        observer.observe(document.body, { childList: true, subtree: true });
+    
+        return () => observer.disconnect();
+      }, []);
     return (
         // boxShadow: "0px 5px 14px 0px rgba(0, 0, 0, 0.16)",
         <><div style={{ background: "#FFF", zIndex: "1", position: "relative" }}>
@@ -139,8 +184,10 @@ export default function TopNavbar({setIsUserLoggedIn}) {
                     </div>
                     <div className="topRight">
                         <div style={{ display: "flex" }} >
-                            <img src={navBanner.icons.traslate} />
-                            <bold className="text" style={{ marginLeft: "5px" }}>English</bold>
+                            {/* <img src={navBanner.icons.traslate} /> */}
+                            {/* <bold className="text" style={{ marginLeft: "5px" }}>English</bold> */}
+                            <div id="google_translate_element" ></div>
+
                         </div>
                         <navBanner.icons.facebook sx={{ fontSize: "1rem" }} />
                         <navBanner.icons.twitter sx={{ fontSize: "1rem" }} />
@@ -158,11 +205,11 @@ export default function TopNavbar({setIsUserLoggedIn}) {
                             onChange={handleChange}
                             aria-label="styled tabs example"
                         >
-                            <StyledTab label="Home" />
-                            <StyledTab label="E-books" />
+                            <StyledTab label="Homepage" />
+                            <StyledTab label="E-Magazine" />
                             <StyledTab label="Audio & Video" />
                             <StyledTab label="Blog" />
-                            <StyledTab label="About" />
+                            <StyledTab label="About Us" />
                             <StyledTab label="Contact" />
                             {/* <StyledTab label="Dashboard" /> */}
                         </StyledTabs>
@@ -213,7 +260,7 @@ export default function TopNavbar({setIsUserLoggedIn}) {
                             <StyledBadge badgeContent={4}>
                                 <img src={navBanner.icons.cart} style={{ width: "1rem" }} />
                             </StyledBadge>
-                            Cart
+                            Items
                         </Button>
                     </div>
                 </div>

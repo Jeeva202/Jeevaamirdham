@@ -20,6 +20,7 @@ import LoginModal from './pages/login/loginModal';
 import { QueryClient, QueryClientProvider } from "react-query";
 import { useState } from 'react';
 import NewLogin from './pages/login/NewLogin';
+import WhatsAppButton from './components/whatsapp/Whatsapp';
 
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ function App() {
   const closeLoginPopup = () => {
     setIsLoginOpen(false); // Close the modal
   };
+  console.log("googleENV",process.env.REACT_APP_GOOGLE_CLIENT_ID)
   return (
     <QueryClientProvider client={queryClient}>
       <>
@@ -44,7 +46,8 @@ function App() {
 
             <BrowserRouter>
               <TopNavbar setIsUserLoggedIn={setIsUserLoggedIn} />
-              <NewLogin isUserLoggedIn={isUserLoggedIn} setIsUserLoggedIn={setIsUserLoggedIn} /> 
+              <NewLogin isUserLoggedIn={isUserLoggedIn}  setIsUserLoggedIn={setIsUserLoggedIn} /> 
+              <WhatsAppButton phoneNumber="9176564723" />
               <Routes>
                 <Route path="/" element={<Navigate to={"/home"} replace />} />
                 <Route path="/home" element={<HomePage />} />

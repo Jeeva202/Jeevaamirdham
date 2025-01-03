@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
     Modal,
     Box,
@@ -18,7 +18,10 @@ import { navBanner } from '../../constants/screenData'
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CloseIcon from '@mui/icons-material/Close';
-import { openLogin } from "../../redux/cartSlice";
+import { openLogin, selectIsLoginOpen } from "../../redux/cartSlice";
+import { closeLogin } from "../../redux/cartSlice"; 
+import { useDispatch, useSelector } from "react-redux";
+
 const style = {
     position: "absolute",
     top: "50%",
@@ -43,6 +46,31 @@ const LoginModal = ({ isUserLoggedIn, setIsUserLoggedIn }) => {
     const [isEmail, setIsEmail] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
+    const isOpen = useSelector(selectIsLoginOpen)
+    const dispatch = useDispatch();
+
+    const handleClose = () => {
+        dispatch(closeLogin());
+    };
+
+    useEffect(() => {
+        if (!isOpen) {
+            resetState();
+        }
+    }, [isOpen]);
+
+    const resetState = () => {
+        setTabIndex(0);
+        setEmail("");
+        setMobile("");
+        setOtp("");
+        setPassword("");
+        setOtpSent(false);
+        setShowSignIn(false);
+        setIsEmail(false);
+        setSnackbarOpen(false);
+        setSnackbarMessage("");
+    };
 
     const handleTabChange = (event, newValue) => {
         setTabIndex(newValue);
@@ -74,7 +102,8 @@ const LoginModal = ({ isUserLoggedIn, setIsUserLoggedIn }) => {
         window.dispatchEvent(new Event('storage')); // Trigger storage event
         setSnackbarMessage(`Welcome, ${decoded.name}!`);
         setSnackbarOpen(true);
-        setOpen(false); // Close the modal after successful login
+        dispatch(closeLogin());
+        // Close the modal after successful login
     };
 
     const handleGoogleLoginError = () => {
@@ -121,7 +150,7 @@ const LoginModal = ({ isUserLoggedIn, setIsUserLoggedIn }) => {
 
     return (
         <>
-            <Modal open={open} onClose={() => setOpen(false)}>
+            <Modal open={isOpen} onClose={handleClose}>
                 <Box sx={style}>
 
                     <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -129,7 +158,7 @@ const LoginModal = ({ isUserLoggedIn, setIsUserLoggedIn }) => {
                             {/* Left side content */}
                         </Box>
                         <Box sx={{ width: "50%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", p: 4, margin: "2rem 0" }}>
-                            <IconButton sx={{ color: "#f09300", position: "absolute", top: 16, right: 16 }} onClick={() => setOpen(false)}>
+                            <IconButton sx={{ color: "#f09300", position: "absolute", top: 16, right: 16 }} onClick={handleClose}>
                                 <CloseIcon />
                             </IconButton>
                             {showSignIn && (
@@ -153,7 +182,7 @@ const LoginModal = ({ isUserLoggedIn, setIsUserLoggedIn }) => {
 
                                         <FacebookLogin
                                             appId="1088597931155576"
-                                            autoLoad={true}
+                                            autoLoad={false}
                                             fields="name,email,picture"
                                             // onClick={componentClicked}
                                             render={renderProps => (
@@ -214,8 +243,8 @@ const LoginModal = ({ isUserLoggedIn, setIsUserLoggedIn }) => {
                                                     onError={handleGoogleLoginError}
                                                 />
                                                 <FacebookLogin
-                                                    appId="1088597931155576"
-                                                    autoLoad={true}
+                                                    // appId="1088597931155576"
+                                                    autoLoad={false}
                                                     fields="name,email,picture"
                                                     // onClick={componentClicked}
                                                     render={renderProps => (
