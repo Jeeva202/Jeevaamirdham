@@ -21,6 +21,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { openLogin, selectIsLoginOpen } from "../../redux/cartSlice";
 import { closeLogin } from "../../redux/cartSlice"; 
 import { useDispatch, useSelector } from "react-redux";
+import { setUserLoggedIn } from "../../redux/cartSlice";
 
 const style = {
     position: "absolute",
@@ -34,7 +35,7 @@ const style = {
 
 };
 
-const LoginModal = ({ isUserLoggedIn, setIsUserLoggedIn }) => {
+const LoginModal = () => {
     const [open, setOpen] = useState(openLogin);
     const [tabIndex, setTabIndex] = useState(0);
     const [email, setEmail] = useState("");
@@ -96,13 +97,13 @@ const LoginModal = ({ isUserLoggedIn, setIsUserLoggedIn }) => {
         const token = credentialResponse.credential;
         const decoded = jwtDecode(token); // Decode token to get user info (optional)
         console.log("Google User Info:", decoded);
-        setIsUserLoggedIn(true)
         localStorage.setItem('username', decoded.name); // Store username in local storage
         localStorage.setItem('email', decoded.email); // Store email in local storage
         window.dispatchEvent(new Event('storage')); // Trigger storage event
         setSnackbarMessage(`Welcome, ${decoded.name}!`);
         setSnackbarOpen(true);
         dispatch(closeLogin());
+        dispatch(setUserLoggedIn(true));
         // Close the modal after successful login
     };
 

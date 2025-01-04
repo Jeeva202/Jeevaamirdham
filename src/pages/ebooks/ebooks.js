@@ -26,8 +26,8 @@ import MonthNavigation from "./monthNavigation";
 import BookDetails from "./bookDetails";
 import AudioPlayer from "./audioPlayer";
 import LoginModal from "../login/NewLogin";
-
-export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
+import { openLogin, setUserLoggedIn } from '../../redux/cartSlice'
+export default function Ebooks() {
     const [allYears, setAllYears] = useState(true);
     const [listenPage, setListenPage] = useState(false)
     const [categoryCartFlag, setCategoryCartFlag] = useState(false)
@@ -44,55 +44,25 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
     const [descTab, setDescTab] = useState("Description")
     const [whichBook, setWhichBook] = useState("0");
     const [openModal, setOpenModal] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
     const [paid, setPaid] = useState(false)
     const [plan, setPlan] = useState('basic')
-    const [expanded, setExpanded] = useState(0); // Always open the first panel by default
-    // const [alertOpen, setAlertOpen] = useState(false); // State to control the alert visibility
-    const audioRef = useRef(null); // Reference to the audio player
-    // const [hasTriggeredAlert, setHasTriggeredAlert] = useState(false); // Track if alert has been triggered
-
+    const [expanded, setExpanded] = useState(0); 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
-    // useEffect(() => {
-    //     // Reset the alert trigger state when the component is mounted or audio is changed
-    //     setHasTriggeredAlert(false);
-    // }, [whichBook]);
-
-    // useEffect(() => {
-    //     if (audioRef.current && !isUserLoggedIn) {
-    //         // Add event listener to track when the audio reaches 5 minutes
-    //         const audioElement = audioRef.current;
-
-    //         // Function to check if audio has been played for 5 minutes or more
-    //         const checkFiveMinutes = () => {
-    //             if (audioElement.currentTime >= 300 && !hasTriggeredAlert) {  // 300 seconds is 5 minutes
-    //                 setHasTriggeredAlert(true); // Ensure the alert only triggers once
-    //                 setAlertOpen(true); // Show the alert
-    //                 audioElement.pause(); // Pause the audio
-    //                 audioElement.currentTime = 0; // Reset the audio to the start
-    //             }
-    //         };
-
-    //         // Attach timeupdate event listener to check playback time
-    //         audioElement.addEventListener("timeupdate", checkFiveMinutes);
-
-    //         // Cleanup event listener when the component is unmounted or audio changes
-    //         return () => {
-    //             audioElement.removeEventListener("timeupdate", checkFiveMinutes);
-    //         };
-    //     }
-    // }, [isUserLoggedIn, hasTriggeredAlert]);
-
 
     const dispatch = useDispatch();
+    const isUserLoggedIn = useSelector((state) => state.cart.isUserLoggedIn);
     const isOpen = useSelector(selectIsCartOpen)
     const handleAddToCart = () => {
         dispatch(openCart());
     };
     const handleOpen = () => setOpenModal(true);
     const handleClose = () => setOpenModal(false);
+    const handleLoginOpen = () => setShowLoginModal(true);
+    const handleLoginClose = () => setShowLoginModal(false)
     const plans = [
         {
             name: "basic",
@@ -1007,17 +977,25 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
         //   handleClose();
         //   window.location.href = "/login";
         // }
+        if(isUserLoggedIn){
 
-        if (plan === 'basic') {
-            handleClose()
-            setPaid(true)
-            // setIsUserLoggedIn()
+            if (plan === 'basic') {
+                handleClose()
+                setPaid(true)
+                // setIsUserLoggedIn()
+            }
+            else if (plan === 'elite') {
+                handlePurchase(599, plan)
+            }
+            else{
+                handlePurchase(999, plan)
+            }
+
         }
-        else if (plan === 'elite') {
-            handlePurchase(599, plan)
-        }
-        else{
-            handlePurchase(999, plan)
+        else {
+            dispatch(openLogin())
+            handleOpen()
+            // handleLoginOpen();
         }
 
     };
@@ -1052,7 +1030,7 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
                 <BookDetails backToHomePage={backToHomePage} catSelectedBook={catSelectedBook} shopBooksData={shopBooksData} changeBook={changeBook} handleAddToCart={handleAddToCart} setDescTab={setDescTab} descTab={descTab} isOpen={isOpen} />
                 : (selectedMonth === null) && (!isNaN(selectedYear)) ?
                     <MonthNavigation backToAllYearPage={backToAllYearPage} selectedYear={selectedYear} oneYearBook={oneYearBook} redirectToMonthPage={redirectToMonthPage} />
-                    : (listenPage)
+                    : (listenPage && isUserLoggedIn)
                         ?
                         <AudioPlayer
                             audioData={audioData}
@@ -1071,7 +1049,7 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
                         <>
                             <div className="Month-navigation">
                                 <a className="back" onClick={() => backToAllYearPage()}>
-                                    E-Book
+                                    E-Magazine
                                 </a>
                                 <img src={ebooks.icons.RightArrowStroke} alt="" />
                                 <div className="year" onClick={() => backToYearPage()}>
@@ -1125,135 +1103,137 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
                                                 {/* {activeTab === "AUDIO" &&  */}
                                                 <div className="audio">
                                                     <div className="audio-buy">
-
-                                                        {!isUserLoggedIn ?
-                                                            <>
-                                                                <div className="plans">
-                                                                    Please subscribe to hear the audio
-                                                                    &nbsp;
-                                                                    <a onClick={handleOpen} style={{ cursor: "pointer" }}>
-                                                                        View Plan</a>
-                                                                </div>
-                                                                <div className="subscribe-section">
-                                                                    <Button variant="text" sx={{
-                                                                        borderRadius: "40px",
-                                                                        width: "10rem",
-                                                                        p: "10px",
-                                                                        background: "#999999",
-                                                                        textTransform: "none",
-                                                                        marginTop: "2rem",
-                                                                        color: "#444444",
-                                                                        fontWeight: "700",
-                                                                        justifyContent: "space-evenly"
-                                                                    }}
-                                                                    // onClick={()=>loginPopup()} 
-                                                                    >
-
-
-                                                                        <img src={ebooks.icons.Lock} style={{ width: "1rem", height: "1.5rem" }} />
-                                                                        Listen Now
-                                                                    </Button>
-                                                                </div>
-                                                                <Modal open={openModal} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
-                                                                    <Box
-                                                                        sx={{
-                                                                            position: 'absolute',
-                                                                            top: '50%',
-                                                                            left: '50%',
-                                                                            transform: 'translate(-50%, -50%)',
-                                                                            width: 1000,
-                                                                            bgcolor: 'background.paper',
-                                                                            boxShadow: 24,
-                                                                            borderRadius: '8px',
-                                                                            p: 4,
-                                                                            display: 'flex',
-                                                                            flexDirection: 'column',
-                                                                            gap: 3,
-                                                                        }}
-                                                                    >
-                                                                        <IconButton
-                                                                            onClick={handleClose}
-                                                                            sx={{
-                                                                                position: 'absolute',
-                                                                                top: 10,
-                                                                                right: 10,
-                                                                                color: 'gray',
-                                                                            }}
-                                                                        >
-                                                                            <CloseIcon />
-                                                                        </IconButton>
-                                                                        <Container maxWidth="md">
-                                                                            <Box textAlign="center" my={4}>
-                                                                                <Typography variant="h4" gutterBottom>
-                                                                                    Choose Your Plan
-                                                                                </Typography>
-                                                                                <Typography variant="subtitle1">
-                                                                                    Select the perfect subscription plan for your needs
-                                                                                </Typography>
-                                                                            </Box>
-                                                                            <Grid container spacing={2}>
-                                                                                {plans.map((plan, index) => (
-                                                                                    <Grid item xs={12} sm={6} md={4} key={index}>
-                                                                                        <Card
-                                                                                            variant="outlined"
-                                                                                            sx={{
-                                                                                                display: "flex",
-                                                                                                flexDirection: "column",
-                                                                                                height: "100%",
-                                                                                            }}
-                                                                                        >
-                                                                                            <CardContent sx={{ flexGrow: 1, fontWeight: 600 }}>
-                                                                                                <Typography sx={{ fontSize: "1.2rem" }} variant="h6" gutterBottom>
-                                                                                                    {plan.name}
-                                                                                                </Typography>
-                                                                                                <Typography sx={{ fontSize: '2rem', fontWeight: 500, color: "black" }} variant="h4" color="primary" gutterBottom>
-                                                                                                    {plan.price}
-                                                                                                </Typography>
-                                                                                                <List>
-                                                                                                    {plan.features.map((feature, idx) => (
-                                                                                                        <ListItem key={idx} disableGutters>
-                                                                                                            <ListItemIcon>
-                                                                                                                <ListItemIcon>
-                                                                                                                    <CheckCircleIcon sx={{ color: "rgb(34 197 94)" }} />
-                                                                                                                </ListItemIcon>
-                                                                                                            </ListItemIcon>
-                                                                                                            <ListItemText primary={feature} />
-                                                                                                        </ListItem>
-                                                                                                    ))}
-                                                                                                </List>
-                                                                                            </CardContent>
-                                                                                            <Box textAlign="center" mb={2} sx={{ px: 2 }}>
-                                                                                                <Button
-                                                                                                    onClick={() => payNow(plan.name)}
-                                                                                                    variant="contained"
-                                                                                                    style={{ ...plan.buttonStyle, width: "100%", padding: "10px 0" }}
-                                                                                                >
-                                                                                                    {plan.buttonLabel}
-                                                                                                </Button>
-                                                                                            </Box>
-                                                                                        </Card>
-                                                                                    </Grid>
-                                                                                ))}
-                                                                            </Grid>
-                                                                        </Container>
-                                                                    </Box>
-                                                                </Modal> </>
-                                                            :
+                                                        {
+                                                            isUserLoggedIn && !openModal ?
                                                             <div className="subscribe-section">
-                                                                <Button variant="text" sx={{
-                                                                    borderRadius: "40px",
-                                                                    width: "10rem",
-                                                                    p: "10px",
-                                                                    background: "#F09300",
-                                                                    textTransform: "none",
-                                                                    marginTop: "2rem",
-                                                                    color: "#FFFFFF",
-                                                                    fontWeight: "700",
-                                                                    justifyContent: "space-evenly"
-                                                                }} onClick={() => navigateToListenPage()}>
-                                                                    Listen Now
-                                                                </Button>
-                                                            </div>
+                                                            <Button variant="text" sx={{
+                                                                borderRadius: "40px",
+                                                                width: "10rem",
+                                                                p: "10px",
+                                                                background: "#F09300",
+                                                                textTransform: "none",
+                                                                marginTop: "2rem",
+                                                                color: "#FFFFFF",
+                                                                fontWeight: "700",
+                                                                justifyContent: "space-evenly"
+                                                            }} onClick={() => navigateToListenPage()}>
+                                                                Listen Now
+                                                            </Button>
+                                                        </div>
+                                                        :
+                                                        <>
+                                                        <div className="plans">
+                                                            Please subscribe to hear the audio
+                                                            &nbsp;
+                                                            <a onClick={handleOpen} style={{ cursor: "pointer" }}>
+                                                                View Plan</a>
+                                                        </div>
+                                                        <div className="subscribe-section">
+                                                            <Button variant="text" sx={{
+                                                                borderRadius: "40px",
+                                                                width: "10rem",
+                                                                p: "10px",
+                                                                background: "#999999",
+                                                                textTransform: "none",
+                                                                marginTop: "2rem",
+                                                                color: "#444444",
+                                                                fontWeight: "700",
+                                                                justifyContent: "space-evenly"
+                                                            }}
+                                                            // onClick={()=>loginPopup()} 
+                                                            >
+
+
+                                                                <img src={ebooks.icons.Lock} style={{ width: "1rem", height: "1.5rem" }} />
+                                                                Listen Now
+                                                            </Button>
+                                                        </div>
+                                                        <Modal open={openModal} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
+                                                            <Box
+                                                                sx={{
+                                                                    position: 'absolute',
+                                                                    top: '50%',
+                                                                    left: '50%',
+                                                                    transform: 'translate(-50%, -50%)',
+                                                                    width: 1000,
+                                                                    bgcolor: 'background.paper',
+                                                                    boxShadow: 24,
+                                                                    borderRadius: '8px',
+                                                                    p: 4,
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                    gap: 3,
+                                                                }}
+                                                            >
+                                                                <IconButton
+                                                                    onClick={handleClose}
+                                                                    sx={{
+                                                                        position: 'absolute',
+                                                                        top: 10,
+                                                                        right: 10,
+                                                                        color: 'gray',
+                                                                    }}
+                                                                >
+                                                                    <CloseIcon />
+                                                                </IconButton>
+                                                                <Container maxWidth="md">
+                                                                    <Box textAlign="center" my={4}>
+                                                                        <Typography variant="h4" gutterBottom>
+                                                                            Choose Your Plan
+                                                                        </Typography>
+                                                                        <Typography variant="subtitle1">
+                                                                            Select the perfect subscription plan for your needs
+                                                                        </Typography>
+                                                                    </Box>
+                                                                    <Grid container spacing={2}>
+                                                                        {plans.map((plan, index) => (
+                                                                            <Grid item xs={12} sm={6} md={4} key={index}>
+                                                                                <Card
+                                                                                    variant="outlined"
+                                                                                    sx={{
+                                                                                        display: "flex",
+                                                                                        flexDirection: "column",
+                                                                                        height: "100%",
+                                                                                    }}
+                                                                                >
+                                                                                    <CardContent sx={{ flexGrow: 1, fontWeight: 600 }}>
+                                                                                        <Typography sx={{ fontSize: "1.2rem" }} variant="h6" gutterBottom>
+                                                                                            {plan.name}
+                                                                                        </Typography>
+                                                                                        <Typography sx={{ fontSize: '2rem', fontWeight: 500, color: "black" }} variant="h4" color="primary" gutterBottom>
+                                                                                            {plan.price}
+                                                                                        </Typography>
+                                                                                        <List>
+                                                                                            {plan.features.map((feature, idx) => (
+                                                                                                <ListItem key={idx} disableGutters>
+                                                                                                    <ListItemIcon>
+                                                                                                        <ListItemIcon>
+                                                                                                            <CheckCircleIcon sx={{ color: "rgb(34 197 94)" }} />
+                                                                                                        </ListItemIcon>
+                                                                                                    </ListItemIcon>
+                                                                                                    <ListItemText primary={feature} />
+                                                                                                </ListItem>
+                                                                                            ))}
+                                                                                        </List>
+                                                                                    </CardContent>
+                                                                                    <Box textAlign="center" mb={2} sx={{ px: 2 }}>
+                                                                                        <Button
+                                                                                            onClick={() => payNow(plan.name)}
+                                                                                            variant="contained"
+                                                                                            style={{ ...plan.buttonStyle, width: "100%", padding: "10px 0" }}
+                                                                                        >
+                                                                                            {plan.buttonLabel}
+                                                                                        </Button>
+                                                                                    </Box>
+                                                                                </Card>
+                                                                            </Grid>
+                                                                        ))}
+                                                                    </Grid>
+                                                                </Container>
+                                                            </Box>
+                                                        </Modal>
+                                                        <LoginModal open={showLoginModal} onClose={handleLoginClose} />
+                                                         </>
                                                         }
 
 

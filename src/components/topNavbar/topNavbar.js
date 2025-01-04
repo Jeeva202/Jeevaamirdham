@@ -11,7 +11,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import EmailIcon from '@mui/icons-material/Email';
 import { useDispatch } from "react-redux";
-import { openLogin } from '../../redux/cartSlice';
+import { openLogin, setUserLoggedIn } from '../../redux/cartSlice';
 const StyledTabs = styled((props) => (
     <Tabs
         {...props}
@@ -60,7 +60,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
         color: "white",
     },
 }));
-export default function TopNavbar({setIsUserLoggedIn}) {
+export default function TopNavbar() {
     const [value, setValue] = React.useState(false);
     const [username, setUsername] = useState(null);
     const [email, setEmail] = useState(null);
@@ -71,6 +71,9 @@ export default function TopNavbar({setIsUserLoggedIn}) {
     useEffect(() => {
         const storedUsername = localStorage.getItem('username');
         const storedEmail = localStorage.getItem('email');
+        if(storedEmail || storedUsername){
+            dispatch(setUserLoggedIn(true));
+        }
         if (storedUsername) {
             setUsername(storedUsername);
         }
@@ -122,7 +125,7 @@ export default function TopNavbar({setIsUserLoggedIn}) {
         localStorage.removeItem('email');
         setUsername(null);
         setEmail(null);
-        setIsUserLoggedIn(false)
+        dispatch(setUserLoggedIn(false));
         handleMenuClose();
         // navigate('/home')
     };

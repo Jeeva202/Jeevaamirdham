@@ -19,10 +19,14 @@ const cartReducer = createSlice({
     closeLogin:(state) =>{
       state.isLoginOpen = false
     },
+    setUserLoggedIn: (state, action) => {
+      state.isUserLoggedIn = action.payload; // Set user login state based on action
+    },
   },
 });
 
-export const { openCart, closeCart, openLogin, closeLogin } = cartReducer.actions;
+export const { openCart, closeCart, openLogin, closeLogin, setUserLoggedIn } = cartReducer.actions;
 export const selectIsCartOpen = (state) => state.cart.isCartOpen;
-export const selectIsLoginOpen = (state) => state.cart.isLoginOpen
+export const selectIsLoginOpen = (state) => state.cart.isLoginOpen;
+export const selectIsUserLoggedIn = (state) => state.cart.isUserLoggedIn;
 export default cartReducer.reducer;
