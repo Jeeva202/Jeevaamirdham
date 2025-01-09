@@ -22,7 +22,7 @@ import { openLogin, selectIsLoginOpen } from "../../redux/cartSlice";
 import { closeLogin } from "../../redux/cartSlice"; 
 import { useDispatch, useSelector } from "react-redux";
 import { setUserLoggedIn } from "../../redux/cartSlice";
-
+import axios from "axios";
 const style = {
     position: "absolute",
     top: "50%",
@@ -34,7 +34,7 @@ const style = {
     boxShadow: 24,
 
 };
-
+const domain = 'http://localhost:3001'
 const LoginModal = () => {
     const [open, setOpen] = useState(openLogin);
     const [tabIndex, setTabIndex] = useState(0);
@@ -93,16 +93,48 @@ const LoginModal = () => {
         alert("OTP Verified!");
     };
 
-    const handleGoogleLoginSuccess = (credentialResponse) => {
+    const handleGoogleLoginSuccess = async (credentialResponse) => {
         const token = credentialResponse.credential;
         const decoded = jwtDecode(token); // Decode token to get user info (optional)
         console.log("Google User Info:", decoded);
+        let {name, email} = decoded
         localStorage.setItem('username', decoded.name); // Store username in local storage
         localStorage.setItem('email', decoded.email); // Store email in local storage
         window.dispatchEvent(new Event('storage')); // Trigger storage event
         setSnackbarMessage(`Welcome, ${decoded.name}!`);
         setSnackbarOpen(true);
         dispatch(closeLogin());
+        try {
+            // Check if the user exists
+            console.log(domain + '/check-user');
+            
+            const checkUserResponse = await axios.post(`${domain}/check-user`, {
+                email: email // Directly send email in the body
+              });
+        
+            if (checkUserResponse.data.userExists) {
+              console.log("User already exists");
+            } else {
+              // User doesn't exist, create a new user
+              console.log("User does not exist. Creating user...");
+        
+              const createUserResponse = await axios.post(domain + '/create-user', {
+                  email: email,
+                  name: name,
+              });
+        
+              if (createUserResponse.data.user) {
+                console.log("User created successfully!");
+                alert(`Welcome, ${name}!`);
+              } else {
+                console.error("Error creating user:", createUserResponse.data.message);
+                alert("There was an error while creating your account.");
+              }
+            }
+          } catch (error) {
+            console.error("Error during API request:", error);
+            alert("An error occurred. Please try again.");
+          }
         dispatch(setUserLoggedIn(true));
         // Close the modal after successful login
     };

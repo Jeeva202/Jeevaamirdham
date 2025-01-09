@@ -3,7 +3,7 @@ import ViewAll from "../../components/viewAllButton/viewAll"
 import {Button} from "@mui/material";
 import CartModal from "../../components/cart/cartModal";
 import { useState } from "react";
-export default function BookDetails({backToHomePage, catSelectedBook, shopBooksData, changeBook, handleAddToCart, setDescTab, descTab, isOpen}){
+export default function BookDetails({backToHomePage, catSelectedBook, shopBooksData, changeBook, handleAddToCart, isOpen}){
     const [quantity, setQuantity] = useState(1)
 
     const decrease = (x) => {
@@ -113,27 +113,16 @@ export default function BookDetails({backToHomePage, catSelectedBook, shopBooksD
         <div className="desc-info">
             <div className="desc-info-tabs">
                 <button
-                    className={`tab-underscore ${descTab === "Description" ? "active" : ""}`}
-                    onClick={() => setDescTab("Description")}
+                    className={`tab-underscore active`}
                 >
                     Description
-                </button>
-                <button
-                    className={`tab-underscore ${descTab === "add-info" ? "active" : ""}`}
-                    onClick={() => setDescTab("add-info")}
-                >
-                    Additional information
                 </button>
             </div>
 
             <div className="desc-tab-content">
-                {descTab === "Description" &&
                     <div className="desc">
                         {shopBooksData[catSelectedBook].desc}
-                    </div>}
-                {descTab === "add-info" && <div>
-                    {shopBooksData[catSelectedBook].additionalInfo}
-                </div>}
+                    </div>
             </div>
 
         </div>

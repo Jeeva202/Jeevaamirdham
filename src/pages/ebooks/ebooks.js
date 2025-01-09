@@ -41,7 +41,6 @@ export default function Ebooks() {
     const [currentPage, setCurrentPage] = useState(1);
     const [noOfYear, setNoOfYear] = useState(1);
     const [noOfMonth, setNoOfMonth] = useState(1)
-    const [descTab, setDescTab] = useState("Description")
     const [whichBook, setWhichBook] = useState("0");
     const [openModal, setOpenModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
@@ -783,19 +782,19 @@ export default function Ebooks() {
 
     })
 
-    const {data:createUser, isLoading:createUserLoading} = useQuery({
-        queryFn: async ()=>{
-            const {data} = await axios.get(`http://localhost:3001/createUser`, {
-                params:{
-                    id:"",
-                    name:"",
-                    email:"",
-                    plan:"basic"
-                }
-            })
-            return data
-        }
-    })
+    // const {data:createUser, isLoading:createUserLoading} = useQuery({
+    //     queryFn: async ()=>{
+    //         const {data} = await axios.get(`http://localhost:3001/createUser`, {
+    //             params:{
+    //                 id:"",
+    //                 name:"",
+    //                 email:"",
+    //                 plan:"basic"
+    //             }
+    //         })
+    //         return data
+    //     }
+    // })
 
     const {data:setPlanData} = useQuery({
         queryFn: async ()=>{
@@ -837,7 +836,6 @@ export default function Ebooks() {
         setWhichBook("0")
         // setActiveTab("AUDIO")
         // setPeriodTab("MONTHLY")
-        setDescTab("Description")
     }
     const backToAllYearPage = () => {
         setAllYears(true)
@@ -846,7 +844,6 @@ export default function Ebooks() {
         setWhichBook("0")
         // setActiveTab("AUDIO")
         // setPeriodTab("MONTHLY")
-        setDescTab("Description")
     }
     const handleCategoryClick = (categoryId) => {
         setSelectedCategory([...selectedCategory, categoryId]);
@@ -1027,7 +1024,7 @@ export default function Ebooks() {
                     <BuyBook categories={categories} handleCategoryClick={handleCategoryClick} currentItems={currentItems} navigateToProductSpecificPage={navigateToProductSpecificPage} handlePageChange={handlePageChange} currentPage={currentPage} isOpen={isOpen} totalPages={totalPages} handleAddToCart={handleAddToCart} />
                 </div>
             ) : (categoryCartFlag) ?
-                <BookDetails backToHomePage={backToHomePage} catSelectedBook={catSelectedBook} shopBooksData={shopBooksData} changeBook={changeBook} handleAddToCart={handleAddToCart} setDescTab={setDescTab} descTab={descTab} isOpen={isOpen} />
+                <BookDetails backToHomePage={backToHomePage} catSelectedBook={catSelectedBook} shopBooksData={shopBooksData} changeBook={changeBook} handleAddToCart={handleAddToCart} isOpen={isOpen} />
                 : (selectedMonth === null) && (!isNaN(selectedYear)) ?
                     <MonthNavigation backToAllYearPage={backToAllYearPage} selectedYear={selectedYear} oneYearBook={oneYearBook} redirectToMonthPage={redirectToMonthPage} />
                     : (listenPage && isUserLoggedIn)
@@ -1105,6 +1102,13 @@ export default function Ebooks() {
                                                     <div className="audio-buy">
                                                         {
                                                             isUserLoggedIn && !openModal ?
+                                                            <>
+                                                            <div className="plans">
+                                                            Please subscribe to hear the audio
+                                                            &nbsp;
+                                                            <a onClick={handleOpen} style={{ cursor: "pointer" }}>
+                                                                View Plan</a>
+                                                        </div>
                                                             <div className="subscribe-section">
                                                             <Button variant="text" sx={{
                                                                 borderRadius: "40px",
@@ -1120,6 +1124,7 @@ export default function Ebooks() {
                                                                 Listen Now
                                                             </Button>
                                                         </div>
+                                                        </>
                                                         :
                                                         <>
                                                         <div className="plans">
@@ -1145,7 +1150,7 @@ export default function Ebooks() {
 
 
                                                                 <img src={ebooks.icons.Lock} style={{ width: "1rem", height: "1.5rem" }} />
-                                                                Listen Now
+                                                                Login to listen
                                                             </Button>
                                                         </div>
                                                         <Modal open={openModal} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
@@ -1239,12 +1244,6 @@ export default function Ebooks() {
 
                                                     </div>
                                                 </div>
-
-                                                <div className="cat-tag">
-                                                    Categories: {bookData[whichBook].category}
-                                                    <br></br>
-                                                    Tags: {bookData[whichBook].tag}
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1253,34 +1252,23 @@ export default function Ebooks() {
                             <div className="desc-info">
                                 <div className="desc-info-tabs">
                                     <button
-                                        className={`tab-underscore ${descTab === "Description" ? "active" : ""}`}
-                                        onClick={() => setDescTab("Description")}
+                                        className={`tab-underscore active`}
                                     >
                                         Description
-                                    </button>
-                                    <button
-                                        className={`tab-underscore ${descTab === "add-info" ? "active" : ""}`}
-                                        onClick={() => setDescTab("add-info")}
-                                    >
-                                        Additional information
                                     </button>
                                 </div>
 
                                 <div className="desc-tab-content">
-                                    {descTab === "Description" &&
                                         <div className="desc">
                                             {bookData[whichBook].desc}
-                                        </div>}
-                                    {descTab === "add-info" && <div>
-                                        {bookData[whichBook].additionalInfo}
-                                    </div>}
+                                        </div>
                                 </div>
 
                             </div>
                             <div className="otherbooks">
                                 <div className="otherbooks-title">
                                     <div className="text">
-                                        Other Ebooks
+                                        Other E-Magazines
 
                                     </div>
                                     <div className="hdivider">
