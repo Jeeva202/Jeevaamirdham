@@ -21,7 +21,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { openLogin, selectIsLoginOpen } from "../../redux/cartSlice";
 import { closeLogin } from "../../redux/cartSlice"; 
 import { useDispatch, useSelector } from "react-redux";
-import { setUserLoggedIn } from "../../redux/cartSlice";
+import { setUserLoggedIn,  setUserId} from "../../redux/cartSlice";
+
 import axios from "axios";
 const style = {
     position: "absolute",
@@ -113,7 +114,9 @@ const LoginModal = () => {
               });
         
             if (checkUserResponse.data.userExists) {
-              console.log("User already exists");
+                dispatch(setUserId(checkUserResponse.data.id))
+                localStorage.setItem("id", checkUserResponse.data.id)
+              console.log("User already exists",checkUserResponse.data.id);
             } else {
               // User doesn't exist, create a new user
               console.log("User does not exist. Creating user...");
@@ -124,7 +127,9 @@ const LoginModal = () => {
               });
         
               if (createUserResponse.data.user) {
-                console.log("User created successfully!");
+                console.log("User created successfully!",createUserResponse.data.user.id);
+                dispatch(setUserId(createUserResponse.data.user.id))
+                localStorage.setItem('id', createUserResponse.data.user.id)
                 alert(`Welcome, ${name}!`);
               } else {
                 console.error("Error creating user:", createUserResponse.data.message);
