@@ -113,7 +113,7 @@ const CartModal = ({ open }) => {
                             }}
                             onClick={() => { 
                                 console.log("Navigating to checkout with total amount:", totalAmount);
-                                navigate('/checkout', { state: { totalAmount } }); 
+                                navigate('/cart'); 
                             }} 
                         >
                             View Cart
