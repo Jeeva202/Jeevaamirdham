@@ -4,7 +4,8 @@ const cartReducer = createSlice({
   name: "cart",
   initialState: {
     isCartOpen: false,
-    isLoginOpen:false
+    isLoginOpen: false,
+    isAdminLoggedIn: false,
   },
   reducers: {
     openCart: (state) => {
@@ -22,11 +23,23 @@ const cartReducer = createSlice({
     setUserLoggedIn: (state, action) => {
       state.isUserLoggedIn = action.payload; // Set user login state based on action
     },
+    setAdminLoggedIn: (state, action) => {
+      state.isAdminLoggedIn = action.payload; // Set admin login state based on action
+    },
   },
 });
 
-export const { openCart, closeCart, openLogin, closeLogin, setUserLoggedIn } = cartReducer.actions;
+export const { 
+  openCart, 
+  closeCart, 
+  openLogin, 
+  closeLogin, 
+  setUserLoggedIn, 
+  setAdminLoggedIn 
+} = cartReducer.actions;
+
 export const selectIsCartOpen = (state) => state.cart.isCartOpen;
 export const selectIsLoginOpen = (state) => state.cart.isLoginOpen;
 export const selectIsUserLoggedIn = (state) => state.cart.isUserLoggedIn;
+export const selectIsAdminLoggedIn = (state) => state.cart.isAdminLoggedIn;
 export default cartReducer.reducer;

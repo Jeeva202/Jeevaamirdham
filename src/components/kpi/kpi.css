@@ -2,10 +2,11 @@
     padding: 1rem 0;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
-.kpis>* {
-    border: 1px solid #000000;
+.kpi-item {
+    border: 1px solid #c3c3c3;
     border-radius: 15px;
     display: flex;
     flex-direction: row;
@@ -16,7 +17,7 @@
     align-items: center;
 }
 
-.kpis>* img {
+.kpi-item img {
     width: 25%;
     padding-right: 20px;
 }
@@ -31,8 +32,15 @@
     font-weight: 600;
 }
 
-.kpi .text{
+.kpi .text {
     color: #999999;
     font-size: 0.8rem;
     font-weight: 400;
+}
+
+@media (max-width: 768px) {
+    .kpi-item {
+        width: 100%;
+        margin: 10px 0;
+    }
 }

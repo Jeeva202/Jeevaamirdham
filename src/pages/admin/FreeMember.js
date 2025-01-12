@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Box, IconButton, Typography } from '@mui/material';
+import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, Box, IconButton, Typography, Menu, MenuItem, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, ListItemIcon, RadioGroup, FormControlLabel, Radio } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 
 const freeMembers = [
     { id: 1, name: 'John Doe', email: 'john@example.com', phone: '123-456-7890', gender: 'Male', joined: '2023-01-01' },
@@ -11,13 +13,37 @@ const freeMembers = [
 export default function FreeMember() {
     const [searchTerm, setSearchTerm] = useState('');
     const [members, setMembers] = useState(freeMembers);
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [selectedMember, setSelectedMember] = useState(null);
+    const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+    const [openMoveDialog, setOpenMoveDialog] = useState(false);
+    const [selectedMembership, setSelectedMembership] = useState('');
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
 
-    const handleDelete = (id) => {
-        setMembers(members.filter(member => member.id !== id));
+    const handleMenuOpen = (event, member) => {
+        setAnchorEl(event.currentTarget);
+        setSelectedMember(member);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
+        setSelectedMember(null);
+    };
+
+    const handleDelete = () => {
+        setMembers(members.filter(member => member.id !== selectedMember.id));
+        setOpenDeleteDialog(false);
+        handleMenuClose();
+    };
+
+    const handleMove = () => {
+        // Implement the logic to move the user to a different membership
+        console.log(`Move ${selectedMember.name} to ${selectedMembership}`);
+        setOpenMoveDialog(false);
+        handleMenuClose();
     };
 
     const filteredMembers = members.filter((member) =>
@@ -34,7 +60,6 @@ export default function FreeMember() {
                 <TextField
                     label="Search Members"
                     variant="outlined"
-                    // fullWidth
                     sx={{ float: 'right' }}
                     size='small'
                     margin="dense"
@@ -69,15 +94,78 @@ export default function FreeMember() {
                                 <TableCell>{member.gender}</TableCell>
                                 <TableCell>{member.joined}</TableCell>
                                 <TableCell>
-                                    <IconButton onClick={() => handleDelete(member.id)} color="error">
-                                        <DeleteIcon />
+                                    <IconButton onClick={(event) => handleMenuOpen(event, member)}>
+                                        <MoreVertIcon />
                                     </IconButton>
+                                    <Menu
+                                        anchorEl={anchorEl}
+                                        open={Boolean(anchorEl)}
+                                        onClose={handleMenuClose}
+                                    >
+                                        <MenuItem onClick={() => setOpenDeleteDialog(true)}>
+                                            <ListItemIcon>
+                                                <DeleteIcon />
+                                            </ListItemIcon>
+                                            Delete
+                                        </MenuItem>
+                                        <MenuItem onClick={() => setOpenMoveDialog(true)}>
+                                            <ListItemIcon>
+                                                <SwapHorizIcon />
+                                            </ListItemIcon>
+                                            Move to Membership
+                                        </MenuItem>
+                                    </Menu>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            <Dialog
+                open={openDeleteDialog}
+                onClose={() => setOpenDeleteDialog(false)}
+            >
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Are you sure you want to delete {selectedMember?.name}?
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenDeleteDialog(false)} variant='outlined'
+                        sx={{ textTransform: "none", border: "1px solid #f09300",color:"#f09300", fontWeight: "bold"}}
+                        >Cancel</Button>
+                    <Button onClick={handleDelete} sx={{ textTransform: "none", background: "#f09300", fontWeight: "bold"}} variant='contained'>Delete</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog
+                open={openMoveDialog}
+                onClose={() => setOpenMoveDialog(false)}
+            >
+                <DialogTitle>Move to Membership</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Select the membership to move {selectedMember?.name} to:
+                    </DialogContentText>
+                    <RadioGroup
+                        sx={{ marginTop: 2 }}
+                        value={selectedMembership}
+                        onChange={(e) => setSelectedMembership(e.target.value)}
+                    >
+                        <FormControlLabel value="Premium" control={<Radio />} label="Premium" />
+                        <FormControlLabel value="Elite" control={<Radio />} label="Elite" />
+                        <FormControlLabel value="Basic" control={<Radio />} label="Free" />
+                    </RadioGroup>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setOpenMoveDialog(false)} variant='outlined'
+                        sx={{ textTransform: "none", border: "1px solid #f09300", color: "#f09300", fontWeight: "bold" }}
+                    >Cancel</Button>
+                    <Button onClick={handleMove} sx={{ textTransform: "none", background: "#f09300", fontWeight: "bold" }} variant='contained'>Confirm</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 }
