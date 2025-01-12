@@ -1,132 +1,171 @@
-import { ebooks } from "../../constants/screenData"
-import ViewAll from "../../components/viewAllButton/viewAll"
-import {Button} from "@mui/material";
+import { ebooks } from "../../constants/screenData";
+import ViewAll from "../../components/viewAllButton/viewAll";
+import { Button } from "@mui/material";
 import CartModal from "../../components/cart/cartModal";
 import { useState } from "react";
-export default function BookDetails({backToHomePage, catSelectedBook, shopBooksData, changeBook, handleAddToCart, isOpen}){
-    const [quantity, setQuantity] = useState(1)
+import { useQuery } from "react-query";
+import axios from "axios";
+import { Loader } from "../../components/loader/loader";
 
-    const decrease = (x) => {
-        if (x != 1) {
-            setQuantity(x - 1)
+export default function BookDetails({ backToHomePage, booksData, catSelectedBook, changeBook, handleAddToCart, isOpen }) {
+    const [quantity, setQuantity] = useState(1);
+    console.log("catselect", catSelectedBook);
+    const bookId = parseInt(catSelectedBook) + 1
+    // Fetch book information using React Query
+    const { data: bookInfoData, error: bookInfoError, isLoading: isBookInfoLoading } = useQuery(
+        ["book-info", bookId],
+        async () => {
+            if (!bookId) {
+                return null; // If no book is selected, return null or handle accordingly
+            }
+            const { data } = await axios.get(`http://localhost:3001/ebooks/book-info?id=${bookId}`);
+            return data;
+        },
+        {
+            enabled: !!bookId, // Only run the query if `bookId` has a valid value
         }
+    );
+
+    // Debugging: Log API response or errors
+    if (isBookInfoLoading) {
+        return <Loader/>
     }
-    const increase = (x) => {
-        setQuantity(x + 1)
+
+    if (bookInfoError) {
+        console.error("Error fetching book info:", bookInfoError);
     }
+
+    if (bookInfoData) {
+        console.log("Fetched book info:", bookInfoData);
+    }
+
+    // Quantity update functions
+    const increase = () => setQuantity(prev => prev + 1);
+    const decrease = () => setQuantity(prev => (prev > 1 ? prev - 1 : 1));
+
+    // Render the component once book info is loaded
+    if (isBookInfoLoading) {
+        return <div>Loading...</div>; // You can show a loading spinner or placeholder here
+    }
+
+    if (!bookInfoData) {
+        return <div>No book data available</div>;
+    }
+
     return (
         <>
-        <div className="category-navigation">
-            <a className="back" onClick={() => backToHomePage()}>
-                Home
-            </a>
-            <img src={ebooks.icons.RightArrowStroke} alt="" />
-            <div className="nav-category" onClick={() => { }}>
-                CATEGORY
+            <div className="category-navigation">
+                <a className="back" onClick={() => backToHomePage()}>
+                    Home
+                </a>
+                <img src={ebooks.icons.RightArrowStroke} alt="" />
+                <div className="nav-category">CATEGORY</div>
+                <img src={ebooks.icons.RightArrowStroke} alt="" />
+                <div className="nav-book">{bookInfoData.title}</div>
             </div>
-            <img src={ebooks.icons.RightArrowStroke} alt="" />
-            <div className="nav-book">
-                {shopBooksData[catSelectedBook].title}
-            </div>
-        </div>
-        <div className="categorybook-buysection">
-            <div className="book-imagesection">
-                <img src={shopBooksData[catSelectedBook].img} alt="" />
-            </div>
-            <div className="book-contentsection">
-                <div className="book-navigator">
-                    <div className="stock" style={shopBooksData[catSelectedBook].availability == 'IN STOCK' ? { backgroundColor: "#24FF0033" } : { backgroundColor: "red" }}>
-                        {shopBooksData[catSelectedBook].availability}
-                    </div>
-                    <div className="prev-next">
-                        <div className="prev" >
-                            <img src={ebooks.icons.Previous} alt="Left Arrow" disabled={catSelectedBook === "0"} onClick={() => changeBook("cat-prev")} />
-                            &nbsp;
-                            PREV
-                        </div>
-                        <div className="nxt">
-
-                            NEXT
-                            &nbsp;
-                            <img src={ebooks.icons.Next} alt="Right Arrow" disabled={parseInt(catSelectedBook) === shopBooksData.length - 1} onClick={() => changeBook("cat-nxt")} />
-                        </div>
-                    </div>
+            <div className="categorybook-buysection">
+                <div className="book-imagesection">
+                    <img src={bookInfoData.imgUrl} alt="" />
                 </div>
-                <div className="title-section">
-                    <div className="title">
-                        {shopBooksData[catSelectedBook].title}
-                    </div>
-                    <div className="subtext">
-                        <div className="author">
-                            Author: {shopBooksData[catSelectedBook].author}
+                <div className="book-contentsection">
+                    <div className="book-navigator">
+                        <div
+                            className="stock"
+                            style={bookInfoData.availability === "IN STOCK" ? { backgroundColor: "#24FF0033" } : { backgroundColor: "red" }}
+                        >
+                            {bookInfoData.availability}
                         </div>
-                        <div className="id">
-                            {shopBooksData[catSelectedBook].id}
+                        <div className="prev-next">
+                            <div className="prev">
+                                <img
+                                    src={ebooks.icons.Previous}
+                                    alt="Left Arrow"
+                                    disabled={catSelectedBook === "0"}
+                                    onClick={() => changeBook("cat-prev")}
+                                />
+                                &nbsp; PREV
+                            </div>
+                            <div className="nxt">
+                                NEXT
+                                &nbsp;
+                                <img
+                                    src={ebooks.icons.Next}
+                                    alt="Right Arrow"
+                                    disabled={parseInt(catSelectedBook) === bookInfoData.length - 1}
+                                    onClick={() => changeBook("cat-nxt")}
+                                />
+                            </div>
                         </div>
                     </div>
-                    <div className="shortdesc">
-                        {shopBooksData[catSelectedBook].shortDesc}
-                    </div>
-                    <div className="category-buy-section">
-                        <div className="tab-content">
-                            <div className="quantity-select">
-                                <div className="count-subscribe">
-                                    Quantity
-                                    <br />
-                                    <br />
-                                    <div className="counter">
-                                        <span className="decrease" onClick={() => { decrease(quantity) }}> - </span>
-                                        &nbsp;
-                                        <span className="quantity"> {quantity} </span>
-                                        &nbsp;
-                                        <span className="increase" onClick={() => { increase(quantity) }}> + </span>
+                    <div className="title-section">
+                        <div className="title">{bookInfoData.title}</div>
+                        <div className="subtext">
+                            <div className="author">Author: {bookInfoData.author}</div>
+                            {/* <div className="id">{bookInfoData.id}</div> */}
+                        </div>
+                        <div className="shortdesc">{bookInfoData.shortdesc}</div>
+                        <div className="category-buy-section">
+                            <div className="tab-content">
+                                <div className="quantity-select">
+                                    <div className="count-subscribe">
+                                        Quantity
+                                        <br />
+                                        <br />
+                                        <div className="counter">
+                                            <span className="decrease" onClick={() => decrease(quantity)}>
+                                                {" "}
+                                                -{" "}
+                                            </span>
+                                            &nbsp;
+                                            <span className="quantity"> {quantity} </span>
+                                            &nbsp;
+                                            <span className="increase" onClick={() => increase(quantity)}>
+                                                {" "}
+                                                +{" "}
+                                            </span>
+                                        </div>
                                     </div>
+                                    <Button
+                                        variant="text"
+                                        sx={{
+                                            borderRadius: "40px",
+                                            width: "10rem",
+                                            p: "10px",
+                                            background: "#F09300",
+                                            textTransform: "none",
+                                            marginTop: "2rem",
+                                            color: "#ffffff",
+                                            fontWeight: "700",
+                                            justifyContent: "space-evenly",
+                                        }}
+                                        onClick={()=>handleAddToCart(bookInfoData, quantity)}
+                                    >
+                                        <img src={ebooks.icons.cart} style={{ width: "1rem", height: "1.5rem", filter: "invert(100%)" }} />
+                                        Add to cart
+                                    </Button>
+                                    <CartModal open={isOpen} />
                                 </div>
-                                <Button variant="text" sx={{
-                                    borderRadius: "40px",
-                                    width: "10rem",
-                                    p: "10px",
-                                    background: "#F09300",
-                                    textTransform: "none",
-                                    marginTop: "2rem",
-                                    color: "#ffffff",
-                                    fontWeight: "700",
-                                    justifyContent: "space-evenly"
-                                }} onClick={handleAddToCart}>
-
-                                    <img src={ebooks.icons.cart} style={{ width: "1rem", height: "1.5rem", filter: "invert(100%)" }} />
-                                    Add to cart
-                                </Button>
-                                <CartModal open={isOpen} />
-                            </div>
-
-                            <div className="cat-tag">
-                                Categories: {shopBooksData[catSelectedBook].category_tag}
-                                <br></br>
-                                Tags: {shopBooksData[catSelectedBook].tag}
+{/* 
+                                <div className="cat-tag">
+                                    Categories: {bookInfoData.category_tag}
+                                    <br />
+                                    Tags: {bookInfoData.tag}
+                                </div> */}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div className="desc-info">
-            <div className="desc-info-tabs">
-                <button
-                    className={`tab-underscore active`}
-                >
-                    Description
-                </button>
-            </div>
+            <div className="desc-info">
+                <div className="desc-info-tabs">
+                    <button className={`tab-underscore active`}>Description</button>
+                </div>
 
-            <div className="desc-tab-content">
-                    <div className="desc">
-                        {shopBooksData[catSelectedBook].desc}
-                    </div>
+                <div className="desc-tab-content">
+                    <div className="desc">{bookInfoData.description}</div>
+                </div>
             </div>
-
-        </div>
-        <div className="otherbooks">
+            <div className="otherbooks">
             <div className="otherbooks-title">
                 <div className="text">
                     Related products
@@ -136,13 +175,13 @@ export default function BookDetails({backToHomePage, catSelectedBook, shopBooksD
                 </div>
             </div>
             <div className="book-cards">
-                {shopBooksData.map((e, i) => {
+                {booksData.map((e, i) => {
 
                     if (i != catSelectedBook) {
                         return (
 
                             <div className="cat-book-card" onClick={(e) => changeBook(i, "catgeorypage")}>
-                                <img src={e.img} alt="" />
+                                <img src={e.imgUrl} alt="" />
                                 <div className="text">
                                     {e.title}
                                     <br />
@@ -156,6 +195,6 @@ export default function BookDetails({backToHomePage, catSelectedBook, shopBooksD
                 })}
             </div>
         </div>
-    </>
-    )
+        </>
+    );
 }

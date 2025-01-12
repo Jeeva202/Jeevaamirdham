@@ -26,7 +26,9 @@ import MonthNavigation from "./monthNavigation";
 import BookDetails from "./bookDetails";
 import AudioPlayer from "./audioPlayer";
 import LoginModal from "../login/NewLogin";
-import { openLogin, setUserLoggedIn } from '../../redux/cartSlice'
+import { openLogin, setUserLoggedIn, selectUserId, setCartDetails, setBooksData } from '../../redux/cartSlice'
+import { Loader } from "../../components/loader/loader";
+
 export default function Ebooks() {
     const [allYears, setAllYears] = useState(true);
     const [listenPage, setListenPage] = useState(false)
@@ -37,7 +39,7 @@ export default function Ebooks() {
     const [catSelectedBook, setCatSelectedBook] = useState("0")
     // const [activeTab, setActiveTab] = useState("AUDIO");
     // const [periodTab, setPeriodTab] = useState("MONTHLY")
-    const itemsPerPage = 3; // Items per page for the buy section
+    const itemsPerPage = 4; // Items per page for the buy section
     const [currentPage, setCurrentPage] = useState(1);
     const [noOfYear, setNoOfYear] = useState(1);
     const [noOfMonth, setNoOfMonth] = useState(1)
@@ -54,9 +56,23 @@ export default function Ebooks() {
 
     const dispatch = useDispatch();
     const isUserLoggedIn = useSelector((state) => state.cart.isUserLoggedIn);
+    const userId = useSelector(selectUserId)
     const isOpen = useSelector(selectIsCartOpen)
-    const handleAddToCart = () => {
-        dispatch(openCart());
+    const handleAddToCart = async (book, quantity) => {
+        console.log("user id", userId);
+    
+        const addtocart = await axios.post('http://localhost:3001/ebooks/add_to_cart', {
+            userId: userId,
+            book: book.id,
+            quantity:quantity
+        });
+        const cartDetails = addtocart.data.cart_details;
+    
+        console.log(addtocart, "add to cart");
+    
+        // Dispatch an action to update the Redux store with the updated cart details
+        dispatch(setCartDetails(cartDetails)); // This will update the cartDetails in Redux
+        dispatch(openCart()); // Open the cart modal
     };
     const handleOpen = () => setOpenModal(true);
     const handleClose = () => setOpenModal(false);
@@ -158,136 +174,104 @@ export default function Ebooks() {
         { id: "Sithanaigal", label: "SITHANAIGAL" },
         { id: "Varalaru", label: "VARALARU" }
     ];
-    const shopBooksData = [
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        }
-    ];
+    // const booksData = [
+    //     {   id:1,
+    //         category: "GNANAM",
+    //         title: "Gnana Amirtham",
+    //         subtitle: "Siddharth Thoughts",
+    //         shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+    //         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         discount: "30%",
+    //         orgPrice: "$814.66",
+    //         offPrice: "₹450.00",
+    //         img: "/assets/images/Gnana_Amirtham.png",
+    //         availability: "IN STOCK",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+    //         category_tag: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary"
+    //     },
+    //     {   id:2,
+    //         category: "GNANAM",
+    //         title: "Gnana Amirtham",
+    //         subtitle: "Siddharth Thoughts",
+    //         shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+    //         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         discount: "30%",
+    //         orgPrice: "$814.66",
+    //         offPrice: "₹450.00",
+    //         img: "/assets/images/Gnana_Amirtham.png",
+    //         availability: "IN STOCK",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+    //         category_tag: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary"
+    //     },
+    //     {   id:3,
+    //         category: "GNANAM",
+    //         title: "Gnana Amirtham",
+    //         subtitle: "Siddharth Thoughts",
+    //         shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+    //         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         discount: "30%",
+    //         orgPrice: "$814.66",
+    //         offPrice: "₹450.00",
+    //         img: "/assets/images/Gnana_Amirtham.png",
+    //         availability: "IN STOCK",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+    //         category_tag: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary"
+    //     },
+    //     {   id:4,
+    //         category: "GNANAM",
+    //         title: "Gnana Amirtham",
+    //         subtitle: "Siddharth Thoughts",
+    //         shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+    //         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         discount: "30%",
+    //         orgPrice: "$814.66",
+    //         offPrice: "₹450.00",
+    //         img: "/assets/images/Gnana_Amirtham.png",
+    //         availability: "IN STOCK",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+    //         category_tag: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary"
+    //     },
+    //     {   id:5,
+    //         category: "GNANAM",
+    //         title: "Gnana Amirtham",
+    //         subtitle: "Siddharth Thoughts",
+    //         shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+    //         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         discount: "30%",
+    //         orgPrice: "$814.66",
+    //         offPrice: "₹450.00",
+    //         img: "/assets/images/Gnana_Amirtham.png",
+    //         availability: "IN STOCK",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+    //         category_tag: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary"
+    //     },
+    //     {   id:6,
+    //         category: "GNANAM",
+    //         title: "Gnana Amirtham",
+    //         subtitle: "Siddharth Thoughts",
+    //         shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+    //         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         discount: "30%",
+    //         orgPrice: "$814.66",
+    //         offPrice: "₹450.00",
+    //         img: "/assets/images/Gnana_Amirtham.png",
+    //         availability: "IN STOCK",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+    //         category_tag: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary"
+    //     },
+    // ];
 
 
 
@@ -615,107 +599,107 @@ export default function Ebooks() {
             ]
         },
     ]
-    const bookData = [
-        {
-            genre: "GNANAM",
-            availability: "IN STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book1.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
-        {
-            genre: "GNANAM",
-            availability: "IN STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book2.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
-        {
-            genre: "GNANAM",
-            availability: "IN STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book3.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
-        {
-            genre: "GNANAM",
-            availability: "IN STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book4.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
-        {
-            genre: "GNANAM",
-            availability: "IN STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book5.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
-        {
-            genre: "GNANAM",
-            availability: "IN STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book6.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
-        {
-            genre: "GNANAM",
-            availability: "OUT OF STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book7.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
+    // const bookData = [
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "IN STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book1.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "IN STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book2.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "IN STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book3.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "IN STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book4.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "IN STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book5.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "IN STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book6.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "OUT OF STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book7.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
 
-    ]
+    // ]
 
     /**
      *  Data fetching for the Ebooks section starts here 
@@ -782,6 +766,29 @@ export default function Ebooks() {
 
     })
 
+    
+    const { data: booksData, error: booksError, isLoading: isBooksLoading } = useQuery({
+        queryKey: ["books"],
+        queryFn: async () => {
+            const { data } = await axios.get("http://localhost:3001/ebooks/books");
+            console.log("Books Data:", data);
+            return data;
+        },
+    });
+      
+    useEffect(() => {
+        if (booksData) {
+            dispatch(setBooksData(booksData)); // Store booksData in Redux
+        }
+    }, [booksData, dispatch]);
+    //   const { data: bookInfoData, error: bookInfoError, isLoading: isBookInfoLoading } = useQuery({
+    //     queryKey: ["book-info", selectedBookId], // Adjust the key based on the selected book
+    //     queryFn: async () => {
+    //       const { data } = await axios.get(`http://localhost:3001/ebooks/book-info?id=${selectedBookId}`);
+    //       return data;
+    //     },
+    //     enabled: !!selectedBookId, // Only enable if a book is selected
+    //   });
     // const {data:createUser, isLoading:createUserLoading} = useQuery({
     //     queryFn: async ()=>{
     //         const {data} = await axios.get(`http://localhost:3001/createUser`, {
@@ -813,14 +820,17 @@ export default function Ebooks() {
      * ==================================================
      *  Data fetching for the Ebooks section ends here 
     */
+    if (isBooksLoading) {
+        return <Loader/>;
+    }
 
-
-
-    const totalPages = Math.ceil(shopBooksData.length / itemsPerPage);
-    const currentItems = shopBooksData.slice(
+    console.log("booksData", booksData);
+    
+    const totalPages = booksData ? Math.ceil(booksData.length / itemsPerPage) : 0;
+    const currentItems = booksData ? booksData.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
-    );
+    ) : [];
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
@@ -864,11 +874,11 @@ export default function Ebooks() {
         }
         else if (e == "nxt") {
 
-            console.log("Before", "whichbook", whichBook, "length", bookData.length);
-            if (parseInt(whichBook) < bookData.length - 1) {
+            console.log("Before", "whichbook", whichBook, "length", booksData.length);
+            if (parseInt(whichBook) < booksData.length - 1) {
                 setWhichBook((parseInt(whichBook) + 1).toString())
             }
-            console.log("After", "whichbook", whichBook, "length", bookData.length);
+            console.log("After", "whichbook", whichBook, "length", booksData.length);
         }
         else if (e == "cat-prev") {
             if (parseInt(catSelectedBook) > 0) {
@@ -876,7 +886,7 @@ export default function Ebooks() {
             }
         }
         else if (e == "cat-nxt") {
-            if (parseInt(catSelectedBook) < shopBooksData.length - 1) {
+            if (parseInt(catSelectedBook) < booksData.length - 1) {
                 setCatSelectedBook((parseInt(catSelectedBook) + 1).toString())
             }
         }
@@ -950,30 +960,6 @@ export default function Ebooks() {
     };
 
     const payNow = (plan) => {
-
-
-
-        /** Use this code once the login page is set and the plan selection functionalities are created*/
-
-
-        // if (isUserLoggedIn) {
-        //   if (plan === "Jeevaamirdham Elite Plan") {
-        //     // handlePurchase(599, plan);
-        //   } else if (plan === "Jeevaamirdham Premium Plan") {
-        //     // handlePurchase(999, plan);
-        //   } else {
-        //     console.log("Free plan selected");
-        //     setFreePlanChosed(true)
-        //     handleClose();
-        //     setPaid(true)
-        //   }
-        // } else {
-        //   setAllYears(true);
-        //   setCatSelectedBook("0");
-        //   setCategoryCartFlag(false);
-        //   handleClose();
-        //   window.location.href = "/login";
-        // }
         if(isUserLoggedIn){
 
             if (plan === 'basic') {
@@ -1024,7 +1010,7 @@ export default function Ebooks() {
                     <BuyBook categories={categories} handleCategoryClick={handleCategoryClick} currentItems={currentItems} navigateToProductSpecificPage={navigateToProductSpecificPage} handlePageChange={handlePageChange} currentPage={currentPage} isOpen={isOpen} totalPages={totalPages} handleAddToCart={handleAddToCart} />
                 </div>
             ) : (categoryCartFlag) ?
-                <BookDetails backToHomePage={backToHomePage} catSelectedBook={catSelectedBook} shopBooksData={shopBooksData} changeBook={changeBook} handleAddToCart={handleAddToCart} isOpen={isOpen} />
+                <BookDetails backToHomePage={backToHomePage} catSelectedBook={catSelectedBook} booksData={booksData} changeBook={changeBook} handleAddToCart={handleAddToCart} isOpen={isOpen} />
                 : (selectedMonth === null) && (!isNaN(selectedYear)) ?
                     <MonthNavigation backToAllYearPage={backToAllYearPage} selectedYear={selectedYear} oneYearBook={oneYearBook} redirectToMonthPage={redirectToMonthPage} />
                     : (listenPage && isUserLoggedIn)
@@ -1059,12 +1045,12 @@ export default function Ebooks() {
                             </div>
                             <div className="monthlybook-buysection">
                                 <div className="book-imagesection">
-                                    <img src={bookData[whichBook].img} alt="" />
+                                    <img src={booksData[whichBook].imgUrl} alt="" />
                                 </div>
                                 <div className="book-contentsection">
                                     <div className="book-navigator">
-                                        <div className="stock" style={bookData[whichBook].availability == 'IN STOCK' ? { backgroundColor: "#24FF0033" } : { backgroundColor: "red" }}>
-                                            {bookData[whichBook].availability}
+                                        <div className="stock" style={booksData[whichBook].availability == 'IN STOCK' ? { backgroundColor: "#24FF0033" } : { backgroundColor: "red" }}>
+                                            {booksData[whichBook].availability}
                                         </div>
                                         <div className="prev-next">
                                             <div className="prev" >
@@ -1076,24 +1062,21 @@ export default function Ebooks() {
 
                                                 Next
                                                 &nbsp;
-                                                <img src={ebooks.icons.Next} alt="Right Arrow" disabled={parseInt(whichBook) === bookData.length - 1} onClick={() => changeBook("nxt")} />
+                                                <img src={ebooks.icons.Next} alt="Right Arrow" disabled={parseInt(whichBook) === booksData.length - 1} onClick={() => changeBook("nxt")} />
                                             </div>
                                         </div>
                                     </div>
                                     <div className="title-section">
                                         <div className="title">
-                                            {bookData[whichBook].title}
+                                            {booksData[whichBook].title}
                                         </div>
                                         <div className="subtext">
                                             <div className="author">
-                                                Author: {bookData[whichBook].author}
-                                            </div>
-                                            <div className="id">
-                                                {bookData[whichBook].id}
+                                                Author: {booksData[whichBook].author}
                                             </div>
                                         </div>
                                         <div className="shortdesc">
-                                            {bookData[whichBook].shortDesc}
+                                            {booksData[whichBook].shortDesc}
                                         </div>
                                         <div className="listen-copy-buy-section">
                                             <div className="tab-content">
@@ -1260,7 +1243,7 @@ export default function Ebooks() {
 
                                 <div className="desc-tab-content">
                                         <div className="desc">
-                                            {bookData[whichBook].desc}
+                                            {booksData[whichBook].desc}
                                         </div>
                                 </div>
 
@@ -1276,7 +1259,7 @@ export default function Ebooks() {
                                     </div>
                                 </div>
                                 <div className="book-cards">
-                                    {bookData.map((e, i) => {
+                                    {booksData.map((e, i) => {
 
                                         if (i != whichBook) {
                                             return (
@@ -1302,3 +1285,4 @@ export default function Ebooks() {
         </Container>
     )
 }
+

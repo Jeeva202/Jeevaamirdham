@@ -11,10 +11,10 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import EmailIcon from '@mui/icons-material/Email';
 import { useDispatch } from "react-redux";
-import { openLogin, setUserLoggedIn } from '../../redux/cartSlice';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { openLogin, setUserLoggedIn, setUserId } from '../../redux/cartSlice';
 
 const StyledTabs = styled((props) => (
     <Tabs
@@ -76,7 +76,8 @@ export default function TopNavbar() {
     useEffect(() => {
         const storedUsername = localStorage.getItem('username');
         const storedEmail = localStorage.getItem('email');
-        if (storedEmail || storedUsername) {
+        const storeId = localStorage.getItem("id")
+        if(storedEmail || storedUsername || storeId){
             dispatch(setUserLoggedIn(true));
         }
         if (storedUsername) {
@@ -85,12 +86,19 @@ export default function TopNavbar() {
         if (storedEmail) {
             setEmail(storedEmail);
         }
+        if(storeId){
+            dispatch(setUserId(storeId))
+        }
+
 
         const handleStorageChange = () => {
             const updatedUsername = localStorage.getItem('username');
             const updatedEmail = localStorage.getItem('email');
+            const updateId = localStorage.getItem('id')
+            dispatch(setUserId(updateId))
             setUsername(updatedUsername);
             setEmail(updatedEmail);
+
         };
 
         window.addEventListener('storage', handleStorageChange);
