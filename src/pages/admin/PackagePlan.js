@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const initialPlans = [
     {
         id: 1,
-        name: 'Free Member',
+        name: 'Jeevaamirdham Basic',
         benefits: [
             'Access to free content',
             'Limited support',
@@ -16,7 +16,17 @@ const initialPlans = [
     },
     {
         id: 2,
-        name: 'Premium Member',
+        name: 'Jeevaamirdham Elite',
+        benefits: [
+            'Access to all content',
+            'Priority support',
+            'Advanced features',
+            'Exclusive content'
+        ]
+    },
+    {
+        id: 3,
+        name: 'Jeevaamirdham Premium',
         benefits: [
             'Access to all content',
             'Priority support',

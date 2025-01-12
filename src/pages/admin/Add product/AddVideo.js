@@ -18,6 +18,7 @@ export default function AddVideo() {
     const [currentTitle, setCurrentTitle] = useState('');
     const [currentSubtitle, setCurrentSubtitle] = useState('');
     const [currentCover, setCurrentCover] = useState('');
+    const [category, setCategory] = useState('');
 
     const handleCoverUpload = (event) => {
         setCover(event.target.files[0]);
@@ -46,6 +47,7 @@ export default function AddVideo() {
         setCurrentTitle('');
         setCurrentSubtitle('');
         setCurrentCover('');
+        setCategory('');
     };
 
     return (
@@ -72,6 +74,15 @@ export default function AddVideo() {
                         margin="normal"
                         value={subtitle}
                         onChange={(e) => setSubtitle(e.target.value)}
+                    />
+                    <TextField
+                        label="Category"
+                        variant="outlined"
+                        fullWidth
+                        size='small'
+                        margin="normal"
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
                     />
                     <InputLabel sx={{ marginTop: "1rem" }}>Video Cover</InputLabel>
                     <TextField

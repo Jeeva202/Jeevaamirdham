@@ -4,15 +4,15 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 
-const premiumMembers = [
-    { id: 1, name: 'John Doe', email: 'john@example.com', phone: '123-456-7890', gender: 'Male', joined: '2023-01-01', subscriptionEnd: '2023-12-31', booksOrdered: 5 },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', phone: '098-765-4321', gender: 'Female', joined: '2023-02-15', subscriptionEnd: '2023-11-30', booksOrdered: 3 },
+const offlineMembers = [
+    { id: 1, name: 'John Doe', email: 'john@example.com', phone: '123-456-7890', gender: 'Male', joined: '2023-01-01' },
+    { id: 2, name: 'Jane Smith', email: 'jane@example.com', phone: '098-765-4321', gender: 'Female', joined: '2023-02-15' },
     // Add more members as needed
 ];
 
-export default function PremiumMember() {
+export default function OfflineMember() {
     const [searchTerm, setSearchTerm] = useState('');
-    const [members, setMembers] = useState(premiumMembers);
+    const [members, setMembers] = useState(offlineMembers);
     const [anchorEl, setAnchorEl] = useState(null);
     const [selectedMember, setSelectedMember] = useState(null);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -54,7 +54,7 @@ export default function PremiumMember() {
     return (
         <Box sx={{ padding: 2 }}>
             <Typography variant="h6" gutterBottom>
-                Premium Members
+                Offline Members
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: "1rem" }}>
                 <TextField
@@ -81,8 +81,6 @@ export default function PremiumMember() {
                             <TableCell sx={{ fontWeight: 'bold' }}>Phone</TableCell>
                             <TableCell sx={{ fontWeight: 'bold' }}>Gender</TableCell>
                             <TableCell sx={{ fontWeight: 'bold' }}>Joined Date</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Subscription End Date</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>Books Ordered</TableCell>
                             <TableCell sx={{ fontWeight: 'bold' }}>Actions</TableCell>
                         </TableRow>
                     </TableHead>
@@ -95,8 +93,6 @@ export default function PremiumMember() {
                                 <TableCell>{member.phone}</TableCell>
                                 <TableCell>{member.gender}</TableCell>
                                 <TableCell>{member.joined}</TableCell>
-                                <TableCell>{member.subscriptionEnd}</TableCell>
-                                <TableCell>{member.booksOrdered}</TableCell>
                                 <TableCell>
                                     <IconButton onClick={(event) => handleMenuOpen(event, member)}>
                                         <MoreVertIcon />

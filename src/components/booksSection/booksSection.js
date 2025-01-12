@@ -20,7 +20,6 @@ export default function BooksSection() {
                     {/* <div className="hdivider">
                         <img src={homePage.icons.HorizontalDivider} alt=""/>
                     </div> */}
-                    <div style={{borderBottom:"1px solid #e6e6e6", width:"90%"}}></div>
                     <div className="viewAll">
                         <ViewAll text="View All"  width="7rem" padding="0.8rem 4rem" />
                     </div>

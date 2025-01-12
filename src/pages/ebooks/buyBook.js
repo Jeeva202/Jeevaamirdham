@@ -58,17 +58,17 @@ export default function BuyBook({categories, handleCategoryClick, currentItems, 
                 {currentItems.map((e, i) => (
                     <div className="book">
                         <div className="img-section">
-                            <StyledBadge badgeContent={e.discount}>
-                                <img src={e.img} alt="" />
-                            </StyledBadge>
+                            {/* <StyledBadge badgeContent={e.discount}> */}
+                                <img src={e.imgUrl} alt="" />
+                            {/* </StyledBadge> */}
                         </div>
                         <div className="content-section">
                             <div className="title" onClick={() => navigateToProductSpecificPage(i)}>{e.title}</div>
                             <div className="subtitle">{e.subtitle}</div>
                             <div className="desc">{e.desc}</div>
                             <div className="price">
-                                {e.offPrice}
-                                <span>{e.orgPrice}</span>
+                            ₹{e.offPrice}
+                                {/* <span>{e.orgPrice}</span> */}
                             </div>
                             <Button variant="text" sx={{
                                 borderRadius: "40px",
@@ -78,7 +78,7 @@ export default function BuyBook({categories, handleCategoryClick, currentItems, 
                                 textTransform: "none",
                                 marginTop: "2rem",
                                 color: "black"
-                            }} onClick={handleAddToCart}>
+                            }} onClick={()=>handleAddToCart(e, 1)}>
 
                                 <img src={ebooks.icons.cart} style={{ width: "1rem" }} />
                                 Add to Cart

@@ -26,8 +26,10 @@ import MonthNavigation from "./monthNavigation";
 import BookDetails from "./bookDetails";
 import AudioPlayer from "./audioPlayer";
 import LoginModal from "../login/NewLogin";
+import { openLogin, setUserLoggedIn, selectUserId, setCartDetails, setBooksData } from '../../redux/cartSlice'
+import { Loader } from "../../components/loader/loader";
 
-export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
+export default function Ebooks() {
     const [allYears, setAllYears] = useState(true);
     const [listenPage, setListenPage] = useState(false)
     const [categoryCartFlag, setCategoryCartFlag] = useState(false)
@@ -37,62 +39,45 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
     const [catSelectedBook, setCatSelectedBook] = useState("0")
     // const [activeTab, setActiveTab] = useState("AUDIO");
     // const [periodTab, setPeriodTab] = useState("MONTHLY")
-    const itemsPerPage = 3; // Items per page for the buy section
+    const itemsPerPage = 4; // Items per page for the buy section
     const [currentPage, setCurrentPage] = useState(1);
     const [noOfYear, setNoOfYear] = useState(1);
     const [noOfMonth, setNoOfMonth] = useState(1)
-    const [descTab, setDescTab] = useState("Description")
     const [whichBook, setWhichBook] = useState("0");
     const [openModal, setOpenModal] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
     const [paid, setPaid] = useState(false)
     const [plan, setPlan] = useState('basic')
-    const [expanded, setExpanded] = useState(0); // Always open the first panel by default
-    // const [alertOpen, setAlertOpen] = useState(false); // State to control the alert visibility
-    const audioRef = useRef(null); // Reference to the audio player
-    // const [hasTriggeredAlert, setHasTriggeredAlert] = useState(false); // Track if alert has been triggered
-
+    const [expanded, setExpanded] = useState(0); 
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
 
-    // useEffect(() => {
-    //     // Reset the alert trigger state when the component is mounted or audio is changed
-    //     setHasTriggeredAlert(false);
-    // }, [whichBook]);
-
-    // useEffect(() => {
-    //     if (audioRef.current && !isUserLoggedIn) {
-    //         // Add event listener to track when the audio reaches 5 minutes
-    //         const audioElement = audioRef.current;
-
-    //         // Function to check if audio has been played for 5 minutes or more
-    //         const checkFiveMinutes = () => {
-    //             if (audioElement.currentTime >= 300 && !hasTriggeredAlert) {  // 300 seconds is 5 minutes
-    //                 setHasTriggeredAlert(true); // Ensure the alert only triggers once
-    //                 setAlertOpen(true); // Show the alert
-    //                 audioElement.pause(); // Pause the audio
-    //                 audioElement.currentTime = 0; // Reset the audio to the start
-    //             }
-    //         };
-
-    //         // Attach timeupdate event listener to check playback time
-    //         audioElement.addEventListener("timeupdate", checkFiveMinutes);
-
-    //         // Cleanup event listener when the component is unmounted or audio changes
-    //         return () => {
-    //             audioElement.removeEventListener("timeupdate", checkFiveMinutes);
-    //         };
-    //     }
-    // }, [isUserLoggedIn, hasTriggeredAlert]);
-
 
     const dispatch = useDispatch();
+    const isUserLoggedIn = useSelector((state) => state.cart.isUserLoggedIn);
+    const userId = useSelector(selectUserId)
     const isOpen = useSelector(selectIsCartOpen)
-    const handleAddToCart = () => {
-        dispatch(openCart());
+    const handleAddToCart = async (book, quantity) => {
+        console.log("user id", userId);
+    
+        const addtocart = await axios.post('http://localhost:3001/ebooks/add_to_cart', {
+            userId: userId,
+            book: book.id,
+            quantity:quantity
+        });
+        const cartDetails = addtocart.data.cart_details;
+    
+        console.log(addtocart, "add to cart");
+    
+        // Dispatch an action to update the Redux store with the updated cart details
+        dispatch(setCartDetails(cartDetails)); // This will update the cartDetails in Redux
+        dispatch(openCart()); // Open the cart modal
     };
     const handleOpen = () => setOpenModal(true);
     const handleClose = () => setOpenModal(false);
+    const handleLoginOpen = () => setShowLoginModal(true);
+    const handleLoginClose = () => setShowLoginModal(false)
     const plans = [
         {
             name: "basic",
@@ -189,136 +174,104 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
         { id: "Sithanaigal", label: "SITHANAIGAL" },
         { id: "Varalaru", label: "VARALARU" }
     ];
-    const shopBooksData = [
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        },
-        {
-            category: "GNANAM",
-            title: "Gnana Amirtham",
-            subtitle: "Siddharth Thoughts",
-            shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
-            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
-            discount: "30%",
-            orgPrice: "$814.66",
-            offPrice: "₹450.00",
-            img: "/assets/images/Gnana_Amirtham.png",
-            availability: "IN STOCK",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
-            category_tag: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary"
-        }
-    ];
+    // const booksData = [
+    //     {   id:1,
+    //         category: "GNANAM",
+    //         title: "Gnana Amirtham",
+    //         subtitle: "Siddharth Thoughts",
+    //         shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+    //         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         discount: "30%",
+    //         orgPrice: "$814.66",
+    //         offPrice: "₹450.00",
+    //         img: "/assets/images/Gnana_Amirtham.png",
+    //         availability: "IN STOCK",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+    //         category_tag: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary"
+    //     },
+    //     {   id:2,
+    //         category: "GNANAM",
+    //         title: "Gnana Amirtham",
+    //         subtitle: "Siddharth Thoughts",
+    //         shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+    //         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         discount: "30%",
+    //         orgPrice: "$814.66",
+    //         offPrice: "₹450.00",
+    //         img: "/assets/images/Gnana_Amirtham.png",
+    //         availability: "IN STOCK",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+    //         category_tag: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary"
+    //     },
+    //     {   id:3,
+    //         category: "GNANAM",
+    //         title: "Gnana Amirtham",
+    //         subtitle: "Siddharth Thoughts",
+    //         shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+    //         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         discount: "30%",
+    //         orgPrice: "$814.66",
+    //         offPrice: "₹450.00",
+    //         img: "/assets/images/Gnana_Amirtham.png",
+    //         availability: "IN STOCK",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+    //         category_tag: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary"
+    //     },
+    //     {   id:4,
+    //         category: "GNANAM",
+    //         title: "Gnana Amirtham",
+    //         subtitle: "Siddharth Thoughts",
+    //         shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+    //         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         discount: "30%",
+    //         orgPrice: "$814.66",
+    //         offPrice: "₹450.00",
+    //         img: "/assets/images/Gnana_Amirtham.png",
+    //         availability: "IN STOCK",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+    //         category_tag: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary"
+    //     },
+    //     {   id:5,
+    //         category: "GNANAM",
+    //         title: "Gnana Amirtham",
+    //         subtitle: "Siddharth Thoughts",
+    //         shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+    //         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         discount: "30%",
+    //         orgPrice: "$814.66",
+    //         offPrice: "₹450.00",
+    //         img: "/assets/images/Gnana_Amirtham.png",
+    //         availability: "IN STOCK",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+    //         category_tag: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary"
+    //     },
+    //     {   id:6,
+    //         category: "GNANAM",
+    //         title: "Gnana Amirtham",
+    //         subtitle: "Siddharth Thoughts",
+    //         shortDesc: "Animi qui et nemo consequatur iste totam et. Id nihil id enim consequatur provident non. Ratione est voluptas aperiam vero architecto.",
+    //         desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         additionalInfo: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin vel turpis a felis facilisis dapibus non ut enim. Nulla ac turpis ac nisi malesuada interdum. Sed lacinia vel felis et tempor. Integer sit amet purus eget velit egestas hendrerit. Nam eget risus nec justo suscipit tincidunt.",
+    //         discount: "30%",
+    //         orgPrice: "$814.66",
+    //         offPrice: "₹450.00",
+    //         img: "/assets/images/Gnana_Amirtham.png",
+    //         availability: "IN STOCK",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன், BE .,",
+    //         category_tag: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary"
+    //     },
+    // ];
 
 
 
@@ -646,107 +599,107 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
             ]
         },
     ]
-    const bookData = [
-        {
-            genre: "GNANAM",
-            availability: "IN STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book1.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
-        {
-            genre: "GNANAM",
-            availability: "IN STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book2.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
-        {
-            genre: "GNANAM",
-            availability: "IN STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book3.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
-        {
-            genre: "GNANAM",
-            availability: "IN STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book4.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
-        {
-            genre: "GNANAM",
-            availability: "IN STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book5.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
-        {
-            genre: "GNANAM",
-            availability: "IN STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book6.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
-        {
-            genre: "GNANAM",
-            availability: "OUT OF STOCK",
-            title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
-            author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
-            id: "SKU: INT280",
-            shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
-            category: "Action & Adventure, Activity Books",
-            tag: "Books, Fiction, Romance - Contemporary",
-            img: "/assets/images/2024_January_book7.svg",
-            cost: "₹ 1000",
-            desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
-            additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
-        },
+    // const bookData = [
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "IN STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book1.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "IN STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book2.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "IN STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book3.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "IN STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book4.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "IN STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book5.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "IN STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book6.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
+    //     {
+    //         genre: "GNANAM",
+    //         availability: "OUT OF STOCK",
+    //         title: "சித்தர்கள் அருளிய வாழ்வியல் வழிகாட்டி",
+    //         author: "ஜீவஅமிர்தம்  கோ.திருமுகன்,   BE .,",
+    //         id: "SKU: INT280",
+    //         shortDesc: "Nihil quo dolorum debitis velit qui et inventore. Delectus aut occaecati sunt mollitia illo. Odio velit mollitia ipsam explicabo nisi quisquam dolore non. Rem omnis consectetur etea.",
+    //         category: "Action & Adventure, Activity Books",
+    //         tag: "Books, Fiction, Romance - Contemporary",
+    //         img: "/assets/images/2024_January_book7.svg",
+    //         cost: "₹ 1000",
+    //         desc: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta.",
+    //         additionalInfo: "Aut eligendi voluptatem adipisci unde iusto. Vitae aut voluptas velit beatae at nam maiores. Sunt dolorem cumque qui sit in esse quia occaecati. Eos et vero optio eaque nemo. Qui omnis nihil accusantium dolorum molestiae. Assumenda rem et non. Aut fugiat fugiat voluptatum vero vitae error. Sequi fugit vitae dolor velit. Nemo et sapiente repudiandae. Quam dolorum accusantium odio amet. Commodi consequatur distinctio voluptas repellat doloribus quia. Consectetur ad similique atque voluptas ut. Earum vel delectus in facilis. Voluptatum minus nobis cum temporibus perferendis est ut. Sed aut saepe ipsum animi asperiores. Nihil nihil repudiandae adipisci quis ea voluptatum dicta."
+    //     },
 
-    ]
+    // ]
 
     /**
      *  Data fetching for the Ebooks section starts here 
@@ -813,19 +766,42 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
 
     })
 
-    const {data:createUser, isLoading:createUserLoading} = useQuery({
-        queryFn: async ()=>{
-            const {data} = await axios.get(`http://localhost:3001/createUser`, {
-                params:{
-                    id:"",
-                    name:"",
-                    email:"",
-                    plan:"basic"
-                }
-            })
-            return data
+    
+    const { data: booksData, error: booksError, isLoading: isBooksLoading } = useQuery({
+        queryKey: ["books"],
+        queryFn: async () => {
+            const { data } = await axios.get("http://localhost:3001/ebooks/books");
+            console.log("Books Data:", data);
+            return data;
+        },
+    });
+      
+    useEffect(() => {
+        if (booksData) {
+            dispatch(setBooksData(booksData)); // Store booksData in Redux
         }
-    })
+    }, [booksData, dispatch]);
+    //   const { data: bookInfoData, error: bookInfoError, isLoading: isBookInfoLoading } = useQuery({
+    //     queryKey: ["book-info", selectedBookId], // Adjust the key based on the selected book
+    //     queryFn: async () => {
+    //       const { data } = await axios.get(`http://localhost:3001/ebooks/book-info?id=${selectedBookId}`);
+    //       return data;
+    //     },
+    //     enabled: !!selectedBookId, // Only enable if a book is selected
+    //   });
+    // const {data:createUser, isLoading:createUserLoading} = useQuery({
+    //     queryFn: async ()=>{
+    //         const {data} = await axios.get(`http://localhost:3001/createUser`, {
+    //             params:{
+    //                 id:"",
+    //                 name:"",
+    //                 email:"",
+    //                 plan:"basic"
+    //             }
+    //         })
+    //         return data
+    //     }
+    // })
 
     const {data:setPlanData} = useQuery({
         queryFn: async ()=>{
@@ -844,14 +820,17 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
      * ==================================================
      *  Data fetching for the Ebooks section ends here 
     */
+    if (isBooksLoading) {
+        return <Loader/>;
+    }
 
-
-
-    const totalPages = Math.ceil(shopBooksData.length / itemsPerPage);
-    const currentItems = shopBooksData.slice(
+    console.log("booksData", booksData);
+    
+    const totalPages = booksData ? Math.ceil(booksData.length / itemsPerPage) : 0;
+    const currentItems = booksData ? booksData.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
-    );
+    ) : [];
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
@@ -867,7 +846,6 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
         setWhichBook("0")
         // setActiveTab("AUDIO")
         // setPeriodTab("MONTHLY")
-        setDescTab("Description")
     }
     const backToAllYearPage = () => {
         setAllYears(true)
@@ -876,7 +854,6 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
         setWhichBook("0")
         // setActiveTab("AUDIO")
         // setPeriodTab("MONTHLY")
-        setDescTab("Description")
     }
     const handleCategoryClick = (categoryId) => {
         setSelectedCategory([...selectedCategory, categoryId]);
@@ -897,11 +874,11 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
         }
         else if (e == "nxt") {
 
-            console.log("Before", "whichbook", whichBook, "length", bookData.length);
-            if (parseInt(whichBook) < bookData.length - 1) {
+            console.log("Before", "whichbook", whichBook, "length", booksData.length);
+            if (parseInt(whichBook) < booksData.length - 1) {
                 setWhichBook((parseInt(whichBook) + 1).toString())
             }
-            console.log("After", "whichbook", whichBook, "length", bookData.length);
+            console.log("After", "whichbook", whichBook, "length", booksData.length);
         }
         else if (e == "cat-prev") {
             if (parseInt(catSelectedBook) > 0) {
@@ -909,7 +886,7 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
             }
         }
         else if (e == "cat-nxt") {
-            if (parseInt(catSelectedBook) < shopBooksData.length - 1) {
+            if (parseInt(catSelectedBook) < booksData.length - 1) {
                 setCatSelectedBook((parseInt(catSelectedBook) + 1).toString())
             }
         }
@@ -983,41 +960,25 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
     };
 
     const payNow = (plan) => {
+        if(isUserLoggedIn){
 
+            if (plan === 'basic') {
+                handleClose()
+                setPaid(true)
+                // setIsUserLoggedIn()
+            }
+            else if (plan === 'elite') {
+                handlePurchase(599, plan)
+            }
+            else{
+                handlePurchase(999, plan)
+            }
 
-
-        /** Use this code once the login page is set and the plan selection functionalities are created*/
-
-
-        // if (isUserLoggedIn) {
-        //   if (plan === "Jeevaamirdham Elite Plan") {
-        //     // handlePurchase(599, plan);
-        //   } else if (plan === "Jeevaamirdham Premium Plan") {
-        //     // handlePurchase(999, plan);
-        //   } else {
-        //     console.log("Free plan selected");
-        //     setFreePlanChosed(true)
-        //     handleClose();
-        //     setPaid(true)
-        //   }
-        // } else {
-        //   setAllYears(true);
-        //   setCatSelectedBook("0");
-        //   setCategoryCartFlag(false);
-        //   handleClose();
-        //   window.location.href = "/login";
-        // }
-
-        if (plan === 'basic') {
-            handleClose()
-            setPaid(true)
-            // setIsUserLoggedIn()
         }
-        else if (plan === 'elite') {
-            handlePurchase(599, plan)
-        }
-        else{
-            handlePurchase(999, plan)
+        else {
+            dispatch(openLogin())
+            handleOpen()
+            // handleLoginOpen();
         }
 
     };
@@ -1049,10 +1010,10 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
                     <BuyBook categories={categories} handleCategoryClick={handleCategoryClick} currentItems={currentItems} navigateToProductSpecificPage={navigateToProductSpecificPage} handlePageChange={handlePageChange} currentPage={currentPage} isOpen={isOpen} totalPages={totalPages} handleAddToCart={handleAddToCart} />
                 </div>
             ) : (categoryCartFlag) ?
-                <BookDetails backToHomePage={backToHomePage} catSelectedBook={catSelectedBook} shopBooksData={shopBooksData} changeBook={changeBook} handleAddToCart={handleAddToCart} setDescTab={setDescTab} descTab={descTab} isOpen={isOpen} />
+                <BookDetails backToHomePage={backToHomePage} catSelectedBook={catSelectedBook} booksData={booksData} changeBook={changeBook} handleAddToCart={handleAddToCart} isOpen={isOpen} />
                 : (selectedMonth === null) && (!isNaN(selectedYear)) ?
                     <MonthNavigation backToAllYearPage={backToAllYearPage} selectedYear={selectedYear} oneYearBook={oneYearBook} redirectToMonthPage={redirectToMonthPage} />
-                    : (listenPage)
+                    : (listenPage && isUserLoggedIn)
                         ?
                         <AudioPlayer
                             audioData={audioData}
@@ -1071,7 +1032,7 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
                         <>
                             <div className="Month-navigation">
                                 <a className="back" onClick={() => backToAllYearPage()}>
-                                    E-Book
+                                    E-Magazine
                                 </a>
                                 <img src={ebooks.icons.RightArrowStroke} alt="" />
                                 <div className="year" onClick={() => backToYearPage()}>
@@ -1084,12 +1045,12 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
                             </div>
                             <div className="monthlybook-buysection">
                                 <div className="book-imagesection">
-                                    <img src={bookData[whichBook].img} alt="" />
+                                    <img src={booksData[whichBook].imgUrl} alt="" />
                                 </div>
                                 <div className="book-contentsection">
                                     <div className="book-navigator">
-                                        <div className="stock" style={bookData[whichBook].availability == 'IN STOCK' ? { backgroundColor: "#24FF0033" } : { backgroundColor: "red" }}>
-                                            {bookData[whichBook].availability}
+                                        <div className="stock" style={booksData[whichBook].availability == 'IN STOCK' ? { backgroundColor: "#24FF0033" } : { backgroundColor: "red" }}>
+                                            {booksData[whichBook].availability}
                                         </div>
                                         <div className="prev-next">
                                             <div className="prev" >
@@ -1101,169 +1062,170 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
 
                                                 Next
                                                 &nbsp;
-                                                <img src={ebooks.icons.Next} alt="Right Arrow" disabled={parseInt(whichBook) === bookData.length - 1} onClick={() => changeBook("nxt")} />
+                                                <img src={ebooks.icons.Next} alt="Right Arrow" disabled={parseInt(whichBook) === booksData.length - 1} onClick={() => changeBook("nxt")} />
                                             </div>
                                         </div>
                                     </div>
                                     <div className="title-section">
                                         <div className="title">
-                                            {bookData[whichBook].title}
+                                            {booksData[whichBook].title}
                                         </div>
                                         <div className="subtext">
                                             <div className="author">
-                                                Author: {bookData[whichBook].author}
-                                            </div>
-                                            <div className="id">
-                                                {bookData[whichBook].id}
+                                                Author: {booksData[whichBook].author}
                                             </div>
                                         </div>
                                         <div className="shortdesc">
-                                            {bookData[whichBook].shortDesc}
+                                            {booksData[whichBook].shortDesc}
                                         </div>
                                         <div className="listen-copy-buy-section">
                                             <div className="tab-content">
                                                 {/* {activeTab === "AUDIO" &&  */}
                                                 <div className="audio">
                                                     <div className="audio-buy">
-
-                                                        {!isUserLoggedIn ?
+                                                        {
+                                                            isUserLoggedIn && !openModal ?
                                                             <>
-                                                                <div className="plans">
-                                                                    Please subscribe to hear the audio
-                                                                    &nbsp;
-                                                                    <a onClick={handleOpen} style={{ cursor: "pointer" }}>
-                                                                        View Plan</a>
-                                                                </div>
-                                                                <div className="subscribe-section">
-                                                                    <Button variant="text" sx={{
-                                                                        borderRadius: "40px",
-                                                                        width: "10rem",
-                                                                        p: "10px",
-                                                                        background: "#999999",
-                                                                        textTransform: "none",
-                                                                        marginTop: "2rem",
-                                                                        color: "#444444",
-                                                                        fontWeight: "700",
-                                                                        justifyContent: "space-evenly"
-                                                                    }}
-                                                                    // onClick={()=>loginPopup()} 
-                                                                    >
-
-
-                                                                        <img src={ebooks.icons.Lock} style={{ width: "1rem", height: "1.5rem" }} />
-                                                                        Listen Now
-                                                                    </Button>
-                                                                </div>
-                                                                <Modal open={openModal} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
-                                                                    <Box
-                                                                        sx={{
-                                                                            position: 'absolute',
-                                                                            top: '50%',
-                                                                            left: '50%',
-                                                                            transform: 'translate(-50%, -50%)',
-                                                                            width: 1000,
-                                                                            bgcolor: 'background.paper',
-                                                                            boxShadow: 24,
-                                                                            borderRadius: '8px',
-                                                                            p: 4,
-                                                                            display: 'flex',
-                                                                            flexDirection: 'column',
-                                                                            gap: 3,
-                                                                        }}
-                                                                    >
-                                                                        <IconButton
-                                                                            onClick={handleClose}
-                                                                            sx={{
-                                                                                position: 'absolute',
-                                                                                top: 10,
-                                                                                right: 10,
-                                                                                color: 'gray',
-                                                                            }}
-                                                                        >
-                                                                            <CloseIcon />
-                                                                        </IconButton>
-                                                                        <Container maxWidth="md">
-                                                                            <Box textAlign="center" my={4}>
-                                                                                <Typography variant="h4" gutterBottom>
-                                                                                    Choose Your Plan
-                                                                                </Typography>
-                                                                                <Typography variant="subtitle1">
-                                                                                    Select the perfect subscription plan for your needs
-                                                                                </Typography>
-                                                                            </Box>
-                                                                            <Grid container spacing={2}>
-                                                                                {plans.map((plan, index) => (
-                                                                                    <Grid item xs={12} sm={6} md={4} key={index}>
-                                                                                        <Card
-                                                                                            variant="outlined"
-                                                                                            sx={{
-                                                                                                display: "flex",
-                                                                                                flexDirection: "column",
-                                                                                                height: "100%",
-                                                                                            }}
-                                                                                        >
-                                                                                            <CardContent sx={{ flexGrow: 1, fontWeight: 600 }}>
-                                                                                                <Typography sx={{ fontSize: "1.2rem" }} variant="h6" gutterBottom>
-                                                                                                    {plan.name}
-                                                                                                </Typography>
-                                                                                                <Typography sx={{ fontSize: '2rem', fontWeight: 500, color: "black" }} variant="h4" color="primary" gutterBottom>
-                                                                                                    {plan.price}
-                                                                                                </Typography>
-                                                                                                <List>
-                                                                                                    {plan.features.map((feature, idx) => (
-                                                                                                        <ListItem key={idx} disableGutters>
-                                                                                                            <ListItemIcon>
-                                                                                                                <ListItemIcon>
-                                                                                                                    <CheckCircleIcon sx={{ color: "rgb(34 197 94)" }} />
-                                                                                                                </ListItemIcon>
-                                                                                                            </ListItemIcon>
-                                                                                                            <ListItemText primary={feature} />
-                                                                                                        </ListItem>
-                                                                                                    ))}
-                                                                                                </List>
-                                                                                            </CardContent>
-                                                                                            <Box textAlign="center" mb={2} sx={{ px: 2 }}>
-                                                                                                <Button
-                                                                                                    onClick={() => payNow(plan.name)}
-                                                                                                    variant="contained"
-                                                                                                    style={{ ...plan.buttonStyle, width: "100%", padding: "10px 0" }}
-                                                                                                >
-                                                                                                    {plan.buttonLabel}
-                                                                                                </Button>
-                                                                                            </Box>
-                                                                                        </Card>
-                                                                                    </Grid>
-                                                                                ))}
-                                                                            </Grid>
-                                                                        </Container>
-                                                                    </Box>
-                                                                </Modal> </>
-                                                            :
+                                                            <div className="plans">
+                                                            Please subscribe to hear the audio
+                                                            &nbsp;
+                                                            <a onClick={handleOpen} style={{ cursor: "pointer" }}>
+                                                                View Plan</a>
+                                                        </div>
                                                             <div className="subscribe-section">
-                                                                <Button variant="text" sx={{
-                                                                    borderRadius: "40px",
-                                                                    width: "10rem",
-                                                                    p: "10px",
-                                                                    background: "#F09300",
-                                                                    textTransform: "none",
-                                                                    marginTop: "2rem",
-                                                                    color: "#FFFFFF",
-                                                                    fontWeight: "700",
-                                                                    justifyContent: "space-evenly"
-                                                                }} onClick={() => navigateToListenPage()}>
-                                                                    Listen Now
-                                                                </Button>
-                                                            </div>
+                                                            <Button variant="text" sx={{
+                                                                borderRadius: "40px",
+                                                                width: "10rem",
+                                                                p: "10px",
+                                                                background: "#F09300",
+                                                                textTransform: "none",
+                                                                marginTop: "2rem",
+                                                                color: "#FFFFFF",
+                                                                fontWeight: "700",
+                                                                justifyContent: "space-evenly"
+                                                            }} onClick={() => navigateToListenPage()}>
+                                                                Listen Now
+                                                            </Button>
+                                                        </div>
+                                                        </>
+                                                        :
+                                                        <>
+                                                        <div className="plans">
+                                                            Please subscribe to hear the audio
+                                                            &nbsp;
+                                                            <a onClick={handleOpen} style={{ cursor: "pointer" }}>
+                                                                View Plan</a>
+                                                        </div>
+                                                        <div className="subscribe-section">
+                                                            <Button variant="text" sx={{
+                                                                borderRadius: "40px",
+                                                                width: "10rem",
+                                                                p: "10px",
+                                                                background: "#999999",
+                                                                textTransform: "none",
+                                                                marginTop: "2rem",
+                                                                color: "#444444",
+                                                                fontWeight: "700",
+                                                                justifyContent: "space-evenly"
+                                                            }}
+                                                            // onClick={()=>loginPopup()} 
+                                                            >
+
+
+                                                                <img src={ebooks.icons.Lock} style={{ width: "1rem", height: "1.5rem" }} />
+                                                                Login to listen
+                                                            </Button>
+                                                        </div>
+                                                        <Modal open={openModal} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
+                                                            <Box
+                                                                sx={{
+                                                                    position: 'absolute',
+                                                                    top: '50%',
+                                                                    left: '50%',
+                                                                    transform: 'translate(-50%, -50%)',
+                                                                    width: 1000,
+                                                                    bgcolor: 'background.paper',
+                                                                    boxShadow: 24,
+                                                                    borderRadius: '8px',
+                                                                    p: 4,
+                                                                    display: 'flex',
+                                                                    flexDirection: 'column',
+                                                                    gap: 3,
+                                                                }}
+                                                            >
+                                                                <IconButton
+                                                                    onClick={handleClose}
+                                                                    sx={{
+                                                                        position: 'absolute',
+                                                                        top: 10,
+                                                                        right: 10,
+                                                                        color: 'gray',
+                                                                    }}
+                                                                >
+                                                                    <CloseIcon />
+                                                                </IconButton>
+                                                                <Container maxWidth="md">
+                                                                    <Box textAlign="center" my={4}>
+                                                                        <Typography variant="h4" gutterBottom>
+                                                                            Choose Your Plan
+                                                                        </Typography>
+                                                                        <Typography variant="subtitle1">
+                                                                            Select the perfect subscription plan for your needs
+                                                                        </Typography>
+                                                                    </Box>
+                                                                    <Grid container spacing={2}>
+                                                                        {plans.map((plan, index) => (
+                                                                            <Grid item xs={12} sm={6} md={4} key={index}>
+                                                                                <Card
+                                                                                    variant="outlined"
+                                                                                    sx={{
+                                                                                        display: "flex",
+                                                                                        flexDirection: "column",
+                                                                                        height: "100%",
+                                                                                    }}
+                                                                                >
+                                                                                    <CardContent sx={{ flexGrow: 1, fontWeight: 600 }}>
+                                                                                        <Typography sx={{ fontSize: "1.2rem" }} variant="h6" gutterBottom>
+                                                                                            {plan.name}
+                                                                                        </Typography>
+                                                                                        <Typography sx={{ fontSize: '2rem', fontWeight: 500, color: "black" }} variant="h4" color="primary" gutterBottom>
+                                                                                            {plan.price}
+                                                                                        </Typography>
+                                                                                        <List>
+                                                                                            {plan.features.map((feature, idx) => (
+                                                                                                <ListItem key={idx} disableGutters>
+                                                                                                    <ListItemIcon>
+                                                                                                        <ListItemIcon>
+                                                                                                            <CheckCircleIcon sx={{ color: "rgb(34 197 94)" }} />
+                                                                                                        </ListItemIcon>
+                                                                                                    </ListItemIcon>
+                                                                                                    <ListItemText primary={feature} />
+                                                                                                </ListItem>
+                                                                                            ))}
+                                                                                        </List>
+                                                                                    </CardContent>
+                                                                                    <Box textAlign="center" mb={2} sx={{ px: 2 }}>
+                                                                                        <Button
+                                                                                            onClick={() => payNow(plan.name)}
+                                                                                            variant="contained"
+                                                                                            style={{ ...plan.buttonStyle, width: "100%", padding: "10px 0" }}
+                                                                                        >
+                                                                                            {plan.buttonLabel}
+                                                                                        </Button>
+                                                                                    </Box>
+                                                                                </Card>
+                                                                            </Grid>
+                                                                        ))}
+                                                                    </Grid>
+                                                                </Container>
+                                                            </Box>
+                                                        </Modal>
+                                                        <LoginModal open={showLoginModal} onClose={handleLoginClose} />
+                                                         </>
                                                         }
 
 
                                                     </div>
-                                                </div>
-
-                                                <div className="cat-tag">
-                                                    Categories: {bookData[whichBook].category}
-                                                    <br></br>
-                                                    Tags: {bookData[whichBook].tag}
                                                 </div>
                                             </div>
                                         </div>
@@ -1273,34 +1235,23 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
                             <div className="desc-info">
                                 <div className="desc-info-tabs">
                                     <button
-                                        className={`tab-underscore ${descTab === "Description" ? "active" : ""}`}
-                                        onClick={() => setDescTab("Description")}
+                                        className={`tab-underscore active`}
                                     >
                                         Description
-                                    </button>
-                                    <button
-                                        className={`tab-underscore ${descTab === "add-info" ? "active" : ""}`}
-                                        onClick={() => setDescTab("add-info")}
-                                    >
-                                        Additional information
                                     </button>
                                 </div>
 
                                 <div className="desc-tab-content">
-                                    {descTab === "Description" &&
                                         <div className="desc">
-                                            {bookData[whichBook].desc}
-                                        </div>}
-                                    {descTab === "add-info" && <div>
-                                        {bookData[whichBook].additionalInfo}
-                                    </div>}
+                                            {booksData[whichBook].desc}
+                                        </div>
                                 </div>
 
                             </div>
                             <div className="otherbooks">
                                 <div className="otherbooks-title">
                                     <div className="text">
-                                        Other Ebooks
+                                        Other E-Magazines
 
                                     </div>
                                     <div className="hdivider">
@@ -1308,7 +1259,7 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
                                     </div>
                                 </div>
                                 <div className="book-cards">
-                                    {bookData.map((e, i) => {
+                                    {booksData.map((e, i) => {
 
                                         if (i != whichBook) {
                                             return (
@@ -1334,3 +1285,4 @@ export default function Ebooks({ isUserLoggedIn, setIsUserLoggedIn }) {
         </Container>
     )
 }
+
