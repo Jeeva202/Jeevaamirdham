@@ -10,18 +10,19 @@ export default function Footer() {
             <div className="foot-section">
                 <div className="footer">
                     <div className="about">
-                        <img src={logo} alt="" srcset="" />
+                        <img src={logo} style={{padding:'1rem 0'}} alt="" srcset="" />
+                        <br/>
                         <div className="summary">
-                            Who are the Siddhars? What is <br />
-                            ideology? Who are the saints? Who are <br />
-                            the sages? What is Jiva Samadhi? <br />
-                            What is the true spirituality created by the <br />
-                            Siddhas? Every Month more than ten <br />
-                            Siddhas, histories of saints, spiritual <br />
-                            Videos. How can a Guru realize himself <br />
-                            and not wander somewhere in search of <br />
-                            a lost Guru? How to give a clear <br />
-                            ideology in the name of spirituality <br />
+                            Who are the Siddhars? What is 
+                            ideology? Who are the saints? Who are 
+                            the sages? What is Jiva Samadhi? 
+                            What is the true spirituality created by the 
+                            Siddhas? Every Month more than ten 
+                            Siddhas, histories of saints, spiritual 
+                            Videos. How can a Guru realize himself 
+                            and not wander somewhere in search of 
+                            a lost Guru? How to give a clear 
+                            ideology in the name of spirituality 
                             without being deceived anywhere?
 
                         </div>

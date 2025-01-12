@@ -1,7 +1,6 @@
-.foot-section{
+/* .foot-section{
     display: flex;
     flex-direction: column;
-    /* width: 80%; */
 }
 .footer{
     width: 100%;
@@ -50,7 +49,6 @@
 .explore .sections, .service .policies, .categ .book-cat{
     display: flex;
     flex-direction: column;
-    /* gap: 2px; */
 }
 .explore a, .service a, .categ a{
     color: #999999;
@@ -69,4 +67,139 @@
 }
 .copyright .text span{
     color: #F09300;
+} */
+
+.foot-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer {
+    width: 100%;
+    display: flex;
+    gap: 30px;
+    padding: 25px 0px;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Ensures items wrap on smaller screens */
+}
+
+.footer > div {
+    flex: 1 1 200px; /* Items will shrink and wrap when space is limited */
+    min-width: 200px;
+}
+
+.about img {
+    max-width: 100%; /* Ensures logo is responsive */
+    height: auto;
+}
+
+.copyright {
+    font-size: 0.8rem;
+    border-top: 1px solid #999999;
+    display: flex;
+    flex-direction: column; /* Stack items vertically on smaller screens */
+    align-items: center;
+    color: #ffffff;
+    padding: 20px 0;
+    letter-spacing: 2px;
+}
+
+.copyright .text {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.copyright .socialmedia {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Contact Section */
+.contact {
+    line-height: 24px;
+}
+
+.contact .phNumber {
+    color: #F09300;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.contact a {
+    color: #ffffff;
+    font-size: 0.8rem;
+}
+
+.contact .email {
+    color: #ffffff;
+    font-size: 1rem;
+}
+
+/* Links and Sections */
+.explore .sections,
+.service .policies,
+.categ .book-cat {
+    display: flex;
+    flex-direction: column;
+}
+
+.explore a,
+.service a,
+.categ a {
+    color: #999999;
+    font-size: 0.8rem;
+}
+
+/* Title Styling */
+.footer .title {
+    font-size: 1rem;
+    color: #ffffff;
+    padding-bottom: 15px;
+}
+.footer .about, .address, .time{
+    font-size: 0.8rem;
+    color: #999999;
+}
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .footer {
+        flex-direction: column; /* Stack all sections vertically */
+        gap: 20px;
+        align-items: center;
+        text-align: center; /* Align content to center for better readability */
+    }
+
+    .footer > div {
+        width: 100%;
+        margin-bottom: 20px; /* Add spacing between sections */
+    }
+
+    .copyright {
+        padding: 20px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer .title {
+        font-size: 0.9rem;
+    }
+
+    .contact .phNumber {
+        font-size: 1rem;
+    }
+
+    .contact .email {
+        font-size: 0.9rem;
+    }
+
+    .explore a,
+    .service a,
+    .categ a {
+        font-size: 0.7rem;
+    }
+
+    .copyright {
+        font-size: 0.7rem;
+    }
 }

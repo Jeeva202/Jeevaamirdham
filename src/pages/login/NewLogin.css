@@ -1,0 +1,56 @@
+.login-modal {
+    width: 90%;
+    max-width: 70rem;
+}
+
+.login-modal-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.login-modal-left {
+    width: 50%;
+    background-image: url('/public/assets/images/blog_sample1.svg');
+    background-size: cover;
+    background-position: center;
+}
+
+.login-modal-right {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem;
+    position: relative;
+}
+
+.login-box {
+    width: 100%;
+    margin-top: 0 !important;
+}
+
+@media (max-width: 768px) {
+    .login-modal-content {
+        flex-direction: column;
+    }
+
+    .login-modal-left {
+        display: none;
+    }
+
+
+    .login-modal-right {
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 1.5rem;
+        position: relative;
+    }
+
+    .login-box {
+        width: 100%;
+    }
+}

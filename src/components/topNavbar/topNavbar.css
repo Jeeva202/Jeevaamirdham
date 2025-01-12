@@ -34,3 +34,21 @@
     background: #FFF;
     box-shadow: 0px 5px 14px 0px rgba(0, 0, 0, 0.16);
 } */
+
+@media (max-width: 768px) {
+  .desktopMenu {
+    display: none !important;
+  }
+  .mobileMenu {
+    display: flex !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .desktopMenu {
+    display: flex !important;
+  }
+  .mobileMenu {
+    display: none !important;
+  }
+}

@@ -18,6 +18,8 @@ import PaymentGateway from './General settings/PaymentGateway';
 import ThirdPartyLogin from './General settings/ThirdPartyLogin';
 import GoogleAnalytics from './General settings/GoogleAnalytics';
 import Smtp from './General settings/Smtp';
+import EliteMember from './EliteMember';
+import OfflineMember from './OfflineMember';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -77,8 +79,39 @@ export default function AdminPanel() {
 
     const tabs = [
         { label: "Overview", content: <AdminOverview /> },
-        { label: "Free Member", content: <FreeMember /> },
-        { label: "Premium Member", content: <PremiumMember /> },
+        {
+            label: "Members", content: (
+                <Box>
+                    <Tabs
+                        value={nestedValue}
+                        onChange={handleNestedChange}
+                        aria-label="Nested tabs example"
+                        TabIndicatorProps={{ style: { backgroundColor: "#f09300" } }}
+                        sx={{ borderBottom: 1, borderColor: 'divider', margin: "1rem 0 1rem 1rem" }}
+                    >
+                        {["Basic", "Elite", "Premium", "Offline - CRM"].map((label, index) => (
+                            <Tab
+                                key={index}
+                                label={label}
+                                sx={{
+                                    textTransform: "none",
+                                    textAlign: "left",
+                                    "&.Mui-selected": {
+                                        color: "#000",
+                                        fontWeight: "bold",
+                                    },
+                                }}
+                                {...a11yProps(index)}
+                            />
+                        ))}
+                    </Tabs>
+                    <NestedTabPanel value={nestedValue} index={0}><FreeMember /></NestedTabPanel>
+                    <NestedTabPanel value={nestedValue} index={1}><EliteMember /></NestedTabPanel>
+                    <NestedTabPanel value={nestedValue} index={2}><PremiumMember /></NestedTabPanel>
+                    <NestedTabPanel value={nestedValue} index={3}><OfflineMember /></NestedTabPanel>
+                </Box>
+            )
+        },
         {
             label: "Add Product", content: (
                 <Box>
@@ -127,7 +160,7 @@ export default function AdminPanel() {
                         TabIndicatorProps={{ style: { backgroundColor: "#f09300" } }}
                         sx={{ borderBottom: 1, borderColor: 'divider', margin: "1rem 0 1rem 1rem" }}
                     >
-                        {["Payment Gateway", "Third Party Login", "Google Analytics", "SMTP Settings", "Add Video"].map((label, index) => (
+                        {["Payment Gateway", "Third Party Login", "Google Analytics", "SMTP Settings"].map((label, index) => (
                             <Tab
                                 key={index}
                                 label={label}

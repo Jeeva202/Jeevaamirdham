@@ -8,6 +8,7 @@ const cartReducer = createSlice({
     userId: null,
     cartDetails: [],
     booksData: [],
+    isAdminLoggedIn: false,
   },
   reducers: {
     openCart: (state) => {
@@ -67,6 +68,9 @@ const cartReducer = createSlice({
     setBooksData: (state, action) => {
       state.booksData = action.payload; // Store booksData in Redux
     },
+    setAdminLoggedIn: (state, action) => {
+      state.isAdminLoggedIn = action.payload; // Set admin login state based on action
+    },
   },
 });
 
@@ -74,7 +78,7 @@ export const { openCart, closeCart, openLogin, closeLogin, setUserLoggedIn,setUs
   addToCart,
   updateQuantity,
   removeFromCart,
-  clearCart, setBooksData,} = cartReducer.actions;
+  clearCart, setBooksData, setAdminLoggedIn} = cartReducer.actions;
 export const selectIsCartOpen = (state) => state.cart.isCartOpen;
 export const selectIsLoginOpen = (state) => state.cart.isLoginOpen;
 export const selectIsUserLoggedIn = (state) => state.cart.isUserLoggedIn;
@@ -84,4 +88,5 @@ export const selectBooksData = (state) => state.cart.booksData;
 export const selectCartTotal = (state) => {
   return state.cart.cartDetails.reduce((total, item) => total + item.quantity * item.price, 0); // Assuming price is included in the cart item
 };
+export const selectIsAdminLoggedIn = (state) => state.cart.isAdminLoggedIn;
 export default cartReducer.reducer;

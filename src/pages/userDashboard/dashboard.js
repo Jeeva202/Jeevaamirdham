@@ -34,7 +34,7 @@ export default function Dashboard() {
                         ))}
                     </List>
                     <br/>
-                    <Button variant='contained' sx={{textTransform:"none", background:"#0ABB75"}} disableElevation >Subscribe Now</Button>
+                    <Button variant='contained' sx={{textTransform:"none", background:"#0ABB75"}} disableElevation >Upgrade Now</Button>
                 </CardContent>
             </Card>
         </div>

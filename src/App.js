@@ -21,6 +21,8 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { useState } from 'react';
 import NewLogin from './pages/login/NewLogin';
 import WhatsAppButton from './components/whatsapp/Whatsapp';
+import ProtectedRoute from './components/ProtectedRoute';
+import { useSelector } from 'react-redux';
 
 
 const queryClient = new QueryClient();
@@ -29,6 +31,7 @@ const queryClient = new QueryClient();
 function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
+  const isAdminLoggedIn = useSelector((state) => state.cart.isAdminLoggedIn);
 
   const loginPopup = () => {
     setIsLoginOpen(true); // Open the modal
@@ -45,9 +48,9 @@ function App() {
           <Box>
 
             <BrowserRouter>
-              <TopNavbar setIsUserLoggedIn={setIsUserLoggedIn} />
-              <NewLogin isUserLoggedIn={isUserLoggedIn}  setIsUserLoggedIn={setIsUserLoggedIn} /> 
-              <WhatsAppButton phoneNumber="9176564723" />
+              {!isAdminLoggedIn && <TopNavbar setIsUserLoggedIn={setIsUserLoggedIn} />}
+              <NewLogin isUserLoggedIn={isUserLoggedIn} setIsUserLoggedIn={setIsUserLoggedIn} /> 
+              {!isAdminLoggedIn && <WhatsAppButton phoneNumber="9176564723" />}
               <Routes>
                 <Route path="/" element={<Navigate to={"/home"} replace />} />
                 <Route path="/home" element={<HomePage />} />
@@ -74,9 +77,15 @@ function App() {
                 <Route path="/cart" element={<ViewCart />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/dashboard" element={<UserDashboard />} />
-                <Route path="/admin/overview" element={<AdminPanel />} />
+                <Route path="/admin/overview" element={
+                  // <AdminPanel />
+                  <ProtectedRoute>
+                  <AdminPanel />
+                </ProtectedRoute>
+              
+                  } />
               </Routes>
-              <Footer />
+              {!isAdminLoggedIn && <Footer />}
             </BrowserRouter>
           </Box>
         </Box>
