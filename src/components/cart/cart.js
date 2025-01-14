@@ -179,7 +179,7 @@ export default function ViewCart() {
             </TableBody>
           </Table>
         </TableContainer>
-        <div style={{ background: "#fff", padding: "2rem", border: "1px solid #e6e6e6", borderRadius: "5px", width: "30%" }}>
+        <div style={{ background: "#fff", padding: "2rem", border: "1px solid #e6e6e6", borderRadius: "5px", width:{lg:'30%', xs: '30%'} }}>
           <p style={{ fontSize: "1.5rem", margin: "10px 0" }}>Cart Total</p>
           <div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>

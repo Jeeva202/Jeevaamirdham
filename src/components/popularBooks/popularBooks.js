@@ -1,5 +1,6 @@
 import "./popularBooks.css"
 import BuyBotton from "../buyButton/buyButton"
+import { Button } from "@mui/material"
 export default function PopularBooks(){
     const top2Books = [
         {
@@ -33,9 +34,10 @@ export default function PopularBooks(){
                         ₹ {book.cost}
                     </div>
                 </div>
-                <div className="buyButton">
-                    <BuyBotton />
+                <div style={{width:'100%', display:'flex', justifyContent:'center'}}>
+                    <Button sx={{fontSize:{lg:'1rem', xs:'0.8rem'},fontWeight:"bold",  padding:{lg:'0.4rem 0.3rem'}, background:'#F09300', color:'black', borderRadius:'30px', width:'90%'}}>Buy Now</Button>
                 </div>
+                
             </div>
         ))}
             </div>

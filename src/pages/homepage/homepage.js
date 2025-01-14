@@ -49,17 +49,17 @@ export default function HomePage() {
                         border: "1px solid #ccc",
                         boxShadow: "none"
                     }}>
-                        <CardContent sx={{ padding: "16px", borderRadius: "5px" }}>
+                        <CardContent sx={{ padding: "10px", paddingBottom:"10px !important", borderRadius: "5px" }}>
                             <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
                                 <IconButton onClick={handlePreviousStep} disabled={step === 0}>
-                                    <ArrowBackIosNewRoundedIcon sx={{ color: '#F09300', fontSize: "1.5rem" }} />
+                                    <ArrowBackIosNewRoundedIcon sx={{ color: '#F09300', fontSize: "1rem" }} />
                                 </IconButton>
                                 <Box component="img" src={carouselImages[step]} alt="carousel" sx={{ width:"95%",height: "100%", borderRadius: "10px" }} />
                                 <IconButton onClick={handleNextStep} disabled={step === numSteps - 1}>
-                                    <ArrowForwardIosRoundedIcon sx={{ color: '#F09300', fontSize: "1.5rem" }} />
+                                    <ArrowForwardIosRoundedIcon sx={{ color: '#F09300', fontSize: "1rem" }} />
                                 </IconButton>
                             </Box>
-                            <Box sx={{ display: 'flex', justifyContent: "center", marginTop: "1rem" }}>
+                            <Box sx={{ display: 'flex', justifyContent: "center", marginTop: "0.5rem" }}>
                                 {[...Array(numSteps)].map((_, index) => (
                                     <Box
                                         key={index}
