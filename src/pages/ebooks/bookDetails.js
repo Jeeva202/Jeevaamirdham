@@ -141,7 +141,7 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
                                         onClick={()=>handleAddToCart(bookInfoData, quantity)}
                                     >
                                         <img src={ebooks.icons.cart} style={{ width: "1rem", height: "1.5rem", filter: "invert(100%)" }} />
-                                        Add to cart
+                                        Buy Now
                                     </Button>
                                     <CartModal open={isOpen} />
                                 </div>

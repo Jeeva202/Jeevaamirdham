@@ -29,8 +29,7 @@ import LoginModal from "../login/NewLogin";
 import { openLogin, setUserLoggedIn, selectUserId, setCartDetails, setBooksData } from '../../redux/cartSlice'
 import { Loader } from "../../components/loader/loader";
 
-export default function Ebooks({selectedYear, setSelectedYear}) {
-    const [allYears, setAllYears] = useState(true);
+export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllYears}) {
     const [listenPage, setListenPage] = useState(false)
     const [categoryCartFlag, setCategoryCartFlag] = useState(false)
     const [selectedMonth, setSelectedMonth] = useState(null);
@@ -73,7 +72,7 @@ export default function Ebooks({selectedYear, setSelectedYear}) {
         });
         const cartDetails = addtocart.data.cart_details;
 
-        console.log(addtocart, "add to cart");
+        console.log(addtocart, "Buy Now");
 
         // Dispatch an action to update the Redux store with the updated cart details
         dispatch(setCartDetails(cartDetails)); // This will update the cartDetails in Redux

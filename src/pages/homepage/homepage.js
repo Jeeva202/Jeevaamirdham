@@ -13,7 +13,7 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import { useSelector, useDispatch } from "react-redux"
 import { selectUserId, setUserId } from "../../redux/cartSlice"
-export default function HomePage({selectedYear, setSelectedYear}) {
+export default function HomePage({selectedYear, setSelectedYear,allYears, setAllYears}) {
     const carouselImages = [
         "/assets/images/carousel1.svg",
         "/assets/images/carousel2.svg"
@@ -92,7 +92,9 @@ export default function HomePage({selectedYear, setSelectedYear}) {
                 </div>
 
                 <div className="PopBooks">
-                    <BooksSection userId={userId} selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
+                    <BooksSection userId={userId} selectedYear={selectedYear} setSelectedYear={setSelectedYear}                         
+                    allYears={allYears}
+                        setAllYears={setAllYears} />
                 </div>
                 <div className="YouTube">
                     <PranavamTV />

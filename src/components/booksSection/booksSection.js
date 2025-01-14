@@ -4,7 +4,7 @@ import PopularBooks from "../popularBooks/popularBooks"
 import ViewAll from "../viewAllButton/viewAll"
 import { homePage } from "../../constants/screenData"
 import { useNavigate } from "react-router-dom"
-export default function BooksSection({userId, selectedYear, setSelectedYear}) {
+export default function BooksSection({userId, selectedYear, setSelectedYear,allYears, setAllYears}) {
     const navigate = useNavigate()
     return (
         <div className="container">
@@ -12,7 +12,8 @@ export default function BooksSection({userId, selectedYear, setSelectedYear}) {
                 <div className="subtitle">
                     E-Magazine Edition
                 </div>
-                <ShopByEditionCard selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
+                <ShopByEditionCard selectedYear={selectedYear} setSelectedYear={setSelectedYear}  allYears={allYears}
+                        setAllYears={setAllYears} />
             </div>
             <div className="right-side">
                 <div className="subtitle-row">
@@ -27,7 +28,8 @@ export default function BooksSection({userId, selectedYear, setSelectedYear}) {
                     </div>
                 </div>
                 <div className="popular">
-                        <PopularBooks userId={userId}/>
+                        <PopularBooks userId={userId}                         
+                        />
                 </div>
             </div>
         </div>

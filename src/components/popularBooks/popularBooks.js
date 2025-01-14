@@ -2,11 +2,11 @@ import "./popularBooks.css"
 import BuyBotton from "../buyButton/buyButton"
 import { useQuery } from "react-query"
 import axios from "axios";
-import { setCartDetails, openCart,selectIsCartOpen } from "../../redux/cartSlice";
+import { setCartDetails, openCart,selectIsCartOpen, setBooksData } from "../../redux/cartSlice";
 import { useSelector, useDispatch } from "react-redux";
 import CartModal from "../cart/cartModal";
 import { Loader } from "../loader/loader";
-
+import { useEffect } from "react";
 export default function PopularBooks({userId}){
         const dispatch = useDispatch()
         const isOpen = useSelector(selectIsCartOpen)
@@ -15,9 +15,16 @@ export default function PopularBooks({userId}){
         queryFn: async () => {
             const { data } = await axios.get("http://localhost:3001/ebooks/books");
             const filteredBooks = data.slice(0, 2); 
+            
             return filteredBooks;
         },
     });
+
+        useEffect(() => {
+            if (booksData) {
+                dispatch(setBooksData(booksData)); // Store booksData in Redux
+            }
+        }, [booksData, dispatch]);
     const handleAddToCart = async (book, quantity) => {
         console.log("user id", userId);
 
@@ -28,7 +35,7 @@ export default function PopularBooks({userId}){
         });
         const cartDetails = addtocart.data.cart_details;
 
-        console.log(addtocart, "add to cart");
+        console.log(addtocart, "Buy Now");
 
         // Dispatch an action to update the Redux store with the updated cart details
         dispatch(setCartDetails(cartDetails)); // This will update the cartDetails in Redux

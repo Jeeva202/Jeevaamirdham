@@ -81,7 +81,7 @@ export default function BuyBook({categories, handleCategoryClick, currentItems, 
                             }} onClick={()=>handleAddToCart(e, 1)}>
 
                                 <img src={ebooks.icons.cart} style={{ width: "1rem" }} />
-                                Add to Cart
+                                Buy Now
                             </Button>
                             <CartModal open={isOpen} />
                         </div>
