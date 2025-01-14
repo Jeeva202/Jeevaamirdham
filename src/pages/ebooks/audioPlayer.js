@@ -269,7 +269,7 @@ export default function AudioPlayer({
 
 
 
-                <div className="audio-prev-nxt">
+                {/* <div className="audio-prev-nxt">
                     <div className="audio-prev" onClick={() => handlePrevNext('previous')}>
                         {prevMagazine && (
                             <>
@@ -293,7 +293,7 @@ export default function AudioPlayer({
                             </>
                         )}
                     </div>
-                </div>
+                </div> */}
             </div>
 
             {/* Modal for upgrade */}
