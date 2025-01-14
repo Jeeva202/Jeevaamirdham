@@ -76,15 +76,15 @@ export default function ViewCart() {
   }, []); // Run only on component mount
 
   // Handle delete from cart
-  const handleDelete = async (name) => {
+  const handleDelete = async (id) => {
     try {
       await axios.post("http://localhost:3001/ebooks/remove_from_cart", {
         userId,
-        book_id: name,
+        book_id: id,
       });
 
       // Remove the item from the frontend
-      setRows(rows.filter((row) => row.name !== name));
+      setRows(rows.filter((row) => row.id !== id));
     } catch (error) {
       console.error("Error removing item from cart:", error);
     }
@@ -150,7 +150,7 @@ export default function ViewCart() {
               {rows.map((row) => (
                 <TableRow key={row.name} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
                   <TableCell>
-                    <IconButton onClick={() => handleDelete(row.name)}>
+                    <IconButton onClick={() => handleDelete(row.id)}>
                       <ClearIcon fontSize="small" />
                     </IconButton>
                   </TableCell>

@@ -10,12 +10,12 @@ import TodayThoughts from './todayThoughts';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import EmailIcon from '@mui/icons-material/Email';
-import { useDispatch } from "react-redux";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { openLogin, setUserLoggedIn, setUserId } from '../../redux/cartSlice';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { openLogin, setUserLoggedIn, setUserId, selectCartDetails, selectUserId, setCartDetails } from '../../redux/cartSlice';
+import axios from 'axios';
 const StyledTabs = styled((props) => (
     <Tabs
         {...props}
@@ -72,6 +72,10 @@ export default function TopNavbar() {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const cart_details = useSelector(selectCartDetails)
+    const userIdfromstore = useSelector(selectUserId) 
+    const userId = userIdfromstore ? userIdfromstore : localStorage.getItem('id')
+    const badgeNumber = cart_details && Array.isArray(cart_details) ? cart_details.length : 0;
 
     useEffect(() => {
         const storedUsername = localStorage.getItem('username');
@@ -109,7 +113,7 @@ export default function TopNavbar() {
     }, []);
 
     useEffect(() => {
-        const routes = ['/', '/ebooks', '/audio_video', '/blog', '/about', '/contact'];
+        const routes = ['/', '/emagazine', '/audio_video', '/blog', '/about', '/contact'];
         const currentPath = window.location.pathname;
         const currentIndex = routes.indexOf(currentPath);
         if (currentIndex !== -1) {
@@ -119,9 +123,18 @@ export default function TopNavbar() {
         }
     }, []);
 
+
+    useEffect(async ()=>{
+        // if(cart_details == []){
+            const response = await axios.get(`http://localhost:3001/ebooks/get_cart?id=${userId}`);
+            const cartData = response.data.cart_details;
+            setCartDetails(cartData)
+        // }
+    }, [])
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
-        const routes = ['/', '/ebooks', '/audio_video', '/blog', '/about', '/contact'];
+        const routes = ['/', '/emagazine', '/audio_video', '/blog', '/about', '/contact'];
         navigate(routes[newValue]);
     };
 
@@ -136,6 +149,7 @@ export default function TopNavbar() {
     const handleLogout = () => {
         localStorage.removeItem('username');
         localStorage.removeItem('email');
+        localStorage.removeItem('id')
         setUsername(null);
         setEmail(null);
         dispatch(setUserLoggedIn(false));
@@ -332,7 +346,10 @@ export default function TopNavbar() {
                         )}
                         <Button disableRipple variant="text" sx={{ textTransform: "none", gap: "0.8rem", fontWeight: 600, fontSize: "0.75rem", color: "#444" }}
                             onClick={() => { navigate('/cart') }}>
-                            <StyledBadge badgeContent={4}>
+                            {/* <StyledBadge badgeContent={
+                                cart_details != []? cart_details.length : cart_details
+                                }> */}
+                                <StyledBadge badgeContent={badgeNumber}>
                                 <img src={navBanner.icons.cart} style={{ width: "1rem" }} />
                             </StyledBadge>
                             {/* Items */}

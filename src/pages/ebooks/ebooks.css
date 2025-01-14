@@ -249,7 +249,9 @@
     color: #000000;
     font-weight: 400;
     text-align: justify;
-
+    max-height: 200px; /* Set a max height for the transcript */
+    overflow-y: auto; /* Make it scrollable when the content exceeds the height */
+    padding-right: 10px;
 }
 
 .audio-prev-nxt {

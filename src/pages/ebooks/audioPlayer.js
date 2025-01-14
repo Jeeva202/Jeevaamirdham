@@ -7,7 +7,6 @@ import { ebooks } from '../../constants/screenData';
 import Playstore from '../../components/playstore/playstore';
 import NewsLetter from '../../components/newsLetter/newsletter';
 import KPI from '../../components/kpi/kpi';
-
 const plans = [
     {
         name: "basic",
@@ -56,26 +55,52 @@ const plans = [
         },
     },
 ];
+const monthMapping = {
+    January: 1,
+    February: 2,
+    March: 3,
+    April: 4,
+    May: 5,
+    June: 6,
+    July: 7,
+    August: 8,
+    September: 9,
+    October: 10,
+    November: 11,
+    December: 12,
+};
 
 export default function AudioPlayer({
+    APIBookData,
     audioData,
-    whichBook,
     backToAllYearPage,
     backToBookBuySection,
-    handleChange,
-    expanded,
-    openPreviousAudioBook,
-    plan
+    handlePrevNext,
+    plan,
+    prevMagazine,
+    nextMagazine,
+    payNow
 }) {
     const audioRef = useRef(null);
-    const [openUpgradeModal, setOpenUpgradeModal] = useState(false); 
+    const [openUpgradeModal, setOpenUpgradeModal] = useState(false);
+    const [expandedState, setExpandedState] = useState(null); // Track expanded state for non-basic plans
+    const [currentAudioIndex, setCurrentAudioIndex] = useState(null); // Current audio index for autoplay
+    const [isPlayingAll, setIsPlayingAll] = useState(false); // Track if "Play All" is activated
 
-    // Function to handle chapter click
+
     const handleChapterClick = (index) => {
-        if (plan === 'basic' && index !== 0) { 
-            setOpenUpgradeModal(true); 
+        if (plan === 'basic' && index !== 0) {
+            // If on basic plan and clicked accordion is not the first one, show the upgrade modal
+            setOpenUpgradeModal(true);
         } else {
-            handleChange(index)(); 
+            if (plan !== 'basic') {
+                // For non-basic plans, toggle the expanded state of the clicked accordion
+                setExpandedState(prevState => (prevState === index ? null : index));
+            } else {
+                // For basic plans, allow only the first accordion to expand and collapse
+                setExpandedState(index === 0 ? index : null);
+            }
+            setCurrentAudioIndex(index);  // Update the current audio index when clicked
         }
     };
 
@@ -84,17 +109,46 @@ export default function AudioPlayer({
         setOpenUpgradeModal(false);
     };
 
-    const handleUpgradeClick = () => {
-        setOpenUpgradeModal(false);
-        // upgrade logic here
-    };
-
+    // const handleUpgradeClick = () => {
+    //     setOpenUpgradeModal(false);
+    //     // upgrade logic here
+    // };
 
     const handleAudioEnded = () => {
-        if (plan === 'basic') {
-            setOpenUpgradeModal(true); // Open the modal when audio finishes
+        // If playing all, move to the next audio
+        if (isPlayingAll && currentAudioIndex < audioData.length - 1) {
+            const nextAudioIndex = currentAudioIndex + 1;
+            setCurrentAudioIndex(nextAudioIndex);
+            setExpandedState(nextAudioIndex);  // Expand the accordion of the next audio
         }
     };
+
+    // Handle Play All click
+    const handlePlayAll = () => {
+        setIsPlayingAll(true);
+        setCurrentAudioIndex(0); // Start playing from the first audio
+        setExpandedState(0); // Expand the first accordion
+    };
+    const handleUpgradeClick = (planName) => {
+        if (planName === 'basic') {
+            // Handle basic plan logic (if any)
+            alert('You are already on the basic plan!');
+        } else {
+            // Call the payNow function for elite and premium plans
+            payNow(planName);
+        setOpenUpgradeModal(false);
+
+        }
+    };
+
+    // Auto-play logic: if `currentAudioIndex` changes, update the audio element and play it
+    useEffect(() => {
+        if (isPlayingAll && audioRef.current && audioData[currentAudioIndex]) {
+            const audio = audioRef.current;
+            audio.src = audioData[currentAudioIndex].audio;
+            audio.play();
+        }
+    }, [currentAudioIndex, isPlayingAll]);
 
     return (
         <>
@@ -104,33 +158,33 @@ export default function AudioPlayer({
                 </a>
                 <img src={ebooks.icons.RightArrowStroke} alt="" />
                 <div className="nav-buy-book" onClick={() => backToBookBuySection()}>
-                    {audioData[whichBook].genre}
+                    {APIBookData.category}
                 </div>
                 <img src={ebooks.icons.RightArrowStroke} alt="" />
                 <div className="nav-title">
-                    {audioData[whichBook].title}
+                    {APIBookData.title}
                 </div>
             </div>
 
             <div className="img-details-section">
-                <img src={audioData[whichBook].img} alt="" />
+                <img src={APIBookData.imgUrl} alt="" />
                 <div className="details">
-                    {audioData[whichBook].details}
+                    {APIBookData.details}
                 </div>
             </div>
 
             <div className="audio-section">
                 <div className="audio-cat">
-                    {audioData[whichBook].genre}
+                    {APIBookData.category}
                 </div>
                 <div className="audio-subtext">
                     <div className="audio-date">
-                        {audioData[whichBook].date} / {audioData[whichBook].by}
+                        {APIBookData.created_dt} / {APIBookData.by}
                     </div>
                 </div>
                 <div className="audio-title-section">
                     <div className="audio-title">
-                        {audioData[whichBook].title}
+                        {APIBookData.title}
                     </div>
                     <button
                         className="audio-playall"
@@ -138,13 +192,13 @@ export default function AudioPlayer({
                         style={{
                             backgroundColor: plan === 'basic' ? '#E6E6E6' : '#F09300',
                         }}
+                        onClick={handlePlayAll}
                     >
                         Play All
                     </button>
                 </div>
-
                 <div className="audio-play-section">
-                    {audioData[whichBook].audio_content.map((audio, index) => (
+                    {audioData.map((audio, index) => (
                         <Accordion
                             key={index}
                             sx={{
@@ -152,9 +206,9 @@ export default function AudioPlayer({
                                 background: index === 0 ? "#FCCC4D" : plan === 'basic' ? "#E6E6E6" : "#FCCC4D",
                                 borderRadius: "10px",
                             }}
-                            expanded={expanded === index || (index === 0 && plan === 'basic')}
-                            onClick={() => handleChapterClick(index)}  // Changed to onClick to handle the disabled accordion click
-                            disabled={plan === 'basic' && index !== 0}  // Disable non-first chapters for 'basic' plan
+                            expanded={plan === 'basic' ? index === 0 && expandedState === 0 : expandedState === index}  // First accordion expandable for basic users
+                            onClick={() => handleChapterClick(index)}  // Handle click to toggle expansion
+                            disabled={plan === 'basic' && index !== 0}  // Disable non-first accordion for basic users
                         >
                             <AccordionSummary
                                 expandIcon={<ArrowDropDownIcon />}
@@ -171,8 +225,8 @@ export default function AudioPlayer({
                                     background: index === 0
                                         ? "#FCCC4D"
                                         : plan === 'basic'
-                                        ? "#E6E6E6"
-                                        : "#FCCC4D",
+                                            ? "#E6E6E6"
+                                            : "#FCCC4D",
                                 }}
                             >
                                 <div className="player-transcript-section">
@@ -184,9 +238,9 @@ export default function AudioPlayer({
                                                 className="audio-image"
                                             />
                                             <div className="audio-details">
-                                                <h3 className="audio-title">{audioData[whichBook].title}</h3>
-                                                <p className="audio-author">{audioData[whichBook].author}</p>
-                                                {index === 0 && plan === 'basic' && (
+                                                <h3 className="audio-title">{APIBookData.title}</h3>
+                                                <p className="audio-author">{APIBookData.author}</p>
+                                                {(index === currentAudioIndex || plan === 'basic') && (
                                                     <audio
                                                         ref={audioRef}
                                                         controls
@@ -203,7 +257,7 @@ export default function AudioPlayer({
                                         </div>
 
                                         <div className="audio-transcript">
-                                            <p>{audio.transcript}</p>
+                                            <div dangerouslySetInnerHTML={{ __html: audio.transcript }} />
                                         </div>
                                     </div>
                                 </div>
@@ -212,35 +266,29 @@ export default function AudioPlayer({
                     ))}
                 </div>
 
+
+
                 <div className="audio-prev-nxt">
-                    <div className="audio-prev" onClick={() => openPreviousAudioBook()}>
-                        {parseInt(whichBook) !== 0 && (
+                    <div className="audio-prev" onClick={() => handlePrevNext('previous')}>
+                        {prevMagazine && (
                             <>
-                                <img src={audioData[(parseInt(whichBook) - 1).toString()].img} alt="" />
+                                <img src={prevMagazine.imgUrl} alt="" />
                                 <div className="audio-prev-text">
-                                    <div className="prev">
-                                        PREV
-                                    </div>
-                                    <div className="prev-title">
-                                        {audioData[(parseInt(whichBook) - 1).toString()].title}
-                                    </div>
+                                    <div className="prev">PREV</div>
+                                    <div className="prev-title">{prevMagazine.title}</div>
                                 </div>
                             </>
                         )}
                     </div>
 
-                    <div className="audio-nxt">
-                        {parseInt(whichBook) < audioData.length - 1 && (
+                    <div className="audio-nxt" onClick={() => handlePrevNext("next")}>
+                        {nextMagazine && (
                             <>
                                 <div className="audio-nxt-text">
-                                    <div className="nxt">
-                                        NEXT
-                                    </div>
-                                    <div className="nxt-title">
-                                        {audioData[(parseInt(whichBook) + 1).toString()].title}
-                                    </div>
+                                    <div className="nxt">NEXT</div>
+                                    <div className="nxt-title">{nextMagazine.title}</div>
                                 </div>
-                                <img src={audioData[(parseInt(whichBook) + 1).toString()].img} alt="" />
+                                <img src={nextMagazine.imgUrl} alt="" />
                             </>
                         )}
                     </div>
@@ -324,7 +372,7 @@ export default function AudioPlayer({
                                                 variant="contained"
                                                 sx={plan.buttonStyle}
                                                 fullWidth
-                                                onClick={handleUpgradeClick}
+                                                onClick={() => plan.name !== "basic" && handleUpgradeClick(plan.name)} // Only trigger on "elite" and "premium"
                                             >
                                                 {plan.buttonLabel}
                                             </Button>
@@ -336,7 +384,7 @@ export default function AudioPlayer({
                     </Container>
                 </Box>
             </Modal>
-            <div className="other-ebooks">
+            {/* <div className="other-ebooks">
                                     {[1, 2, 3].map((e, i) => (
                                         <div className="other-book">
                                         <img src="/assets/images/other-ebooks.svg" alt=""/>
@@ -375,10 +423,10 @@ export default function AudioPlayer({
                                         </div>
                                         </div>
                                     ))}
-                                </div>
-                                <Playstore/>
-                                <NewsLetter/>
-                                <KPI/>
+                                </div> */}
+            <Playstore />
+            <NewsLetter />
+            <KPI />
         </>
     );
 }

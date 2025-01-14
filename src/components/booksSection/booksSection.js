@@ -4,14 +4,16 @@ import PopularBooks from "../popularBooks/popularBooks"
 import ViewAll from "../viewAllButton/viewAll"
 import { homePage } from "../../constants/screenData"
 import { Button } from "@mui/material"
-export default function BooksSection() {
+import { useNavigate } from "react-router-dom"
+export default function BooksSection({userId, selectedYear, setSelectedYear}) {
+    const navigate = useNavigate()
     return (
         <div className="container">
             <div className="left-side">
                 <div className="subtitle">
                     E-Magazine Edition
                 </div>
-                <ShopByEditionCard />
+                <ShopByEditionCard selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
             </div>
             <div className="right-side">
                 <div className="subtitle-row">
@@ -19,12 +21,18 @@ export default function BooksSection() {
                         Popular Books
                     </div>
                     <div>
-                    <Button sx={{ textTransform:'none', fontSize:{lg:'1rem', xs:'0.7rem'},fontWeight:"bold",  padding:{lg:'0.5rem 2.4rem',xs:'0.4rem 0.3rem'}, background:'#F09300', color:'black', borderRadius:'30px'}}>View All</Button>
+                    <Button sx={{ 
+                        textTransform:'none', 
+                        fontSize:{lg:'1rem', xs:'0.7rem'},
+                        fontWeight:"bold",  
+                        padding:{lg:'0.5rem 2.4rem',xs:'0.4rem 0.3rem'}, 
+                        background:'#F09300', color:'black', borderRadius:'30px'}}
+                        onClick={()=> navigate('/emagazine')}>View All</Button>
 
                     </div>
                 </div>
                 <div className="popular">
-                        <PopularBooks/>
+                        <PopularBooks userId={userId}/>
                 </div>
             </div>
         </div>

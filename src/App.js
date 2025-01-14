@@ -32,7 +32,7 @@ function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
   const isAdminLoggedIn = useSelector((state) => state.cart.isAdminLoggedIn);
-
+  const [selectedYear, setSelectedYear] = useState(NaN);
   const loginPopup = () => {
     setIsLoginOpen(true); // Open the modal
   };
@@ -53,14 +53,16 @@ function App() {
               {!isAdminLoggedIn && <WhatsAppButton phoneNumber="9176564723" />}
               <Routes>
                 <Route path="/" element={<Navigate to={"/home"} replace />} />
-                <Route path="/home" element={<HomePage />} />
+                <Route path="/home" element={<HomePage selectedYear={selectedYear} setSelectedYear={setSelectedYear}/>} />
                 <Route
-                  path="/ebooks"
+                  path="/emagazine"
                   element={
                     <>
                       <Ebooks
                         isUserLoggedIn={isUserLoggedIn}
                         loginPopup={loginPopup}
+                        selectedYear={selectedYear}
+                        setSelectedYear={setSelectedYear}
                       />
                       {/* {isLoginOpen && <LoginModal onClose={closeLoginPopup} />} */}
                       {isLoginOpen && <NewLogin isUserLoggedIn={isUserLoggedIn} setIsUserLoggedIn={setIsUserLoggedIn} />}
