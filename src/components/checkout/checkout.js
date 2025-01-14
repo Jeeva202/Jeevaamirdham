@@ -87,7 +87,7 @@ export default function Checkout() {
 
                   // Send payment data to your backend to store it
                   try {
-                      const res = await fetch("http://localhost:3001/ebooks/payment-success", {
+                      const res = await fetch(process.env.REACT_APP_URL+"/ebooks/payment-success", {
                           method: "POST",
                           headers: {
                               "Content-Type": "application/json",

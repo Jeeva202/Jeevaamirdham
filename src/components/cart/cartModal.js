@@ -23,7 +23,7 @@ const CartModal = ({ open }) => {
     // Handle removing an item from the cart
     const handleRemoveFromCart = async (bookId) => {
         try {
-            await axios.post('http://localhost:3001/ebooks/remove_from_cart', {
+            await axios.post(process.env.REACT_APP_URL+'/ebooks/remove_from_cart', {
                 userId,
                 book_id: bookId,
             });

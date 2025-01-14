@@ -14,7 +14,7 @@ export default function PopularBooks({ userId }) {
     const { data: booksData, error: booksError, isLoading: isBooksLoading } = useQuery({
         queryKey: ["books"],
         queryFn: async () => {
-            const { data } = await axios.get("http://localhost:3001/ebooks/books");
+            const { data } = await axios.get(process.env.REACT_APP_URL+"/ebooks/books");
             const filteredBooks = data.slice(0, 2);
 
             return filteredBooks;
@@ -25,12 +25,12 @@ export default function PopularBooks({ userId }) {
         if (booksData) {
             dispatch(setBooksData(booksData)); // Store booksData in Redux
         }
-    }, [booksData, dispatch]);
-
+    }, [booksData]);
     const handleAddToCart = async (book, quantity) => {
         console.log("user id", userId);
+        // const addtocart = await axios.post(process.env.REACT_APP_URL+'/ebooks/add_to_cart', {
+            const addtocart = await axios.post(process.env.REACT_APP_URL+'/ebooks/add_to_cart', {
 
-        const addtocart = await axios.post('http://localhost:3001/ebooks/add_to_cart', {
             userId: userId,
             book: book.id,
             quantity: quantity
@@ -72,17 +72,8 @@ export default function PopularBooks({ userId }) {
                             padding: { lg: '0.4rem 0.3rem' },
                             background: '#F09300', color: 'black',
                             borderRadius: '30px', width: '90%'
-                        }} onclick={() => {
-                            console.log("function call");
-
-                            handleAddToCart(book, 1)
-                        }
-                        }>Buy Now</Button>
-                                        <Button onclick={()=>{console.log("new button called");
-                                        }}> Buy now</Button>
+                        }} onClick={() => handleAddToCart(book, 1)}>Buy Now</Button>
                     </div>
-
-
 
                 </div>
             ))}
