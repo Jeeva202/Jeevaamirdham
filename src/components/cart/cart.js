@@ -12,12 +12,13 @@ import IconButton from "@mui/material/IconButton";
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Ensure axios is installed
 import { useSelector } from "react-redux";
-import { selectUserId, selectBooksData } from "../../redux/cartSlice";
+import { selectUserId, selectBooksData, selectIsUserLoggedIn } from "../../redux/cartSlice";
 
 export default function ViewCart() {
   const [rows, setRows] = useState([]); // Initially empty, will be populated with real cart data
   const navigate = useNavigate();
   let userId = useSelector(selectUserId);
+  let isUserLoggedIn = useSelector(isUserLoggedIn)
   // const bookdata = useSelector(selectBooksData);
   let totalAmount = rows.reduce((total, row) => total + row.subtotal, 0).toFixed(2);
 
@@ -72,8 +73,10 @@ export default function ViewCart() {
 
   // Fetch cart data when the component mounts
   useEffect(() => {
-    fetchCartData();
-  }, []); // Run only on component mount
+    if(isUserLoggedIn == true){
+      fetchCartData();
+    }
+  }, [isUserLoggedIn]); // Run only on component mount
 
   // Handle delete from cart
   const handleDelete = async (id) => {

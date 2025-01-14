@@ -14,8 +14,9 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useSelector, useDispatch } from 'react-redux';
-import { openLogin, setUserLoggedIn, setUserId, selectCartDetails, selectUserId, setCartDetails } from '../../redux/cartSlice';
+import { openLogin, setUserLoggedIn, setUserId, selectCartDetails, selectUserId, setCartDetails, selectIsLoginOpen, selectIsUserLoggedIn } from '../../redux/cartSlice';
 import axios from 'axios';
+
 const StyledTabs = styled((props) => (
     <Tabs
         {...props}
@@ -76,7 +77,7 @@ export default function TopNavbar() {
     const userIdfromstore = useSelector(selectUserId) 
     const userId = userIdfromstore ? userIdfromstore : localStorage.getItem('id')
     const badgeNumber = cart_details && Array.isArray(cart_details) ? cart_details.length : 0;
-
+    const isUserLoggedIn = useSelector(selectIsUserLoggedIn)
     useEffect(() => {
         const storedUsername = localStorage.getItem('username');
         const storedEmail = localStorage.getItem('email');
@@ -125,11 +126,11 @@ export default function TopNavbar() {
 
 
     useEffect(async ()=>{
-        // if(cart_details == []){
+        if(isUserLoggedIn == true){
             const response = await axios.get(`http://localhost:3001/ebooks/get_cart?id=${userId}`);
             const cartData = response.data.cart_details;
             setCartDetails(cartData)
-        // }
+        }
     }, [])
 
     const handleChange = (event, newValue) => {

@@ -7,6 +7,7 @@ import { ebooks } from '../../constants/screenData';
 import Playstore from '../../components/playstore/playstore';
 import NewsLetter from '../../components/newsLetter/newsletter';
 import KPI from '../../components/kpi/kpi';
+const no_image = "/assets/images/no_image_available.jpeg"
 const plans = [
     {
         name: "basic",
@@ -233,8 +234,8 @@ export default function AudioPlayer({
                                     <div className="player">
                                         <div className="audio-header">
                                             <img
-                                                src="/assets/images/audio.svg"
-                                                alt="Audio Thumbnail"
+                                                src={audio.img || no_image}
+                                                alt={"thumbnail image"}
                                                 className="audio-image"
                                             />
                                             <div className="audio-details">
