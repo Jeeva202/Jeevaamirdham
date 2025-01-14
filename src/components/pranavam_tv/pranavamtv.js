@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { homePage } from "../../constants/screenData";
 import ViewAll from "../viewAllButton/viewAll"
 import "./pranavam.css"
@@ -53,8 +54,8 @@ export default function PranavamTV() {
                 <div className="text">
                     Audio and Video
                 </div>
-                <div className="viewAll">
-                    <ViewAll text="View All" width="7rem" padding={"0.8rem 4rem"}/>
+                <div>
+                    <Button sx={{ textTransform:'none', fontSize:{lg:'1rem', xs:'0.7rem'},fontWeight:"bold",  padding:{lg:'0.5rem 2.4rem',xs:'0.4rem 0.3rem'}, background:'#F09300', color:'black', borderRadius:'30px'}}>View All</Button>
                 </div>
             </div>
             <div className="video-section">
@@ -70,7 +71,7 @@ export default function PranavamTV() {
                                     {d.title}
 
                                 </div>
-                                <div className="add-info">
+                                {/* <div className="add-info">
                                     <div className="comment">
                                         <img src={homePage.icons.CommentIcon} alt="" />
                                         <div className="count">{d.comments }</div>
@@ -79,7 +80,7 @@ export default function PranavamTV() {
                                         <img src={homePage.icons.ViewIcon} alt="" />
                                         <div className="count">{d.views}</div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
 
                         </div>

@@ -3,6 +3,7 @@ import ShopByEditionCard from "../shopByEditionCard/shopByEditionCard"
 import PopularBooks from "../popularBooks/popularBooks"
 import ViewAll from "../viewAllButton/viewAll"
 import { homePage } from "../../constants/screenData"
+import { Button } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 export default function BooksSection({userId, selectedYear, setSelectedYear,allYears, setAllYears}) {
     const navigate = useNavigate()
@@ -20,11 +21,15 @@ export default function BooksSection({userId, selectedYear, setSelectedYear,allY
                     <div className="subtitle">
                         Popular Books
                     </div>
-                    {/* <div className="hdivider">
-                        <img src={homePage.icons.HorizontalDivider} alt=""/>
-                    </div> */}
-                    <div className="viewAll">
-                        <ViewAll text="View All"  width="7rem" padding="0.8rem 4rem" onClick={()=> navigate('/emagazine')} />
+                    <div>
+                    <Button sx={{ 
+                        textTransform:'none', 
+                        fontSize:{lg:'1rem', xs:'0.7rem'},
+                        fontWeight:"bold",  
+                        padding:{lg:'0.5rem 2.4rem',xs:'0.4rem 0.3rem'}, 
+                        background:'#F09300', color:'black', borderRadius:'30px'}}
+                        onClick={()=> navigate('/emagazine')}>View All</Button>
+
                     </div>
                 </div>
                 <div className="popular">

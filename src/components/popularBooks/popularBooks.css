@@ -5,7 +5,7 @@
     width: 50%;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
 }
 .book-cards .content > * {
     padding-bottom: 10px;
@@ -28,4 +28,36 @@
 }
 .buyButton{
     width: 100%;
+}
+
+@media (max-width: 768px) {
+    .book-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .book-cards > .card {
+        width: 90%;
+        margin-bottom: 20px;
+    }
+
+    .book-cards .image {
+        width: 100%;
+    }
+
+    .book-cards .title {
+        font-size: 1rem;
+    }
+
+    .desc {
+        font-size: 0.9rem;
+    }
+
+    .cost {
+        font-size: 1rem;
+    }
+
+    .buyButton {
+        width: 100%;
+    }
 }

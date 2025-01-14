@@ -1,12 +1,28 @@
 import "./shopByEditionCard.css";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
+
 export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYears, setAllYears }) {
+
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const Cards = [
         { year: 2019, img: "/assets/images/2018.png" },
         { year: 2020, img: "/assets/images/2019.png" },
@@ -15,6 +31,7 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
         { year: 2023, img: "/assets/images/2022.png" },
         { year: 2024, img: "/assets/images/2023.png" }
     ];
+;
 
     const navigate = useNavigate();
 
@@ -38,11 +55,11 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
     };
 
     return (
-        <div className="Cards">
-            {Cards.map((e) => (
+        <div className={`Cards ${isMobile ? 'mobile' : ''}`}>
+            {Cards.map((e) => ( 
                 <div className="card" key={e.year}>
                     <div className="card-img">
-                        <img style={{ width: "100%", height: "100%" }} src={e.img} alt="" />
+                        <img style={{ width: "100%", height: "100%" }}  src={e.img} alt="" />
                     </div>
                     <a className="card-text">
                         <p onClick={() => handleOnClick(e.year)}>View {e.year} Edition</p>

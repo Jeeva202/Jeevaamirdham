@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import CartModal from "../cart/cartModal";
 import { Loader } from "../loader/loader";
 import { useEffect } from "react";
+import { Button } from "@mui/material"
 export default function PopularBooks({userId}){
         const dispatch = useDispatch()
         const isOpen = useSelector(selectIsCartOpen)
@@ -63,9 +64,15 @@ export default function PopularBooks({userId}){
                         ₹ {book.offPrice}
                     </div>
                 </div>
-                <div className="buyButton">
-                    <BuyBotton onclick={()=>handleAddToCart(book, 1)}/>
+                <div style={{width:'100%', display:'flex', justifyContent:'center'}}>
+                    <Button sx={{
+                        fontSize:{lg:'1rem', xs:'0.8rem'},
+                        fontWeight:"bold",  
+                        padding:{lg:'0.4rem 0.3rem'}, 
+                        background:'#F09300', color:'black', 
+                        borderRadius:'30px', width:'90%'}} onclick={()=>handleAddToCart(book, 1)}>Buy Now</Button>
                 </div>
+                
             </div>
         ))}
         <CartModal open={isOpen} />
