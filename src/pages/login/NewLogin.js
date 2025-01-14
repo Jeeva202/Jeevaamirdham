@@ -21,7 +21,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { openLogin, selectIsLoginOpen } from "../../redux/cartSlice";
 import { closeLogin } from "../../redux/cartSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { setUserLoggedIn,  setUserId, setAdminLoggedIn} from "../../redux/cartSlice";
+import { setUserLoggedIn, setUserId, setAdminLoggedIn } from "../../redux/cartSlice";
 
 import axios from "axios";
 import PrivacyPolicyModal from './PrivacyPolicyModal';
@@ -41,8 +41,8 @@ const style = {
     boxShadow: 24,
 
 };
-const domain = 'http://localhost:3001'
-const LoginModal = ({handleLogin}) => {
+const domain = process.env.REACT_APP_URL+''
+const LoginModal = ({ handleLogin }) => {
     const [open, setOpen] = useState(openLogin);
     const [tabIndex, setTabIndex] = useState(0);
     const [email, setEmail] = useState("");
@@ -126,25 +126,25 @@ const LoginModal = ({handleLogin}) => {
             if (checkUserResponse.data.userExists) {
                 dispatch(setUserId(checkUserResponse.data.id))
                 localStorage.setItem("id", checkUserResponse.data.id)
-              console.log("User already exists",checkUserResponse.data.id);
+                console.log("User already exists", checkUserResponse.data.id);
             } else {
-              // User doesn't exist, create a new user
-              console.log("User does not exist. Creating user...");
-        
-              const createUserResponse = await axios.post(domain + '/create-user', {
-                  email: email,
-                  name: name,
-              });
-        
-              if (createUserResponse.data.user) {
-                console.log("User created successfully!",createUserResponse.data.user.id);
-                dispatch(setUserId(createUserResponse.data.user.id))
-                localStorage.setItem('id', createUserResponse.data.user.id)
-                alert(`Welcome, ${name}!`);
-              } else {
-                console.error("Error creating user:", createUserResponse.data.message);
-                alert("There was an error while creating your account.");
-              }
+                // User doesn't exist, create a new user
+                console.log("User does not exist. Creating user...");
+
+                const createUserResponse = await axios.post(domain + '/create-user', {
+                    email: email,
+                    name: name,
+                });
+
+                if (createUserResponse.data.user) {
+                    console.log("User created successfully!", createUserResponse.data.user.id);
+                    dispatch(setUserId(createUserResponse.data.user.id))
+                    localStorage.setItem('id', createUserResponse.data.user.id)
+                    alert(`Welcome, ${name}!`);
+                } else {
+                    console.error("Error creating user:", createUserResponse.data.message);
+                    alert("There was an error while creating your account.");
+                }
             }
         } catch (error) {
             console.error("Error during API request:", error);

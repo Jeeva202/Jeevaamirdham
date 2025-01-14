@@ -65,7 +65,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
     const handleAddToCart = async (book, quantity) => {
         console.log("user id", userId);
 
-        const addtocart = await axios.post('http://localhost:3001/ebooks/add_to_cart', {
+        const addtocart = await axios.post(process.env.REACT_APP_URL+'/ebooks/add_to_cart', {
             userId: userId,
             book: book.id,
             quantity: quantity
@@ -542,7 +542,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
                 return;
             }
             const monthNumber = monthMapping[selectedMonth];
-            const { data } = await axios.get('http://localhost:3001/emagazine-page/magazine-details', {
+            const { data } = await axios.get(process.env.REACT_APP_URL+'/emagazine-page/magazine-details', {
                 params: { year: selectedYear, month: monthNumber },
             });
             return data;
@@ -563,7 +563,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
                 return;
             }
             const monthNumber = monthMapping[selectedMonth];
-            const { data } = await axios.get('http://localhost:3001/emagazine-page/other-magazine-details', {
+            const { data } = await axios.get(process.env.REACT_APP_URL+'/emagazine-page/other-magazine-details', {
                 params: { year: selectedYear, month: monthNumber },
             });
             return data;
@@ -641,7 +641,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
     const { data: booksData, error: booksError, isLoading: isBooksLoading } = useQuery({
         queryKey: ["books"],
         queryFn: async () => {
-            const { data } = await axios.get("http://localhost:3001/ebooks/books");
+            const { data } = await axios.get(process.env.REACT_APP_URL+"/ebooks/books");
             console.log("Books Data:", data);
             return data;
         },
@@ -690,14 +690,14 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
             // Get previous magazine
             const prevMonth = selectedMonth === "January" ? "December" : Object.keys(monthMapping)[Object.values(monthMapping).indexOf(monthMapping[selectedMonth]) - 1];
             const prevYear = selectedMonth === "January" ? selectedYear - 1 : selectedYear;
-            const prevResponse = await axios.get('http://localhost:3001/emagazine-page/magazine-details', {
+            const prevResponse = await axios.get(process.env.REACT_APP_URL+'/emagazine-page/magazine-details', {
                 params: { year: prevYear, month: monthMapping[prevMonth] }
             });
 
             // Get next magazine
             const nextMonth = selectedMonth === "December" ? "January" : Object.keys(monthMapping)[Object.values(monthMapping).indexOf(monthMapping[selectedMonth]) + 1];
             const nextYear = selectedMonth === "December" ? selectedYear + 1 : selectedYear;
-            const nextResponse = await axios.get('http://localhost:3001/emagazine-page/magazine-details', {
+            const nextResponse = await axios.get(process.env.REACT_APP_URL+'/emagazine-page/magazine-details', {
                 params: { year: nextYear, month: monthMapping[nextMonth] }
             });
 
@@ -855,7 +855,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
     
                         // Send payment data to your backend to store it
                         try {
-                            const res = await fetch("http://localhost:3001/emagazine-page/payment-success", {
+                            const res = await fetch(process.env.REACT_APP_URL+"/emagazine-page/payment-success", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
