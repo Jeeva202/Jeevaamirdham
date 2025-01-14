@@ -3,14 +3,16 @@ import ShopByEditionCard from "../shopByEditionCard/shopByEditionCard"
 import PopularBooks from "../popularBooks/popularBooks"
 import ViewAll from "../viewAllButton/viewAll"
 import { homePage } from "../../constants/screenData"
-export default function BooksSection() {
+import { useNavigate } from "react-router-dom"
+export default function BooksSection({userId, selectedYear, setSelectedYear}) {
+    const navigate = useNavigate()
     return (
         <div className="container">
             <div className="left-side">
                 <div className="subtitle">
                     E-Magazine Edition
                 </div>
-                <ShopByEditionCard />
+                <ShopByEditionCard selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
             </div>
             <div className="right-side">
                 <div className="subtitle-row">
@@ -21,11 +23,11 @@ export default function BooksSection() {
                         <img src={homePage.icons.HorizontalDivider} alt=""/>
                     </div> */}
                     <div className="viewAll">
-                        <ViewAll text="View All"  width="7rem" padding="0.8rem 4rem" />
+                        <ViewAll text="View All"  width="7rem" padding="0.8rem 4rem" onClick={()=> navigate('/emagazine')} />
                     </div>
                 </div>
                 <div className="popular">
-                        <PopularBooks/>
+                        <PopularBooks userId={userId}/>
                 </div>
             </div>
         </div>

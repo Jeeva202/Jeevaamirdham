@@ -29,11 +29,10 @@ import LoginModal from "../login/NewLogin";
 import { openLogin, setUserLoggedIn, selectUserId, setCartDetails, setBooksData } from '../../redux/cartSlice'
 import { Loader } from "../../components/loader/loader";
 
-export default function Ebooks() {
+export default function Ebooks({selectedYear, setSelectedYear}) {
     const [allYears, setAllYears] = useState(true);
     const [listenPage, setListenPage] = useState(false)
     const [categoryCartFlag, setCategoryCartFlag] = useState(false)
-    const [selectedYear, setSelectedYear] = useState(NaN);
     const [selectedMonth, setSelectedMonth] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(["GNANAM"]);
     const [catSelectedBook, setCatSelectedBook] = useState("0")
@@ -190,7 +189,9 @@ export default function Ebooks() {
         November: 11,
         December: 12,
     };
-
+    const reverseMonthMapping = Object.fromEntries(
+        Object.entries(monthMapping).map(([key, value]) => [value, key])
+    );
 
 
     const categories = [
@@ -578,23 +579,34 @@ export default function Ebooks() {
 
 
 
-    const { data: APIYearBookImages, status: YearImagestatus, isLoading: isYearImageLoading, error: YearImageError } = useQuery({
-        queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:3001/emagazine-page/magazine-yearwise`)
-            return data
-        },
-        queryKey: ["magazine-yearwise", selectedYear, selectedMonth, allYears],
-        enabled: !selectedYear && !selectedMonth && allYears
-    })
+    // const { data: APIYearBookImages, status: YearImagestatus, isLoading: isYearImageLoading, error: YearImageError } = useQuery({
+    //     queryFn: async () => {
+    //         const { data } = await axios.get(`http://localhost:3001/emagazine-page/magazine-yearwise`)
+    //         return data
+    //     },
+    //     queryKey: ["magazine-yearwise", selectedYear, selectedMonth, allYears],
+    //     enabled: !selectedYear && !selectedMonth && allYears
+    // })
 
 
     const { data: APIMonthBookImages, status: MonthImagestatus, isLoading: isMonthImageLoading, error: MonthImageError } = useQuery({
         queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:3001/emagazine-page/magazine-monthwise`)
-            return data
+            const { data } = await axios.get(`http://localhost:3001/emagazine-page/magazine-monthwise`, {
+                params:{
+                    year:selectedYear
+                }
+            })
+            console.log("month data", data);
+            
+            const mappedData = data.map(item => ({
+                ...item,
+                month_eng: reverseMonthMapping[item.month], // Map the numeric month to the month name
+            }));
+
+            return mappedData
         },
         queryKey: ["magazine-monthwise", selectedYear, selectedMonth, allYears],
-        enabled: !!selectedYear && !selectedMonth && !allYears
+        enabled: !!selectedYear && !selectedMonth
     })
 
 
@@ -643,17 +655,17 @@ export default function Ebooks() {
     }, [booksData, dispatch]);
 
 
-    const { data: setPlanData } = useQuery({
-        queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:3001/setPlan`, {
-                params: {
-                    id: "",
-                    plan: plan ? plan : "basic"
-                }
-            })
-            return data
-        },
-    })
+    // const { data: setPlanData } = useQuery({
+    //     queryFn: async () => {
+    //         const { data } = await axios.get(`http://localhost:3001/setPlan`, {
+    //             params: {
+    //                 id: "",
+    //                 plan: plan ? plan : "basic"
+    //             }
+    //         })
+    //         return data
+    //     },
+    // })
     const navigateToListenPage = async () => {
         const uid = localStorage.getItem("id")
         try {
@@ -722,7 +734,7 @@ export default function Ebooks() {
      * ==================================================
      *  Data fetching for the Ebooks section ends here 
     */
-    if (isLoading || isBooksLoading) {
+    if (isLoading || isBooksLoading || isMonthImageLoading) {
         return <Loader />;
     }
 
@@ -941,7 +953,7 @@ export default function Ebooks() {
             ) : (categoryCartFlag) ?
                 <BookDetails backToHomePage={backToHomePage} catSelectedBook={catSelectedBook} booksData={booksData} changeBook={changeBook} handleAddToCart={handleAddToCart} isOpen={isOpen} />
                 : (selectedMonth === null) && (!isNaN(selectedYear)) ?
-                    <MonthNavigation backToAllYearPage={backToAllYearPage} selectedYear={selectedYear} oneYearBook={oneYearBook} redirectToMonthPage={redirectToMonthPage} />
+                    <MonthNavigation backToAllYearPage={backToAllYearPage} selectedYear={selectedYear} oneYearBook={APIMonthBookImages} redirectToMonthPage={redirectToMonthPage} />
                     : (listenPage && isUserLoggedIn)
                         ?
                         <AudioPlayer
@@ -1179,7 +1191,7 @@ export default function Ebooks() {
                                 </div>
 
                             </div>
-                            <div className="otherbooks">
+                            {/* <div className="otherbooks">
                                 <div className="otherbooks-title">
                                     <div className="text">
                                         Other E-Magazines
@@ -1209,7 +1221,7 @@ export default function Ebooks() {
                                         }
                                     })}
                                 </div>
-                            </div>
+                            </div> */}
                         </>
             }
 

@@ -1,6 +1,7 @@
 import "./shopByEditionCard.css"
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-export default function ShopByEditionCard(){
+import { useNavigate } from "react-router-dom";
+export default function ShopByEditionCard({selectedYear, setSelectedYear}){
     const Cards = [
         {
             year:2018,
@@ -27,6 +28,11 @@ export default function ShopByEditionCard(){
             img:"/assets/images/2023.png"
         }
     ]
+    const navigate = useNavigate()
+    const handleOnClick = (year) =>{
+        navigate("/emagazine");
+        setSelectedYear(year)
+    }
     return(
         <div className="Cards">
             {Cards.map((e)=>(
@@ -34,8 +40,8 @@ export default function ShopByEditionCard(){
                     <div className="card-img">
                         <img style={{width:"100%",height:"100%"}}src={e.img} alt="" srcset="" />
                     </div>
-                    <a className="card-text" href="">
-                        <p>View {e.year} Edition </p>
+                    <a className="card-text" >
+                        <p onClick={()=>handleOnClick(e.year)}>View {e.year} Edition </p>
                         <KeyboardArrowRightIcon/>
                     </a>
                 </div>

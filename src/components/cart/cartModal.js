@@ -15,6 +15,7 @@ const CartModal = ({ open }) => {
         return book ? total + item.quantity * book.offPrice : total;
     }, 0);
     const handleProceedToCheckout = () => {
+        dispatch(closeCart());
         navigate("/checkout", { state: { totalAmount } });
       };
     console.log(totalAmount, "from carModal");
@@ -113,6 +114,7 @@ const CartModal = ({ open }) => {
                             }}
                             onClick={() => { 
                                 console.log("Navigating to checkout with total amount:", totalAmount);
+                                dispatch(closeCart());
                                 navigate('/cart'); 
                             }} 
                         >

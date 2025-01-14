@@ -11,15 +11,27 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, Box, Typography, Button, IconButton, Skeleton } from '@mui/material';
 import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRounded';
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
-
-export default function HomePage() {
+import { useSelector, useDispatch } from "react-redux"
+import { selectUserId, setUserId } from "../../redux/cartSlice"
+export default function HomePage({selectedYear, setSelectedYear}) {
     const carouselImages = [
         "/assets/images/carousel1.svg",
         "/assets/images/carousel2.svg"
     ];
     const [step, setStep] = useState(0);
     const numSteps = carouselImages.length;
+    const dispatch = useDispatch()
+    const userId = useSelector(selectUserId);
 
+    useEffect(() => {
+        if (!userId) {
+            // If userId is not in Redux store, get it from localStorage and dispatch it
+            const idFromLocalStorage = localStorage.getItem('id');
+            if (idFromLocalStorage) {
+                dispatch(setUserId(idFromLocalStorage));
+            }
+        }
+    }, [userId, dispatch]);
     const handleNextStep = () => {
         setStep(prevStep => (prevStep + 1) % numSteps);
     };
@@ -80,7 +92,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="PopBooks">
-                    <BooksSection />
+                    <BooksSection userId={userId} selectedYear={selectedYear} setSelectedYear={setSelectedYear} />
                 </div>
                 <div className="YouTube">
                     <PranavamTV />
