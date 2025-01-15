@@ -18,7 +18,7 @@ export default function ViewCart() {
   const [rows, setRows] = useState([]); // Initially empty, will be populated with real cart data
   const navigate = useNavigate();
   let userId = useSelector(selectUserId);
-  let isUserLoggedIn = useSelector(isUserLoggedIn)
+  let isUserLoggedIn = useSelector(selectIsUserLoggedIn)
   // const bookdata = useSelector(selectBooksData);
   let totalAmount = rows.reduce((total, row) => total + row.subtotal, 0).toFixed(2);
 
@@ -81,7 +81,7 @@ export default function ViewCart() {
   // Handle delete from cart
   const handleDelete = async (id) => {
     try {
-      await axios.post(process.env.REACT_APP_URL+"/ebooks/remove_from_cart", {
+      await axios.post("http://localhost:3001/ebooks/remove_from_cart", {
         userId,
         book_id: id,
       });
@@ -96,7 +96,7 @@ export default function ViewCart() {
   // Handle quantity change and update backend
   const handleQuantityChange = async (bookId, newQuantity) => {
     try {
-      await axios.post(process.env.REACT_APP_URL+"/ebooks/update_quantity", {
+      await axios.post("http://localhost:3001/ebooks/update_quantity", {
         userId,
         book_id: bookId,
         quantity: newQuantity,
