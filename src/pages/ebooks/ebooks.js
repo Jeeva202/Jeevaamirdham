@@ -26,7 +26,7 @@ import MonthNavigation from "./monthNavigation";
 import BookDetails from "./bookDetails";
 import AudioPlayer from "./audioPlayer";
 import LoginModal from "../login/NewLogin";
-import { openLogin, setUserLoggedIn, selectUserId, setCartDetails, setBooksData } from '../../redux/cartSlice'
+import { openLogin, setUserLoggedIn, selectUserId, setCartDetails, setBooksData,selectCartDetails } from '../../redux/cartSlice'
 import { Loader } from "../../components/loader/loader";
 
 export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllYears}) {
@@ -59,24 +59,34 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
     const isUserLoggedInFromStore = useSelector((state) => state.cart.isUserLoggedIn);
     const isUserLoggedIn = isUserLoggedInFromStore !== undefined ? isUserLoggedInFromStore : !!localStorage.getItem('id');
     console.log("is user logged in", isUserLoggedIn);
-    
+    const cartDetails = useSelector(selectCartDetails)
     const userId = useSelector(selectUserId)
     const isOpen = useSelector(selectIsCartOpen)
     const handleAddToCart = async (book, quantity) => {
-        console.log("user id", userId);
-
-        const addtocart = await axios.post(process.env.REACT_APP_URL+'/ebooks/add_to_cart', {
-            userId: userId,
-            book: book.id,
-            quantity: quantity
-        });
-        const cartDetails = addtocart.data.cart_details;
-
-        console.log(addtocart, "Buy Now");
-
-        // Dispatch an action to update the Redux store with the updated cart details
-        dispatch(setCartDetails(cartDetails)); // This will update the cartDetails in Redux
-        dispatch(openCart()); // Open the cart modal
+        if(isUserLoggedIn){
+            console.log("user id", userId);
+                const addtocart = await axios.post(process.env.REACT_APP_URL+'/ebooks/add_to_cart', {
+    
+                userId: userId,
+                book: book.id,
+                quantity: quantity
+            });
+            const cartDetailsfromAPI = addtocart.data.cart_details;
+    
+            console.log(addtocart, "Buy Now");
+    
+            // Dispatch an action to update the Redux store with the updated cart details
+            dispatch(setCartDetails(cartDetailsfromAPI)); // This will update the cartDetails in Redux
+        }
+        else{
+            let noLoginCartData = [...cartDetails, {book_id:book.id, quantity: quantity || 1}]
+            console.log("no login", noLoginCartData);
+            
+            dispatch(setCartDetails(noLoginCartData))
+        }
+        console.log(cartDetails);
+        
+        dispatch(openCart()); 
     };
     const handleOpen = () => setOpenModal(true);
     const handleClose = () => setOpenModal(false);
@@ -580,7 +590,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
 
     // const { data: APIYearBookImages, status: YearImagestatus, isLoading: isYearImageLoading, error: YearImageError } = useQuery({
     //     queryFn: async () => {
-    //         const { data } = await axios.get(`http://localhost:3001/emagazine-page/magazine-yearwise`)
+    //         const { data } = await axios.get(process.env.REACT_APP_URL + `/emagazine-page/magazine-yearwise`)
     //         return data
     //     },
     //     queryKey: ["magazine-yearwise", selectedYear, selectedMonth, allYears],
@@ -590,7 +600,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
 
     const { data: APIMonthBookImages, status: MonthImagestatus, isLoading: isMonthImageLoading, error: MonthImageError } = useQuery({
         queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:3001/emagazine-page/magazine-monthwise`, {
+            const { data } = await axios.get(process.env.REACT_APP_URL + `/emagazine-page/magazine-monthwise`, {
                 params:{
                     year:selectedYear
                 }
@@ -611,7 +621,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
 
     // const { data: prevNxtAudioData, status: prevNxtAudioStatus, isLoading: prevNxtAudioLoading, error: prevNxtAudioError } = useQuery({
     //     queryFn: async () => {
-    //         const { data } = await axios.get(`http://localhost:3001/emagazine-page/audio-prev-nxt-details`, {
+    //         const { data } = await axios.get(process.env.REACT_APP_URL + `/emagazine-page/audio-prev-nxt-details`, {
     //             params: {
     //                 bid: "book_id"
     //             }
@@ -626,7 +636,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
 
     const { data: planData, status: planStatus, isLoading: planIsLoading, error: planError } = useQuery({
         queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:3001/getPlan`, {
+            const { data } = await axios.get(process.env.REACT_APP_URL + `/getPlan`, {
                 params: {
                     id: userId ? userId : localStorage.getItem('id')
                 }
@@ -656,7 +666,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
 
     // const { data: setPlanData } = useQuery({
     //     queryFn: async () => {
-    //         const { data } = await axios.get(`http://localhost:3001/setPlan`, {
+    //         const { data } = await axios.get(process.env.REACT_APP_URL + `/setPlan`, {
     //             params: {
     //                 id: "",
     //                 plan: plan ? plan : "basic"
@@ -668,7 +678,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
     const navigateToListenPage = async () => {
         const uid = localStorage.getItem("id")
         try {
-            const response = await axios.get(`http://localhost:3001/emagazine-page/audiofile?uid=${uid}&year=${selectedYear}&month=${selectedMonthNumber}`)
+            const response = await axios.get(process.env.REACT_APP_URL + `/emagazine-page/audiofile?uid=${uid}&year=${selectedYear}&month=${selectedMonthNumber}`)
             setAudioData(response.data)
             setListenPage(true)
 
@@ -830,7 +840,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
     
         try {
             // Fetch the price of the selected plan from the backend
-            const response = await fetch(`http://localhost:3001/emagazine-page/get-plan-amount?planName=${planName}`);
+            const response = await fetch(process.env.REACT_APP_URL + `/emagazine-page/get-plan-amount?planName=${planName}`);
             const data = await response.json();
     
             if (response.ok) {

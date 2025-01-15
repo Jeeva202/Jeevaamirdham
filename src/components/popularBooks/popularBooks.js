@@ -8,9 +8,13 @@ import CartModal from "../cart/cartModal";
 import { Loader } from "../loader/loader";
 import { useEffect } from "react";
 import { Button } from "@mui/material"
+import { selectIsUserLoggedIn, selectCartDetails } from "../../redux/cartSlice";
 export default function PopularBooks({ userId }) {
     const dispatch = useDispatch()
     const isOpen = useSelector(selectIsCartOpen)
+    const isUserLoggedInFromStore = useSelector((state) => state.cart.isUserLoggedIn);
+    const isUserLoggedIn = isUserLoggedInFromStore !== undefined ? isUserLoggedInFromStore : !!localStorage.getItem('id');
+    const cartDetails = useSelector(selectCartDetails)
     const { data: booksData, error: booksError, isLoading: isBooksLoading } = useQuery({
         queryKey: ["books"],
         queryFn: async () => {
@@ -27,20 +31,26 @@ export default function PopularBooks({ userId }) {
         }
     }, [booksData]);
     const handleAddToCart = async (book, quantity) => {
-        console.log("user id", userId);
-        // const addtocart = await axios.post(process.env.REACT_APP_URL+'/ebooks/add_to_cart', {
-            const addtocart = await axios.post(process.env.REACT_APP_URL+'/ebooks/add_to_cart', {
+        if(isUserLoggedIn){
+            console.log("user id", userId);
+            // const addtocart = await axios.post(process.env.REACT_APP_URL+'/ebooks/add_to_cart', {
+                const addtocart = await axios.post(process.env.REACT_APP_URL+'/ebooks/add_to_cart', {
+    
+                userId: userId,
+                book: book.id,
+                quantity: quantity
+            });
+            const cartDetails = addtocart.data.cart_details;
+    
+            console.log(addtocart, "Buy Now");
+    
+            // Dispatch an action to update the Redux store with the updated cart details
+            dispatch(setCartDetails(cartDetails)); // This will update the cartDetails in Redux
+        }
+        else{
+            dispatch(setCartDetails([...cartDetails, {book_id:book.id, quantity: quantity || 1}]))
+        }
 
-            userId: userId,
-            book: book.id,
-            quantity: quantity
-        });
-        const cartDetails = addtocart.data.cart_details;
-
-        console.log(addtocart, "Buy Now");
-
-        // Dispatch an action to update the Redux store with the updated cart details
-        dispatch(setCartDetails(cartDetails)); // This will update the cartDetails in Redux
         dispatch(openCart()); // Open the cart modal
     };
 

@@ -127,7 +127,7 @@ export default function TopNavbar() {
 
     useEffect(async ()=>{
         if(isUserLoggedIn == true){
-            const response = await axios.get(`http://localhost:3001/ebooks/get_cart?id=${userId}`);
+            const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
             const cartData = response.data.cart_details;
             setCartDetails(cartData)
         }

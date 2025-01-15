@@ -61,7 +61,7 @@ export default function Checkout() {
   try {
 
       // Fetch the price of the selected plan from the backend
-      // const response = await fetch(`http://localhost:3001/ebooks/get-book-amount?id=${userData.id}`);
+      // const response = await fetch(process.env.REACT_APP_URL + `/ebooks/get-book-amount?id=${userData.id}`);
       // const data = await response.json();
 
       // if (response.ok) {
@@ -158,7 +158,7 @@ export default function Checkout() {
         userId = localStorage.getItem("id");
       }
       try {
-        const response = await axios.get(`http://localhost:3001/ebooks/get_cart?id=${userId}`);
+        const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
         const cartData = response.data.cart_details; // Assuming cart_details is the array of books in the cart
   
         setCartDetails(cartData)

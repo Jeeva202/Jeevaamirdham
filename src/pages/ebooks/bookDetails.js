@@ -18,7 +18,7 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
             if (!bookId) {
                 return null; // If no book is selected, return null or handle accordingly
             }
-            const { data } = await axios.get(`http://localhost:3001/ebooks/book-info?id=${bookId}`);
+            const { data } = await axios.get(process.env.REACT_APP_URL + `/ebooks/book-info?id=${bookId}`);
             return data;
         },
         {
