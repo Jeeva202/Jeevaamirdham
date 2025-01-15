@@ -3,9 +3,9 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 // import { useState } from "react";
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+// import Modal from '@mui/material/Modal';
+// import Box from '@mui/material/Box';
+// import Button from '@mui/material/Button';
 
 
 export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYears, setAllYears }) {
@@ -36,23 +36,23 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
     const navigate = useNavigate();
 
     // State for modal visibility
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    // const [isModalVisible, setIsModalVisible] = useState(false);
 
     // Function to handle year selection
     const handleOnClick = (year) => {
-        if (year === 2024) {
+        // if (year === 2024) {
             navigate("/emagazine");
             setSelectedYear(year);
             setAllYears(false);
-        } else {
-            setIsModalVisible(true); // Show modal if the year is not 2024
-        }
+        // } else {
+        //     setIsModalVisible(true); // Show modal if the year is not 2024
+        // }
     };
 
     // Function to close the modal
-    const closeModal = () => {
-        setIsModalVisible(false);
-    };
+    // const closeModal = () => {
+    //     setIsModalVisible(false);
+    // };
 
     return (
         <div className={`Cards ${isMobile ? 'mobile' : ''}`}>
@@ -69,7 +69,7 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
             ))}
 
             {/* Modal for non-2024 years */}
-            <Modal
+            {/* <Modal
                 open={isModalVisible}
                 onClose={closeModal}
                 aria-labelledby="modal-title"
@@ -97,7 +97,7 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
                         Close
                     </Button>
                 </Box>
-            </Modal>
+            </Modal> */}
         </div>
     );
 }
