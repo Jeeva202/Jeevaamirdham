@@ -55,7 +55,7 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
 
     return (
         <div className={`Cards ${isMobile ? 'mobile' : ''}`}>
-            {magazines.map((e) => ( 
+            {magazines.slice(0,4).map((e) => ( 
                 <div className="card" key={e.year}>
                     <div className="card-img">
                         <img style={{ width: "100%", height: "100%" }}  src={e.imgUrl} alt="" />
