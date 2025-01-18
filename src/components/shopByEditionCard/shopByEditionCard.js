@@ -24,12 +24,11 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
     }, []);
 
     const Cards = [
-        { year: 2019, img: "/assets/images/2018.png" },
-        { year: 2020, img: "/assets/images/2019.png" },
-        { year: 2021, img: "/assets/images/2020.png" },
-        { year: 2022, img: "/assets/images/2021.png" },
+        { year: 2024, img: "/assets/images/2023.png" },
         { year: 2023, img: "/assets/images/2022.png" },
-        { year: 2024, img: "/assets/images/2023.png" }
+        { year: 2022, img: "/assets/images/2021.png" },
+        { year: 2021, img: "/assets/images/2020.png" }
+
     ];
 ;
 
@@ -62,8 +61,9 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
                         <img style={{ width: "100%", height: "100%" }}  src={e.img} alt="" />
                     </div>
                     <a className="card-text">
-                        <p onClick={() => handleOnClick(e.year)}>View {e.year} Edition</p>
-                        <KeyboardArrowRightIcon />
+                        <p >View {e.year} </p>
+                        <KeyboardArrowRightIcon onClick={() => handleOnClick(e.year)} style={{ fontSize: '24px', color: '#151515', marginLeft: '8px', background:'#f09103', borderRadius: '50%',cursor:'pointer' }} />
+
                     </a>
                 </div>
             ))}

@@ -2,7 +2,8 @@
     font-size: 1rem;
     font-weight: 600;
     width: 100%;
-    background-color: #F09300;
+    /* background-color: #F09300; */
+    background: linear-gradient(90deg, #F09300 0%, #FFB800 100%);
     padding: 10px 30px 10px 30px;
     border-radius: 50px;
     border: None;
