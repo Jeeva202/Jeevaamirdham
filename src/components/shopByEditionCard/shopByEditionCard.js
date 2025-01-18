@@ -61,8 +61,9 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
                         <img style={{ width: "100%", height: "100%" }}  src={e.imgUrl} alt="" />
                     </div>
                     <a className="card-text">
-                        <p onClick={() => handleOnClick(e.year)}>View {e.year} Edition</p>
-                        <KeyboardArrowRightIcon />
+                        <p >View {e.year} </p>
+                        <KeyboardArrowRightIcon onClick={() => handleOnClick(e.year)} style={{ fontSize: '24px', color: '#151515', marginLeft: '8px', background:'#f09103', borderRadius: '50%',cursor:'pointer' }} />
+
                     </a>
                 </div>
             ))}

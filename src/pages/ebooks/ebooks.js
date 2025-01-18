@@ -725,10 +725,11 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
                                                                             borderRadius: "40px",
                                                                             width: "10rem",
                                                                             p: "10px",
-                                                                            background: "#F09300",
+                                                                            // background: "#F09300",
+                                                                            background: 'linear-gradient(90deg, #F09300 0%, #FFB800 100%)', // Fixed closing parenthesis
                                                                             textTransform: "none",
                                                                             marginTop: "2rem",
-                                                                            color: "#FFFFFF",
+                                                                            color: "#121212",
                                                                             fontWeight: "700",
                                                                             justifyContent: "space-evenly"
                                                                         }} onClick={() => navigateToListenPage()}>
@@ -854,13 +855,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
 
 
                                                     </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="desc-info">
+                                                    <div className="desc-info">
                                 <div className="desc-info-tabs">
                                     <button
                                         className={`tab-underscore active`}
@@ -876,6 +871,13 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
                                 </div>
 
                             </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                           
                             {/* <div className="otherbooks">
                                 <div className="otherbooks-title">
                                     <div className="text">

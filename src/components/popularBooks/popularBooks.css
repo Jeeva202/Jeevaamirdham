@@ -4,8 +4,10 @@
 .book-cards > .card{
     width: 50%;
     display: flex;
+    text-align: center;
     flex-direction: column;
     align-items: center;
+    padding: 24px;
 }
 .book-cards .content > * {
     padding-bottom: 10px;
@@ -28,6 +30,7 @@
 }
 .buyButton{
     width: 100%;
+    background: linear-gradient(90deg, #F09300 0%, #FFB800 100%);
 }
 
 @media (max-width: 768px) {
@@ -59,5 +62,6 @@
 
     .buyButton {
         width: 100%;
+        background: linear-gradient(90deg, #F09300 0%, #FFB800 100%);
     }
 }

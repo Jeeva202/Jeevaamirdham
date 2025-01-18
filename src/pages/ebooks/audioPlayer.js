@@ -204,8 +204,12 @@ export default function AudioPlayer({
                             key={index}
                             sx={{
                                 boxShadow: "none",
-                                background: index === 0 ? "#FCCC4D" : plan === 'basic' ? "#E6E6E6" : "#FCCC4D",
+                                background: index === 0 ? "#f8f8f8" : plan === 'basic' ? "#E6E6E6" : "#f8f8f8",
                                 borderRadius: "10px",
+                                border: "1px solid #E6E6E6",
+                              "&::before": {
+      height: 0, // Fixed the pseudo-element syntax
+    },
                             }}
                             expanded={plan === 'basic' ? index === 0 && expandedState === 0 : expandedState === index}  // First accordion expandable for basic users
                             onClick={() => handleChapterClick(index)}  // Handle click to toggle expansion
@@ -217,17 +221,17 @@ export default function AudioPlayer({
                                 id={`panel${index}-header`}
                             >
                                 <div className="audio-play-title">
-                                    <div className="index">{index + 1}</div>
+                                    <div className="index">Chapter {index + 1}</div>
                                     <Typography className="audio-play-title">{audio.title}</Typography>
                                 </div>
                             </AccordionSummary>
                             <AccordionDetails
                                 sx={{
                                     background: index === 0
-                                        ? "#FCCC4D"
+                                        ? "#f8f8f8"
                                         : plan === 'basic'
                                             ? "#E6E6E6"
-                                            : "#FCCC4D",
+                                            : "#f8f8f8",
                                 }}
                             >
                                 <div className="player-transcript-section">
