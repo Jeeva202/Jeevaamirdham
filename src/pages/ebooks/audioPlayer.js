@@ -80,9 +80,11 @@ export default function AudioPlayer({
     plan,
     prevMagazine,
     nextMagazine,
-    payNow
+    payNow,
+    selectedYear,
+    selectedMonth,
 }) {
-    const audioRef = useRef(null);
+    const audioRefs = useRef([]);
     const [openUpgradeModal, setOpenUpgradeModal] = useState(false);
     const [expandedState, setExpandedState] = useState(null); // Track expanded state for non-basic plans
     const [currentAudioIndex, setCurrentAudioIndex] = useState(null); // Current audio index for autoplay
@@ -101,7 +103,7 @@ export default function AudioPlayer({
                 // For basic plans, allow only the first accordion to expand and collapse
                 setExpandedState(index === 0 ? index : null);
             }
-            setCurrentAudioIndex(index);  // Update the current audio index when clicked
+            // setCurrentAudioIndex(index);  // Update the current audio index when clicked
         }
     };
 
@@ -137,17 +139,30 @@ export default function AudioPlayer({
         } else {
             // Call the payNow function for elite and premium plans
             payNow(planName);
-        setOpenUpgradeModal(false);
+            setOpenUpgradeModal(false);
 
         }
     };
 
+    const handleAudioPlay = (index) => {
+        // Pause any other audio that is currently playing
+        audioRefs.current.forEach((audio, i) => {
+            if (i !== index && audio) {
+                audio.pause();
+            }
+        });
+        setCurrentAudioIndex(index); // Update current audio index
+    };
+
     // Auto-play logic: if `currentAudioIndex` changes, update the audio element and play it
     useEffect(() => {
-        if (isPlayingAll && audioRef.current && audioData[currentAudioIndex]) {
-            const audio = audioRef.current;
+        // Only attempt to play if audioRefs.current[currentAudioIndex] exists
+        if (isPlayingAll && audioRefs.current[currentAudioIndex]) {
+            const audio = audioRefs.current[currentAudioIndex];
             audio.src = audioData[currentAudioIndex].audio;
-            audio.play();
+            audio.play().catch(error => {
+                console.error('Error playing audio:', error);
+            });
         }
     }, [currentAudioIndex, isPlayingAll]);
 
@@ -159,7 +174,7 @@ export default function AudioPlayer({
                 </a>
                 <img src={ebooks.icons.RightArrowStroke} alt="" />
                 <div className="nav-buy-book" onClick={() => backToBookBuySection()}>
-                    {APIBookData.category}
+                    {selectedYear} / {selectedMonth}
                 </div>
                 <img src={ebooks.icons.RightArrowStroke} alt="" />
                 <div className="nav-title">
@@ -207,9 +222,9 @@ export default function AudioPlayer({
                                 background: index === 0 ? "#f8f8f8" : plan === 'basic' ? "#E6E6E6" : "#f8f8f8",
                                 borderRadius: "10px",
                                 border: "1px solid #E6E6E6",
-                              "&::before": {
-      height: 0, // Fixed the pseudo-element syntax
-    },
+                                "&::before": {
+                                    height: 0, // Fixed the pseudo-element syntax
+                                },
                             }}
                             expanded={plan === 'basic' ? index === 0 && expandedState === 0 : expandedState === index}  // First accordion expandable for basic users
                             onClick={() => handleChapterClick(index)}  // Handle click to toggle expansion
@@ -223,6 +238,11 @@ export default function AudioPlayer({
                                 <div className="audio-play-title">
                                     <div className="index">Chapter {index + 1}</div>
                                     <Typography className="audio-play-title">{audio.title}</Typography>
+                                    {/* {currentAudioIndex === index && (
+                                        <Typography variant="body2" sx={{ ml: 2, color: 'green' }}>
+                                            Currently Playing
+                                        </Typography>
+                                    )} */}
                                 </div>
                             </AccordionSummary>
                             <AccordionDetails
@@ -245,13 +265,14 @@ export default function AudioPlayer({
                                             <div className="audio-details">
                                                 <h3 className="audio-title">{APIBookData.title}</h3>
                                                 <p className="audio-author">{APIBookData.author}</p>
-                                                {(index === currentAudioIndex || plan === 'basic') && (
+                                                {(plan != 'basic' || (plan === 'basic' && index == 0)) && (
                                                     <audio
-                                                        ref={audioRef}
+                                                        ref={(el) => (audioRefs.current[index] = el)}
                                                         controls
                                                         disablepictureinpicture
                                                         controlslist="nodownload noplaybackrate"
                                                         className="audio-element"
+                                                        onPlay={() => handleAudioPlay(index)}
                                                         onEnded={handleAudioEnded}  // Listen for audio ending
                                                     >
                                                         <source src={audio.audio} type="audio/mpeg" />

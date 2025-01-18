@@ -649,6 +649,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
                             backToBookBuySection={backToBookBuySection}
                             handlePrevNext={handlePrevNext}
                             plan={planData}
+                            selectedYear={selectedYear}
                             selectedMonth={selectedMonth}
                             prevMagazine={prevMagazine}
                             nextMagazine={nextMagazine}
