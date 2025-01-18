@@ -33,7 +33,7 @@ export default function MonthNavigation({ backToAllYearPage, selectedYear, oneYe
       </div>
       <div className="ebooks-one-year">
         <div className="month-wise">
-          {oneYearBook.map((e) => (
+          {oneYearBook.reverse().map((e) => (
             <div className="month-wrapper" key={e.month}>
               <img src={e.imgUrl} alt={e.month} />
               <ViewAll
