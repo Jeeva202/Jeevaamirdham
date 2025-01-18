@@ -1,45 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, IconButton } from "@mui/material";
 import StopIcon from "@mui/icons-material/Stop";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import axios from "axios";
 
 const AudioPlayerCard = () => {
     const [activeIndex, setActiveIndex] = useState(null); // Track the currently playing card
+    const [audioData, setAudioData] = useState([]); // State to store audio data
+
+    useEffect(() => {
+        const fetchAudioData = async () => {
+            try {
+                const response = await axios.get(process.env.REACT_APP_URL + `/audio-video-page/all_audio_data`);
+                setAudioData(response.data);
+            } catch (error) {
+                console.error("Error fetching audio data:", error);
+            }
+        };
+
+        fetchAudioData();
+    }, []);
 
     const handlePlay = (index) => {
-        setActiveIndex(index); // Set the card as playing
+        setActiveIndex(index);
     };
 
     const handleStop = () => {
-        setActiveIndex(null); // Stop the audio playback
+        setActiveIndex(null);
     };
-
-    const audioData = [
-        {
-            title: "சித்திவளாகத்தில் கல்பட்டு ஐயா - 1",
-            background: "/assets/images/audio.svg",
-            thumbnail: "/assets/images/audio.svg",
-            audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-        },
-        {
-            title: "சித்திவளாகத்தில் கல்பட்டு ஐயா - 2",
-            background: "/assets/images/audio.svg",
-            thumbnail: "/assets/images/audio.svg",
-            audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-        },
-        {
-            title: "சித்திவளாகத்தில் கல்பட்டு ஐயா - 3",
-            background: "/assets/images/audio.svg",
-            thumbnail: "/assets/images/audio.svg",
-            audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-        },
-        {
-            title: "சித்திவளாகத்தில் கல்பட்டு ஐயா - 4",
-            background: "/assets/images/audio.svg",
-            thumbnail: "/assets/images/audio.svg",
-            audio: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3",
-        },
-    ];
 
     return (
         <div
@@ -71,9 +59,10 @@ const AudioPlayerCard = () => {
                             left: 0,
                             width: "100%",
                             height: "100%",
-                            backgroundImage: `url(${item.background})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center",
+                            backgroundImage: `url(${item.coverImage_url})`,
+                            backgroundSize: "contain",
+                            backgroundPosition: "center center",
+                            backgroundRepeat: "no-repeat",
                         }}
                     ></div>
                     <div
@@ -87,7 +76,6 @@ const AudioPlayerCard = () => {
                             zIndex: 2,
                         }}
                     ></div>
-                    {/* <Button>HH</Button> */}
                     {activeIndex !== index ? (
                         <Button
                             disableElevation
@@ -103,8 +91,8 @@ const AudioPlayerCard = () => {
                                 left: "50%",
                                 transform: "translateX(-50%)",
                                 zIndex: 10,
-                                color:"black",
-                                fontWeight:"bold",
+                                color: "black",
+                                fontWeight: "bold",
                             }}
                         >
                             Play
@@ -121,18 +109,12 @@ const AudioPlayerCard = () => {
                             }}
                         >
                             <div style={{ display: "flex", gap: "10px" }}>
-                                {/* <img
-                  src={item.thumbnail}
-                  alt="Thumbnail"
-                  style={{
-                    width: "5rem",
-                    height: "5rem",
-                    borderRadius: "5px",
-                  }}
-                /> */}
                                 <div>
                                     <div style={{ fontWeight: "bold", marginBottom: "8px" }}>
                                         {item.title}
+                                    </div>
+                                    <div style={{ marginBottom: "8px" }}>
+                                        {item.subtitle}
                                     </div>
                                     <div
                                         style={{
@@ -150,7 +132,7 @@ const AudioPlayerCard = () => {
                                             controlslist="nodownload noplaybackrate"
                                             style={{ width: "100%" }}
                                         >
-                                            <source src={item.audio} type="audio/mp3" />
+                                            <source src={item.audiofile_url} type="audio/mp3" />
                                             Your browser does not support the audio element.
                                         </audio>
                                         <IconButton

@@ -40,7 +40,7 @@
     display: flex;
     font-size: 0.8rem;
     gap: 5px;
-    height: -webkit-fill-available;
+    /* height: -webkit-fill-available; */
     width: auto;
 }
 

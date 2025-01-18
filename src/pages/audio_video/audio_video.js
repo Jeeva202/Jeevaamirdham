@@ -1,52 +1,29 @@
-import React from 'react'
-import PranavamTV from '../../components/pranavam_tv/pranavamtv'
-import { Container } from '@mui/material'
-import { homePage } from "../../constants/screenData";
-import AudioPlayerGrid from './audio';
+import React, { useState, useEffect } from 'react';
+import { Container } from '@mui/material';
 import AudioPlayerCard from './audio';
+import axios from 'axios';
 
-
-function YouTubeEmbed({ videoId, onClick }) {
-    return (
-        <div className="youtubeEmbed"
-            onClick={() => onClick(videoId)}
-            style={{
-
-                backgroundImage: `url(https://img.youtube.com/vi/${videoId}/hqdefault.jpg)`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                cursor: 'pointer',
-            }}
-        >
-        </div>
-    );
-}
-const handleClick = (videoId) => {
-    console.log("Clicked video ID:", videoId);
-};
 export default function Audio_video() {
-    const youtubedata = [
-        {
-            videoid: "iFGenD2BGSQ",
-            title: "வராகி அம்மன் அருட்காப்பு பாடல்",
-            views: "178K",
-            comments: "101"
-        },
-        {
-            videoid: "iFGenD2BGSQ",
-            title: "வராகி அம்மன் அருட்காப்பு பாடல்",
-            views: "178K",
-            comments: "101"
-        },
-        {
-            videoid: "iFGenD2BGSQ",
-            title: "வராகி அம்மன் அருட்காப்பு பாடல்",
-            views: "178K",
-            comments: "101"
-        },
-    ]
+    const [videoData, setVideoData] = useState([]);
+    const [currentVideo, setCurrentVideo] = useState(null);
 
+    useEffect(() => {
+        const fetchVideoData = async () => {
+            try {
+                const response = await axios.get(process.env.REACT_APP_URL + `/audio-video-page/all_video_data`);
+                setVideoData(response.data);
+                setCurrentVideo(response.data[0]); // Set the first video as the current video
+            } catch (error) {
+                console.error("Error fetching video data:", error);
+            }
+        };
 
+        fetchVideoData();
+    }, []);
+
+    const handleVideoClick = (video) => {
+        setCurrentVideo(video);
+    };
 
     return (
         <Container maxWidth="lg">
@@ -56,46 +33,57 @@ export default function Audio_video() {
                         Videos
                     </div>
                 </div>
-                <div className="video-section">
-                    <div className="main">
-                        <iframe src="https://www.youtube.com/embed/iFGenD2BGSQ?si=W_TfT2N-tT8vvZVm" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                    </div>
-                    <div className="other">
-                        {youtubedata.map((d) => (
-                            <div className="embed">
-                                <YouTubeEmbed videoId={d.videoid} onClick={handleClick} />
-                                <div className="video-title">
-                                    <div className="text">
-                                        {d.title}
+                <div className="video-section" style={{ display: 'flex', gap: '16px' }}>
+                    <div className="main" style={{ flex: 2 }}>
+                        {currentVideo && (
+                            <div style={{ position: 'relative' }}>
+                                <video controls style={{ width: '100%', borderRadius: '8px', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)' }}>
+                                    <source src={currentVideo.videofile_url} type="video/mp4" />
+                                    Your browser does not support the video tag.
+                                </video>
+                                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginTop: '8px' }}>
+                                <img src={currentVideo.coverImage_url} alt={currentVideo.title} style={{ width: '8rem', borderRadius: '8px' }} />
 
+                                <div className="video-title" style={{ marginTop: '8px' }}>
+                                    <div className="text" style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                                        {currentVideo.title}
                                     </div>
-                                    <div className="add-info">
-                                        <div className="comment">
-                                            <img src={homePage.icons.CommentIcon} alt="" />
-                                            <div className="count">{d.comments}</div>
-                                        </div>
-                                        <div className="views">
-                                            <img src={homePage.icons.ViewIcon} alt="" />
-                                            <div className="count">{d.views}</div>
-                                        </div>
+                                    <div style={{ fontSize: '1rem', color: '#555' }}>
+                                        {currentVideo.subtitle}
                                     </div>
+                                </div>
                                 </div>
 
                             </div>
+                        )}
+                    </div>
+                    <div className="other" style={{ flex: 1, overflowY: 'auto', maxHeight: '500px' }}>
+                    <div style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '16px' }}>
+                        Next Videos
+                    </div>
+                        {videoData.map((item, index) => (
+                            <div className="embed" key={index} onClick={() => handleVideoClick(item)} style={{ cursor: 'pointer', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <img src={item.coverImage_url} alt={item.title} style={{ width: '30%', borderRadius: '8px' }} />
+                                <div className="video-title">
+                                    <div className="text" style={{ fontSize: '1rem', fontWeight: 'bold' }}>
+                                        {item.title}
+                                    </div>
+                                    <div style={{ fontSize: '0.8rem', color: '#555' }}>
+                                        {item.subtitle}
+                                    </div>
+                                </div>
+                            </div>
                         ))}
-
                     </div>
                 </div>
             </div>
-            <div>
-            <div className="text">
-                        <h3>Audios</h3>
-                    </div>
+            <div style={{marginTop:'3rem'}}>
+                <div className="text">
+                    <h3>Audios</h3>
+                </div>
                 <AudioPlayerCard />
                 <br />
-                    
-        </div>
+            </div>
         </Container>
-
-    )
+    );
 }
