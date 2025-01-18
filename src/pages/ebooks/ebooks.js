@@ -140,35 +140,35 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
             },
         },
     ];
-    const YearWiseEbooks = [
-        {
-            year: 2024,
-            img: "/assets/images/ebook_2024.svg"
-        },
-        {
-            year: 2023,
-            img: "/assets/images/ebook_2023.svg"
-        },
-        {
-            year: 2022,
-            img: "/assets/images/ebook_2022.svg"
-        },
-        {
-            year: 2021,
-            img: "/assets/images/ebook_2021.svg"
-        },
-        {
-            year: 2020,
-            img: "/assets/images/ebook_2020.svg"
-        },
-        {
-            year: 2019,
-            img: "/assets/images/ebook_2019.svg"
-        }, {
-            year: 2018,
-            img: "/assets/images/ebook_2018.svg"
-        }
-    ]
+    // const YearWiseEbooks = [
+    //     {
+    //         year: 2024,
+    //         img: "/assets/images/ebook_2024.svg"
+    //     },
+    //     {
+    //         year: 2023,
+    //         img: "/assets/images/ebook_2023.svg"
+    //     },
+    //     {
+    //         year: 2022,
+    //         img: "/assets/images/ebook_2022.svg"
+    //     },
+    //     {
+    //         year: 2021,
+    //         img: "/assets/images/ebook_2021.svg"
+    //     },
+    //     {
+    //         year: 2020,
+    //         img: "/assets/images/ebook_2020.svg"
+    //     },
+    //     {
+    //         year: 2019,
+    //         img: "/assets/images/ebook_2019.svg"
+    //     }, {
+    //         year: 2018,
+    //         img: "/assets/images/ebook_2018.svg"
+    //     }
+    // ]
     const oneYearBook = [
         { month: "January", img: "/assets/images/ebook_jan.svg", monthInNumber: 1 },
         { month: "February", img: "/assets/images/ebook_feb.svg", monthInNumber: 2 },
@@ -632,7 +632,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
         <Container maxWidth="lg">
             {allYears ? (
                 <div className="ebook-section">
-                    <YearNavigation redirectToYearPage={redirectToYearPage} books={YearWiseEbooks} />
+                    <YearNavigation redirectToYearPage={redirectToYearPage} />
                     <BuyBook categories={categories} handleCategoryClick={handleCategoryClick} currentItems={currentItems} navigateToProductSpecificPage={navigateToProductSpecificPage} handlePageChange={handlePageChange} currentPage={currentPage} isOpen={isOpen} totalPages={totalPages} handleAddToCart={handleAddToCart} />
                 </div>
             ) : (categoryCartFlag) ?

@@ -1,24 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ebooks } from "../../constants/screenData";
 import ViewAll from "../../components/viewAllButton/viewAll";
-// import Modal from '@mui/material/Modal';
-// import Box from '@mui/material/Box';
-// import Button from '@mui/material/Button';
+import { Loader } from "../../components/loader/loader";
+import { useQuery } from "react-query";
 
-export default function YearNavigation({ redirectToYearPage, books }) {
-  // const [isModalVisible, setIsModalVisible] = useState(false);
+import axios from "axios";
+export default function YearNavigation({ redirectToYearPage }) {
 
-  const handleYearClick = (year) => {
-    // if (year !== 2024) {
-    //   setIsModalVisible(true); // Show the modal if the selected year is not 2024
-    // } else {
-      redirectToYearPage(year); // Proceed with normal redirection if the year is 2024
-    // }
+  const fetchMagazines = async () => {
+    const response = await axios.get(process.env.REACT_APP_URL + '/emagazine-page/magazine-yearwise');
+    return response.data.reverse(); // Reverse the data here to match your original behavior
   };
 
-  // const closeModal = () => {
-  //   setIsModalVisible(false); // Close the modal when the user clicks close
-  // };
+  const { data: magazines, isLoading, isError, error } = useQuery(
+    ['magazines', 'yearwise'],  
+    fetchMagazines, 
+    {
+      staleTime: 60000, // Optional: cache the data for 1 minute (60000ms) before refetching
+      cacheTime: 300000, // Optional: keep the data cached for 5 minutes (300000ms) after it's unused
+    }
+  );
+  const handleYearClick = (year) => {
+
+      redirectToYearPage(year); // Proceed with normal redirection if the year is 2024
+
+  };
+
+
+  if (isLoading) {
+    return <Loader/>;
+  }
 
   return (
     <div className="ebook">
@@ -31,9 +42,9 @@ export default function YearNavigation({ redirectToYearPage, books }) {
         </div>
       </div>
       <div className="year-wise">
-        {books.map((e) => (
+        {magazines.map((e) => (
           <div className="year-wrapper" key={e.year}>
-            <img src={e.img} alt={e.year} />
+            <img src={e.imgUrl} alt={e.year} />
             <ViewAll
               text={e.year}
               width="10rem"
