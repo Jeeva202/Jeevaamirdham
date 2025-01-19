@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import PrivacyPolicyModal from './PrivacyPolicyModal';
 import TermsOfServiceModal from './TermsOfServiceModal';
-import { openLogin, selectIsLoginOpen, closeLogin, setUserLoggedIn, setUserId, setAdminLoggedIn } from "../../redux/cartSlice";
+import { openLogin, selectIsLoginOpen, closeLogin, setUserLoggedIn, setUserId, setAdminLoggedIn, setLoginOtp, clearLoginOtp, selectLoginOtp, selectLoginExpiry } from "../../redux/cartSlice";
 import { navBanner } from '../../constants/screenData';
 import './NewLogin.css';
 
@@ -48,10 +48,11 @@ const LoginModal = () => {
     const [otp, setOtp] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [otpSent, setOtpSent] = useState(false);
+    const [showOtpScreen, setShowOtpScreen] = useState(false);
     const [showSignIn, setShowSignIn] = useState(false);
-    const [isEmail, setIsEmail] = useState(false);
-    const [isNewUser, setIsNewUser] = useState(false);
+    const [showContEmail, setShowContEmail] = useState(true);
+    const [showExstingUser, setShowExstingUser] = useState(false);
+    const [showCreatePasswd, setShowCreatePasswd] = useState(false);
     const [loading, setLoading] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -60,6 +61,9 @@ const LoginModal = () => {
     const isOpen = useSelector(selectIsLoginOpen);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const loginOtpExpiry = useSelector(selectLoginExpiry)
+    const loginOtp = useSelector(selectLoginOtp)
+
 
     const handleClose = () => {
         dispatch(closeLogin());
@@ -78,14 +82,18 @@ const LoginModal = () => {
         setOtp("");
         setPassword("");
         setConfirmPassword("");
-        setOtpSent(false);
+        setShowOtpScreen(false);
         setShowSignIn(false);
-        setIsEmail(false);
-        setIsNewUser(false);
+        setShowContEmail(true);
+        setShowCreatePasswd(false);
+        setShowExstingUser(false);
         setLoading(false);
         setSnackbarOpen(false);
         setSnackbarMessage("");
     };
+    const handleBack = () => {
+        resetState();
+    }
 
     const handleGoogleLoginSuccess = async (credentialResponse) => {
         const token = credentialResponse.credential;
@@ -162,44 +170,62 @@ const LoginModal = () => {
     };
 
     const handleSendOtp = async () => {
-
-        setLoading(true);
-
+        dispatch(clearLoginOtp());
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const expiry = Date.now() + 5 * 60 * 1000; // 5 minutes from now
+        console.log(otp, expiry);
+        // Store OTP in Redux
+        dispatch(setLoginOtp({ otp, expiry }));
+        console.log('New OTP sent successfully!', loginOtp);
+        // Simulate sending OTP via email
         try {
-            const response = await axios.post(`${domain}/login/send-otp`, { email });
-            console.log("send otp",response, email);
-            if (response.data.success) {
-                setOtpSent(true);
-                setSnackbarMessage("OTP sent to your email.");
-                setSnackbarOpen(true);
-            } else {
-                setSnackbarMessage("Failed to send OTP. Please try again.");
-                setSnackbarOpen(true);
-            }
+            await axios.post(`${domain}/login/send-otpToEmail`, { email: email.toLowerCase(), otp });
+            setSnackbarMessage('OTP has been sent successfully');
+            console.log('OTP sent successfully!');
+            setShowOtpScreen(true);
         } catch (error) {
-            setSnackbarMessage("An error occurred. Please try again.");
-            setSnackbarOpen(true);
+            console.error('Failed to send OTP:', error);
+            setSnackbarMessage('Failed to send OTP');
+
         }
-        setLoading(false);
     };
+    console.log('check otp!', loginOtp);
 
-    const handleVerifyOtp = async () => {
-        setLoading(true);
-        try {
-            const response = await axios.post(`${domain}/login/verify-otp`, { email, otp });
-            if (response.data.success) {
-                setSnackbarMessage("OTP verified successfully.");
-                setSnackbarOpen(true);
-                setIsEmail(true);
-            } else {
-                setSnackbarMessage("Invalid OTP. Please try again.");
-                setSnackbarOpen(true);
-            }
-        } catch (error) {
-            setSnackbarMessage("An error occurred. Please try again.");
+    const handleVerifyOtp = () => {
+        console.log("Verify OTP!", otp, loginOtp, loginOtpExpiry);
+        const storedOtp = loginOtp
+        console.log('verify otppp!', storedOtp)
+        const expiry = loginOtpExpiry;
+        // Validate OTP and expiry
+        if (!storedOtp || !expiry) {
+            console.log("OTP or expiry not set.");
+            setSnackbarMessage("OTP not set. Please request a new OTP.");
+            setSnackbarOpen(true);
+            dispatch(clearLoginOtp());
+            return;
+        }
+        // Check if the OTP is expired
+        const currentTime = Date.now();
+        if (currentTime > expiry) {
+            console.log("OTP expired.");
+            setSnackbarMessage("OTP expired. Please request a new OTP.");
+            setSnackbarOpen(true);
+            dispatch(clearLoginOtp());
+            return;
+        }
+        // Compare the input OTP with the stored OTP
+        if (otp === storedOtp) {
+            console.log("OTP verified successfully!");
+            setSnackbarMessage("OTP verified successfully.");
+            setSnackbarOpen(true);
+            dispatch(clearLoginOtp()); // Clear OTP from Redux after successful verification
+            setShowOtpScreen(false); // Hide OTP screen
+            setShowCreatePasswd(true); // Show create password fields after OTP is verified
+        } else {
+            console.log("Invalid OTP.");
+            setSnackbarMessage("Invalid OTP. Please try again.");
             setSnackbarOpen(true);
         }
-        setLoading(false);
     };
 
     const handleCreatePassword = async () => {
@@ -212,8 +238,13 @@ const LoginModal = () => {
         try {
             const response = await axios.post(`${domain}/login/create-password`, { email, password });
             if (response.data.success) {
-                setSnackbarMessage("Password created successfully.");
+                setSnackbarMessage("Password updated.");
                 setSnackbarOpen(true);
+                localStorage.setItem("id", response.data.userId);
+                localStorage.setItem('username', email.split('@')[0]);
+                localStorage.setItem('email', email);
+                window.dispatchEvent(new Event('storage'));
+                dispatch(setUserLoggedIn(true));
                 dispatch(closeLogin());
             } else {
                 setSnackbarMessage("Failed to create password. Please try again.");
@@ -235,6 +266,9 @@ const LoginModal = () => {
                 setSnackbarOpen(true);
                 dispatch(setUserId(response.data.userId));
                 localStorage.setItem("id", response.data.userId);
+                localStorage.setItem('username', email.split('@')[0]);
+                localStorage.setItem('email', email);
+                window.dispatchEvent(new Event('storage'));
                 dispatch(setUserLoggedIn(true));
                 dispatch(closeLogin());
             } else {
@@ -251,14 +285,15 @@ const LoginModal = () => {
     const handleForgotPassword = async () => {
         setLoading(true);
         try {
-            const response = await axios.post(`${domain}/login/forgot-password`, { email });
-            if (response.data.success) {
-                setSnackbarMessage("Password reset link sent to your email.");
-                setSnackbarOpen(true);
-            } else {
-                setSnackbarMessage("Failed to send reset link. Please try again.");
-                setSnackbarOpen(true);
-            }
+            setShowOtpScreen(true);
+            // const response = await axios.post(`${domain}/login/forgot-password`, { email });
+            // if (response.data.success) {
+            //     setSnackbarMessage("Password reset link sent to your email.");
+            //     setSnackbarOpen(true);
+            // } else {
+            //     setSnackbarMessage("Failed to send reset link. Please try again.");
+            //     setSnackbarOpen(true);
+            // }
         } catch (error) {
             setSnackbarMessage("An error occurred. Please try again.");
             setSnackbarOpen(true);
@@ -267,27 +302,37 @@ const LoginModal = () => {
     };
 
     const handleNext = async () => {
-        setLoading(true);
+        setLoading(true); // Show loading spinner
         try {
+            // Check if the user exists
             const response = await axios.post(`${domain}/login/find-user`, { email });
-            console.log("check user",response.data);
-            if (response.data.userExists) {
-                if (response.data.hasPassword) {
-                    setIsEmail(true);
+            const { isExistingUser, isPasswordAvailable } = response.data;
+            console.log("finduser", response.data);
+            if (isExistingUser) {
+                if (isPasswordAvailable) {
+                    // If the user exists and has a password, go to password login
+                    setShowContEmail(false);
+                    setShowExstingUser(true);
                 } else {
-                    setIsNewUser(true);
-                    handleSendOtp();
+                    // User exists but no password; send OTP and prompt to set a password
+                    await handleSendOtp();
+                    setShowContEmail(false);
+                    setShowOtpScreen(true);
                 }
             } else {
-                setIsNewUser(true);
-                handleSendOtp();
+                // New user; send OTP and prompt to create a new account
+                await handleSendOtp();
+                setShowContEmail(false);
+                setShowOtpScreen(true);
             }
         } catch (error) {
+            console.error("Error during user check:", error);
             setSnackbarMessage("An error occurred. Please try again.");
             setSnackbarOpen(true);
         }
-        setLoading(false);
+        setLoading(false); // Hide loading spinner
     };
+
 
     return (
         <>
@@ -302,7 +347,7 @@ const LoginModal = () => {
                                 <CloseIcon />
                             </IconButton>
                             {showSignIn && (
-                                <IconButton sx={{ background: "#fff", color: "#f09300", position: "absolute", top: 16, left: 16 }} onClick={() => setShowSignIn(false)}>
+                                <IconButton sx={{ background: "#fff", color: "#f09300", position: "absolute", top: 16, left: 16 }} onClick={handleBack}>
                                     <ArrowBackIcon />
                                 </IconButton>
                             )}
@@ -333,12 +378,14 @@ const LoginModal = () => {
                                         setPassword={setPassword}
                                         confirmPassword={confirmPassword}
                                         setConfirmPassword={setConfirmPassword}
-                                        otpSent={otpSent}
-                                        setOtpSent={setOtpSent}
-                                        isEmail={isEmail}
-                                        setIsEmail={setIsEmail}
-                                        isNewUser={isNewUser}
-                                        setIsNewUser={setIsNewUser}
+                                        showOtpScreen={showOtpScreen}
+                                        setShowOtpScreen={setShowOtpScreen}
+                                        showContEmail={showContEmail}
+                                        setShowContEmail={setShowContEmail}
+                                        showExstingUser={showExstingUser}
+                                        setShowExstingUser={setShowExstingUser}
+                                        showCreatePasswd={showCreatePasswd}
+                                        setShowCreatePasswd={setShowCreatePasswd}
                                         handleNext={handleNext}
                                         handleSendOtp={handleSendOtp}
                                         handleVerifyOtp={handleVerifyOtp}
@@ -397,12 +444,12 @@ const LoginOptions = ({ setShowSignIn, handleGoogleLoginSuccess, handleGoogleLog
 
 const SignInForm = ({
     email, setEmail, mobile, setMobile, otp, setOtp, password, setPassword, confirmPassword, setConfirmPassword,
-    otpSent, setOtpSent, isEmail, setIsEmail, isNewUser, setIsNewUser, handleNext, handleSendOtp, handleVerifyOtp,
-    handleCreatePassword, handleEmailLogin, handleForgotPassword, handleAdminLogin, loading
+    showOtpScreen, setShowOtpScreen, showContEmail, setShowContEmail, showExstingUser, setShowExstingUser, handleNext, handleSendOtp, handleVerifyOtp,
+    handleCreatePassword, handleEmailLogin, handleForgotPassword, handleAdminLogin, loading, showCreatePasswd, setShowCreatePasswd
 }) => {
     return (
         <>
-            {!otpSent && !isEmail ? (
+            {showContEmail && !showExstingUser && !showOtpScreen && !showCreatePasswd && (
                 <>
                     <Typography sx={{ color: "#F09300", textAlign: "center", fontWeight: 'bold', lineHeight: 'normal', marginBottom: "0.7rem", fontSize: { lg: '1.3rem', xs: '1rem' } }}>
                         Enter Email
@@ -420,7 +467,8 @@ const SignInForm = ({
                         {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Next'}
                     </Button>
                 </>
-            ) : isEmail ? (
+            )}
+            {showExstingUser && (
                 <>
                     <Typography sx={{ color: "#F09300", textAlign: "center", fontWeight: 'bold', lineHeight: 'normal', marginBottom: "0.7rem", fontSize: { lg: '1.3rem', xs: '1rem' } }}>
                         Enter your password
@@ -448,13 +496,14 @@ const SignInForm = ({
                         Forgot Password?
                     </Button>
                 </>
-            ) : (
+            )}
+            {showOtpScreen && (
                 <>
                     <Typography sx={{ color: "#F09300", textAlign: "center", fontWeight: 'bold', lineHeight: 'normal', marginBottom: "0.7rem", fontSize: { lg: '1.3rem', xs: '1rem' } }}>
                         Enter OTP
                     </Typography>
                     <Typography variant="subtitle1" sx={{ color: "#999", margin: "1rem 0", textAlign: "center" }}>
-                        We have sent an OTP to <strong style={{ color: "#333" }}>{mobile}</strong>
+                        We have sent an OTP to <strong style={{ color: "#333" }}>{email}</strong>
                     </Typography>
                     <TextField
                         label="Enter OTP"
@@ -468,8 +517,38 @@ const SignInForm = ({
                     <Button onClick={handleVerifyOtp} disableElevation fullWidth variant="contained" sx={{ marginTop: "1rem", color: "white", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", padding: { lg: "0.7rem 3rem", md: "0.5rem 2rem", xs: "0.3rem 0rem" } }}>
                         {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Verify OTP'}
                     </Button>
-                    <Button disableElevation fullWidth variant="text" sx={{ marginTop: "1rem", color: "#f09300", textTransform: 'none', fontWeight: "bold", borderRadius: "30px", padding: "0.7rem 3rem" }}>
+                    <Button onClick={handleSendOtp} disableElevation fullWidth variant="text" sx={{ marginTop: "1rem", color: "#f09300", textTransform: 'none', fontWeight: "bold", borderRadius: "30px", padding: "0.7rem 3rem" }}>
                         Resend OTP
+                    </Button>
+                </>
+            )}
+            {showCreatePasswd && (
+                <>
+                    <Typography sx={{ color: "#F09300", textAlign: "center", fontWeight: 'bold', lineHeight: 'normal', marginBottom: "0.7rem", fontSize: { lg: '1.3rem', xs: '1rem' } }}>
+                        Create Password
+                    </Typography>
+                    <TextField
+                        label="Password"
+                        type="password"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        sx={{ margin: "1rem 0" }}
+                    />
+                    <TextField
+                        label="Confirm Password"
+                        type="password"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        sx={{ margin: "1rem 0" }}
+                    />
+                    <Button onClick={handleCreatePassword} disableElevation fullWidth variant="contained" sx={{ marginTop: "1rem", color: "white", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", padding: { lg: "0.7rem 3rem", md: "0.5rem 2rem", xs: "0.3rem 0rem" } }}>
+                        {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Create Password'}
                     </Button>
                 </>
             )}

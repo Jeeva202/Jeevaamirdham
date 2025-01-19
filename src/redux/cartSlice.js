@@ -4,23 +4,25 @@ const cartReducer = createSlice({
   name: "cart",
   initialState: {
     isCartOpen: false,
-    isLoginOpen:false,
+    isLoginOpen: false,
     userId: null,
     cartDetails: [],
     booksData: [],
     isAdminLoggedIn: false,
+    otp: null,
+    expiry: null,
   },
   reducers: {
     openCart: (state) => {
       state.isCartOpen = true;
     },
     closeCart: (state) => {
-      state.isCartOpen = false; 
+      state.isCartOpen = false;
     },
-    openLogin:(state) =>{
+    openLogin: (state) => {
       state.isLoginOpen = true
     },
-    closeLogin:(state) =>{
+    closeLogin: (state) => {
       state.isLoginOpen = false
     },
     setUserLoggedIn: (state, action) => {
@@ -37,7 +39,7 @@ const cartReducer = createSlice({
     },
     addToCart: (state, action) => {
       const { book_id, quantity } = action.payload;
-      
+
       // Check if the item already exists in the cart
       const existingItemIndex = state.cartDetails.findIndex(item => item.book_id === book_id);
 
@@ -71,22 +73,45 @@ const cartReducer = createSlice({
     setAdminLoggedIn: (state, action) => {
       state.isAdminLoggedIn = action.payload; // Set admin login state based on action
     },
+    setLoginOtp: (state, action) => {
+      state.otp = action.payload.otp;
+      state.expiry = action.payload.expiry;
+    },
+    clearLoginOtp: (state) => {
+      state.otp = null;
+      state.expiry = null;
+    },
   },
 });
 
-export const { openCart, closeCart, openLogin, closeLogin, setUserLoggedIn,setUserId, clearUserId, setCartDetails,
+export const { openCart, 
+  closeCart, 
+  openLogin, 
+  closeLogin, 
+  setUserLoggedIn, 
+  setUserId, 
+  clearUserId, 
+  setCartDetails,
   addToCart,
   updateQuantity,
   removeFromCart,
-  clearCart, setBooksData, setAdminLoggedIn} = cartReducer.actions;
+  clearCart, 
+  setBooksData, 
+  setAdminLoggedIn, 
+  setLoginOtp, 
+  clearLoginOtp } = cartReducer.actions;
 export const selectIsCartOpen = (state) => state.cart.isCartOpen;
 export const selectIsLoginOpen = (state) => state.cart.isLoginOpen;
 export const selectIsUserLoggedIn = (state) => state.cart.isUserLoggedIn;
-export const selectUserId = (state) => state.cart.userId; 
+export const selectUserId = (state) => state.cart.userId;
 export const selectCartDetails = (state) => state.cart.cartDetails;
 export const selectBooksData = (state) => state.cart.booksData;
 export const selectCartTotal = (state) => {
   return state.cart.cartDetails.reduce((total, item) => total + item.quantity * item.price, 0); // Assuming price is included in the cart item
 };
 export const selectIsAdminLoggedIn = (state) => state.cart.isAdminLoggedIn;
+export const selectLoginOtp = (state) => state.cart.otp;
+export const selectLoginExpiry = (state) => state.cart.expiry;
+
+
 export default cartReducer.reducer;
