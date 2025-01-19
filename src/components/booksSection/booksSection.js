@@ -33,8 +33,8 @@ export default function BooksSection({userId, selectedYear, setSelectedYear,allY
                     </div>
                 </div>
                 <div className="popular">
-                        {/* <PopularBooks userId={userId}                         
-                        /> */}
+                        <PopularBooks userId={userId}                         
+                        />
                 </div>
             </div>
         </div>

@@ -14,7 +14,9 @@ export default function TodayThoughts() {
             sx={{backgroundColor:"#DC6803", color:"#FFFFFF", fontSize:{lg:'0.7rem', sm:'0.5rem', md:'0.6rem'}}}
           />
           <div className="today-thoughts-text">
-            <marquee>Vestibulum tempus imperdiet sem ac porttitor. Vivamus pulvinar commodo orci, suscipit porttitor velit elementum non. Fusce nec pellentesque erat, id lobortis nunc.</marquee>
+            <marquee>
+            A tiny drop that falls into the ocean becomes the ocean, A small plant that blossoms on the mountain becomes the mountain. A single drop of sound (Nādam) that merges with the body, Shines as life itself, the eternal Pranava... Indeed!
+            </marquee>
           </div>
         </div>
       </Container>

@@ -1,4 +1,7 @@
 .banner{
-    width:95%;
+    width:100%;
     padding: 3rem 0;
+}
+.playStore{
+    text-align: center;
 }

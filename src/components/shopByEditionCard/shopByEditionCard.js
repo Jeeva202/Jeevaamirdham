@@ -2,6 +2,9 @@ import "./shopByEditionCard.css";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+import { useQuery } from "react-query";
+import { Loader } from "../loader/loader";
 // import { useState } from "react";
 // import Modal from '@mui/material/Modal';
 // import Box from '@mui/material/Box';
@@ -9,7 +12,6 @@ import { useNavigate } from "react-router-dom";
 
 
 export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYears, setAllYears }) {
-
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
@@ -23,42 +25,40 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const Cards = [
-        { year: 2024, img: "/assets/images/2023.png" },
-        { year: 2023, img: "/assets/images/2022.png" },
-        { year: 2022, img: "/assets/images/2021.png" },
-        { year: 2021, img: "/assets/images/2020.png" }
-
-    ];
-;
 
     const navigate = useNavigate();
 
-    // State for modal visibility
-    // const [isModalVisible, setIsModalVisible] = useState(false);
 
     // Function to handle year selection
     const handleOnClick = (year) => {
-        // if (year === 2024) {
             navigate("/emagazine");
             setSelectedYear(year);
             setAllYears(false);
-        // } else {
-        //     setIsModalVisible(true); // Show modal if the year is not 2024
-        // }
     };
+    const fetchMagazines = async () => {
+        const response = await axios.get(process.env.REACT_APP_URL + '/emagazine-page/magazine-yearwise');
+        return response.data.reverse(); // Reverse the data here to match your original behavior
+      };
+    
+      const { data: magazines, isLoading, isError, error } = useQuery(
+        ['magazines', 'yearwise'],  
+        fetchMagazines, 
+        {
+          staleTime: 60000, // Optional: cache the data for 1 minute (60000ms) before refetching
+          cacheTime: 300000, // Optional: keep the data cached for 5 minutes (300000ms) after it's unused
+        }
+      );
 
-    // Function to close the modal
-    // const closeModal = () => {
-    //     setIsModalVisible(false);
-    // };
+        if (isLoading) {
+          return <Loader/>;
+        }
 
     return (
         <div className={`Cards ${isMobile ? 'mobile' : ''}`}>
-            {Cards.map((e) => ( 
+            {magazines.slice(0,4).map((e) => ( 
                 <div className="card" key={e.year}>
                     <div className="card-img">
-                        <img style={{ width: "100%", height: "100%" }}  src={e.img} alt="" />
+                        <img style={{ width: "100%", height: "100%" }}  src={e.imgUrl} alt="" />
                     </div>
                     <a className="card-text">
                         <p >View {e.year} </p>

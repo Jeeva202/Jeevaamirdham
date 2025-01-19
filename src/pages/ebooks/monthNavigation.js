@@ -39,17 +39,15 @@ export default function MonthNavigation({ backToAllYearPage, selectedYear, oneYe
      
       </div>
         <div className="month-wise">
-          
-          {oneYearBook.map((e) => (
-            
-            <div className="month-wrapper" key={e.month}>
+          {oneYearBook.reverse().map((e) => (
+            <div onClick={() => handleMonthClick(e.month_eng)} className="month-wrapper" key={e.month} data-month={e.month_eng}>
               
               <img src={e.imgUrl} alt={e.month} />
-              <ViewAll
+              {/* <ViewAll
                 text={e.month_eng + " " + selectedYear}
                 width="11rem"
-                onClick={() => handleMonthClick(e.month_eng)} // Call the new function on month click
-              />
+                 // Call the new function on month click
+              /> */}
             </div>
           ))}
         </div>

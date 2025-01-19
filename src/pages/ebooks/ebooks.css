@@ -25,7 +25,8 @@
     gap: 30px;
 }
 
-.ebook .year-wrapper{
+.ebook .year-wrapper,
+.ebooks-one-year .month-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -832,6 +833,7 @@
     font-weight: 700;
     background: linear-gradient(90deg, #F09300 0%, #FFB800 100%);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 16px;
 }
@@ -880,13 +882,6 @@
     transition: color 0.3s ease;
 }
 
-.desc-info-tabs button.active {
-    /* color: #F09300; */
-}
-
-.tab-underscore.active {
-    /* border-bottom: 3px solid #F09300; */
-}
 
 .other-ebooks {
     display: grid;
@@ -1081,6 +1076,7 @@
     font-weight: 800;
     background:#f09300;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     position: relative;
     display: inline-block;
@@ -1102,6 +1098,7 @@
     font-weight: 800;
     background: #f09300;
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     position: relative;
     display: inline-block;
@@ -1127,7 +1124,8 @@
     perspective: 1000px;
 }
 
-.ebook .year-wrapper {
+.ebook .year-wrapper, 
+.ebooks-one-year .month-wrapper {
     position: relative;
     background: #ffffff;
     border-radius: 10px;
@@ -1141,13 +1139,15 @@
     transform-style: preserve-3d;
 }
 
-.ebook .year-wrapper:hover {
+.ebook .year-wrapper:hover,
+.ebooks-one-year .month-wrapper:hover {
     transform: translateY(-16px) rotateX(5deg);
     box-shadow: 0 20px 40px rgba(240, 168, 0, 0.166);
     border-radius: 10px;
 }
 
-.ebook .year-wrapper::before, .ebooks-one-year .month-wrapper::before {
+.ebook .year-wrapper::before,
+ .ebooks-one-year .month-wrapper::before {
     content: '';
     position: absolute;
     top: 0;
@@ -1161,22 +1161,26 @@
     transition: opacity 0.3s ease;
 }
 
-.ebook .year-wrapper:hover::before {
+.ebook .year-wrapper:hover::before,
+.ebooks-one-year .month-wrapper:hover::before {
     opacity: 1;
 }
 
-.ebook .year-wrapper img {
+.ebook .year-wrapper img,
+.ebooks-one-year .month-wrapper img {
     width: 80%;
     height: 100%;
     object-fit: contain;
     transition: transform 0.5s ease;
 }
 
-.ebook .year-wrapper:hover img {
+.ebook .year-wrapper:hover img,
+ .ebooks-one-year .month-wrapper:hover img {
     transform: scale(1.05);
 }
 
-.ebook .year-wrapper button {
+.ebook .year-wrapper button,
+ .ebooks-one-year .month-wrapper button {
     position: absolute;
     bottom: 20px;
     left: 50%;
@@ -1196,7 +1200,8 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.ebook .year-wrapper button:hover {
+.ebook .year-wrapper button:hover,
+ .ebooks-one-year .month-wrapper button:hover {
     background: #F09300;
    
     color: white;
@@ -1222,14 +1227,34 @@
     z-index: 2;
 }
 
+/* Month Label */
+.ebooks-one-year .month-wrapper::after {
+    content: attr(data-month);
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    /* background: #f09300; */
+    background: linear-gradient(90deg, #F09300 0%, #FFB800 100%);
+    padding: 8px 24px;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #121212;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 1024px) {
-    .ebook .year-wise {
+    .ebook .year-wise,
+    .ebooks-one-year .month-wise {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
         gap: 24px;
     }
     
-    .ebook .year-wrapper {
+    .ebook .year-wrapper,
+    .ebooks-one-year .month-wrapper {
         height: 350px;
     }
     
@@ -1239,16 +1264,19 @@
 }
 
 @media (max-width: 768px) {
-    .ebook .year-wise {
+    .ebook .year-wise,
+    .ebooks-one-year .month-wise {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: 20px;
     }
     
-    .ebook .year-wrapper {
+    .ebook .year-wrapper, 
+    .ebooks-one-year .month-wrapper {
         height: 300px;
     }
     
-    .ebook .year-wrapper button {
+    .ebook .year-wrapper button,
+    .ebooks-one-year .month-wrapper button {
         padding: 12px !important;
         font-size: 1rem;
     }
