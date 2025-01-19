@@ -1,24 +1,24 @@
 import React, { useState } from "react";
 import { ebooks } from "../../constants/screenData";
 import ViewAll from "../../components/viewAllButton/viewAll";
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+// import Modal from '@mui/material/Modal';
+// import Box from '@mui/material/Box';
+// import Button from '@mui/material/Button';
 
 export default function MonthNavigation({ backToAllYearPage, selectedYear, oneYearBook, redirectToMonthPage }) {
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  // const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleMonthClick = (month) => {
-    if (month !== "November") {
-      setIsModalVisible(true); // Show the modal if the selected month is not November
-    } else {
+    // if (month !== "November") {
+    //   setIsModalVisible(true); // Show the modal if the selected month is not November
+    // } else {
       redirectToMonthPage(month); // Proceed with normal redirection if the month is November
-    }
+    // }
   };
 
-  const closeModal = () => {
-    setIsModalVisible(false); // Close the modal when the user clicks close
-  };
+  // const closeModal = () => {
+  //   setIsModalVisible(false); // Close the modal when the user clicks close
+  // };
 
   return (
     <>
@@ -32,9 +32,18 @@ export default function MonthNavigation({ backToAllYearPage, selectedYear, oneYe
         </div>
       </div>
       <div className="ebooks-one-year">
+      <div className="title">
+        <div className="emagazine">
+          E-Magazine by Months
+        </div> 
+     
+      </div>
         <div className="month-wise">
+          
           {oneYearBook.map((e) => (
+            
             <div className="month-wrapper" key={e.month}>
+              
               <img src={e.imgUrl} alt={e.month} />
               <ViewAll
                 text={e.month_eng + " " + selectedYear}
@@ -47,7 +56,7 @@ export default function MonthNavigation({ backToAllYearPage, selectedYear, oneYe
       </div>
 
       {/* MUI Modal */}
-      <Modal
+      {/* <Modal
         open={isModalVisible}
         onClose={closeModal}
         aria-labelledby="modal-title"
@@ -75,7 +84,7 @@ export default function MonthNavigation({ backToAllYearPage, selectedYear, oneYe
             Close
           </Button>
         </Box>
-      </Modal>
+      </Modal> */}
     </>
   );
 }

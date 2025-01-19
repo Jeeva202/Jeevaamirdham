@@ -98,7 +98,7 @@ export default function Checkout() {
                       if (res.ok) {
                           const data = await res.json();
                           console.log("Payment data saved successfully:", data);
-                          alert("Payment successful and subscription activated!");
+                          alert("Payment successful.");
                       } else {
                           console.error("Failed to update backend");
                           alert("Payment was successful but could not update subscription. Please contact support.");

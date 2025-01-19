@@ -20,6 +20,7 @@ export default function PopularBooks({ userId }) {
         queryFn: async () => {
             const { data } = await axios.get(process.env.REACT_APP_URL+"/ebooks/books");
             const filteredBooks = data.slice(0, 2);
+            console.log("data", data, filteredBooks);
 
             return filteredBooks;
         },
@@ -80,7 +81,8 @@ export default function PopularBooks({ userId }) {
                             fontSize: { lg: '1rem', xs: '0.8rem' },
                             fontWeight: "bold",
                             padding: { lg: '0.4rem 0.3rem' },
-                            background: '#F09300', color: 'black',
+                            background: 'linear-gradient(90deg, #F09300 0%, #FFB800 100%)', // Fixed closing parenthesis
+                            color: '#121212',
                             borderRadius: '30px', width: '90%'
                         }} onClick={() => handleAddToCart(book, 1)}>Buy Now</Button>
                     </div>

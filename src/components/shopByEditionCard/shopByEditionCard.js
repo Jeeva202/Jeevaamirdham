@@ -3,9 +3,9 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 // import { useState } from "react";
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
+// import Modal from '@mui/material/Modal';
+// import Box from '@mui/material/Box';
+// import Button from '@mui/material/Button';
 
 
 export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYears, setAllYears }) {
@@ -24,35 +24,34 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
     }, []);
 
     const Cards = [
-        { year: 2019, img: "/assets/images/2018.png" },
-        { year: 2020, img: "/assets/images/2019.png" },
-        { year: 2021, img: "/assets/images/2020.png" },
-        { year: 2022, img: "/assets/images/2021.png" },
+        { year: 2024, img: "/assets/images/2023.png" },
         { year: 2023, img: "/assets/images/2022.png" },
-        { year: 2024, img: "/assets/images/2023.png" }
+        { year: 2022, img: "/assets/images/2021.png" },
+        { year: 2021, img: "/assets/images/2020.png" }
+
     ];
 ;
 
     const navigate = useNavigate();
 
     // State for modal visibility
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    // const [isModalVisible, setIsModalVisible] = useState(false);
 
     // Function to handle year selection
     const handleOnClick = (year) => {
-        if (year === 2024) {
+        // if (year === 2024) {
             navigate("/emagazine");
             setSelectedYear(year);
             setAllYears(false);
-        } else {
-            setIsModalVisible(true); // Show modal if the year is not 2024
-        }
+        // } else {
+        //     setIsModalVisible(true); // Show modal if the year is not 2024
+        // }
     };
 
     // Function to close the modal
-    const closeModal = () => {
-        setIsModalVisible(false);
-    };
+    // const closeModal = () => {
+    //     setIsModalVisible(false);
+    // };
 
     return (
         <div className={`Cards ${isMobile ? 'mobile' : ''}`}>
@@ -62,14 +61,15 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
                         <img style={{ width: "100%", height: "100%" }}  src={e.img} alt="" />
                     </div>
                     <a className="card-text">
-                        <p onClick={() => handleOnClick(e.year)}>View {e.year} Edition</p>
-                        <KeyboardArrowRightIcon />
+                        <p >View {e.year} </p>
+                        <KeyboardArrowRightIcon onClick={() => handleOnClick(e.year)} style={{ fontSize: '24px', color: '#151515', marginLeft: '8px', background:'#f09103', borderRadius: '50%',cursor:'pointer' }} />
+
                     </a>
                 </div>
             ))}
 
             {/* Modal for non-2024 years */}
-            <Modal
+            {/* <Modal
                 open={isModalVisible}
                 onClose={closeModal}
                 aria-labelledby="modal-title"
@@ -97,7 +97,7 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
                         Close
                     </Button>
                 </Box>
-            </Modal>
+            </Modal> */}
         </div>
     );
 }

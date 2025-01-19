@@ -19,6 +19,7 @@ export default function HomePage({selectedYear, setSelectedYear,allYears, setAll
         "/assets/images/carousel2.svg"
     ];
     const [step, setStep] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
     const numSteps = carouselImages.length;
     const dispatch = useDispatch()
     const userId = useSelector(selectUserId);
@@ -51,44 +52,104 @@ export default function HomePage({selectedYear, setSelectedYear,allYears, setAll
                 <div className="NavBar">
 
                 </div>
-                <div className="carousel">
-                    <Card sx={{
-                        background: "#fbf1e6",
-                        // backdropFilter: "blur(7.5px)",
-                        width: "100%",
-                        // maxWidth: "37rem",
-                        borderRadius: "10px",
-                        border: "1px solid #ccc",
-                        boxShadow: "none"
-                    }}>
-                        <CardContent sx={{ padding: "10px", paddingBottom:"10px !important", borderRadius: "5px" }}>
-                            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                <IconButton onClick={handlePreviousStep} disabled={step === 0}>
-                                    <ArrowBackIosNewRoundedIcon sx={{ color: '#F09300', fontSize: "1rem" }} />
-                                </IconButton>
-                                <Box component="img" src={carouselImages[step]} alt="carousel" sx={{ width:"95%",height: "100%", borderRadius: "10px" }} />
-                                <IconButton onClick={handleNextStep} disabled={step === numSteps - 1}>
-                                    <ArrowForwardIosRoundedIcon sx={{ color: '#F09300', fontSize: "1rem" }} />
-                                </IconButton>
-                            </Box>
-                            <Box sx={{ display: 'flex', justifyContent: "center", marginTop: "0.5rem" }}>
-                                {[...Array(numSteps)].map((_, index) => (
-                                    <Box
-                                        key={index}
-                                        sx={{
-                                            width: 8,
-                                            height: 8,
-                                            borderRadius: '50%',
-                                            backgroundColor: index === step ? '#d9d9d9' : '#F09300',
-                                            margin: '0 4px',
-                                            cursor: 'pointer',
+                <div className="carousel-container">
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            width: '100%',
+                            height: '300px',
+                            overflow: 'hidden',
+                            borderRadius: '8px',
+                            backgroundColor: '#FCEDEC'
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                width: `${numSteps * 100}%`,
+                                transform: `translateX(-${(step * 100) / numSteps}%)`,
+                                transition: 'transform 0.5s ease-in-out',
+                            }}
+                        >
+                            {carouselImages.map((image, index) => (
+                                <Box
+                                    key={index}
+                                    sx={{
+                                        width: `${100 / numSteps}%`,
+                                        height: '300px',
+                                    }}
+                                >
+                                    <img
+                                        src={image}
+                                        alt={`slide-${index}`}
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            objectFit: 'cover',
                                         }}
-                                        onClick={() => setStep(index)}
+                                        onLoad={() => setIsLoading(false)}
                                     />
-                                ))}
-                            </Box>
-                        </CardContent>
-                    </Card>
+                                </Box>
+                            ))}
+                        </Box>
+
+                        {!isLoading && (
+                            <>
+                                <IconButton
+                                    onClick={handlePreviousStep}
+                                    sx={{
+                                        position: 'absolute',
+                                        left: 10,
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        bgcolor: 'rgba(255, 255, 255, 0.8)',
+                                        '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.9)' },
+                                    }}
+                                >
+                                    <ArrowBackIosNewRoundedIcon />
+                                </IconButton>
+
+                                <IconButton
+                                    onClick={handleNextStep}
+                                    sx={{
+                                        position: 'absolute',
+                                        right: 10,
+                                        top: '50%',
+                                        transform: 'translateY(-50%)',
+                                        bgcolor: 'rgba(255, 255, 255, 0.8)',
+                                        '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.9)' },
+                                    }}
+                                >
+                                    <ArrowForwardIosRoundedIcon />
+                                </IconButton>
+
+                                <Box
+                                    sx={{
+                                        position: 'absolute',
+                                        bottom: 16,
+                                        left: '50%',
+                                        transform: 'translateX(-50%)',
+                                        display: 'flex',
+                                        gap: 1,
+                                    }}
+                                >
+                                    {carouselImages.map((_, index) => (
+                                        <Box
+                                            key={index}
+                                            onClick={() => setStep(index)}
+                                            sx={{
+                                                width: 8,
+                                                height: 8,
+                                                borderRadius: '50%',
+                                                bgcolor: step === index ? '#F09300' : 'rgba(255, 255, 255, 0.7)',
+                                                cursor: 'pointer',
+                                            }}
+                                        />
+                                    ))}
+                                </Box>
+                            </>
+                        )}
+                    </Box>
                 </div>
 
                 <div className="PopBooks">
