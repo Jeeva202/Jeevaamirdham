@@ -465,7 +465,12 @@ const SignInForm = ({
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const isNextButtonDisabled = !username || !email;
+    const isEmailValid = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    };
+
+    const isNextButtonDisabled = !username || !email || !isEmailValid(email);
 
     return (
         <>
@@ -491,6 +496,8 @@ const SignInForm = ({
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         sx={{ mb: 2, marginBottom: '1rem' }}
+                        error={email && !isEmailValid(email)}
+                        helperText={email && !isEmailValid(email) ? "Please enter a valid email" : ""}
                     />
                     <Button
                         onClick={handleNext}
