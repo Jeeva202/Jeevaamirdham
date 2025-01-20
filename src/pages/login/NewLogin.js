@@ -462,10 +462,11 @@ const SignInForm = ({
     showOtpScreen, setShowOtpScreen, showContEmail, setShowContEmail, showExstingUser, setShowExstingUser, handleNext, handleSendOtp, handleVerifyOtp,
     handleCreatePassword, handleEmailLogin, handleForgotPassword, handleAdminLogin, loading, showCreatePasswd, setShowCreatePasswd
 }) => {
-        const [showPassword, setShowPassword] = useState(false);
-        const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-        
-    
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const isNextButtonDisabled = !username || !email;
+
     return (
         <>
             {showContEmail && !showExstingUser && !showOtpScreen && !showCreatePasswd && (
@@ -491,7 +492,14 @@ const SignInForm = ({
                         onChange={(e) => setEmail(e.target.value)}
                         sx={{ mb: 2, marginBottom: '1rem' }}
                     />
-                    <Button onClick={handleNext} disableElevation fullWidth variant="contained" sx={{ color: "white", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", padding: { lg: "0.7rem 3rem", md: "0.5rem 2rem", xs: "0.3rem 0rem" } }}>
+                    <Button
+                        onClick={handleNext}
+                        disableElevation
+                        fullWidth
+                        variant="contained"
+                        sx={{ color: "white", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", padding: { lg: "0.7rem 3rem", md: "0.5rem 2rem", xs: "0.3rem 0rem" } }}
+                        disabled={isNextButtonDisabled}
+                    >
                         {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Next'}
                     </Button>
                 </>
