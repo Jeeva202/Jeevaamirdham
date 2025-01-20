@@ -26,6 +26,9 @@ import TermsOfServiceModal from './TermsOfServiceModal';
 import { openLogin, selectIsLoginOpen, closeLogin, setUserLoggedIn, setUserId, setAdminLoggedIn, setLoginOtp, clearLoginOtp, selectLoginOtp, selectLoginExpiry } from "../../redux/cartSlice";
 import { navBanner } from '../../constants/screenData';
 import './NewLogin.css';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 const style = {
     position: "absolute",
@@ -44,6 +47,7 @@ const domain = process.env.REACT_APP_URL + '';
 const LoginModal = () => {
     const [tabIndex, setTabIndex] = useState(0);
     const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [mobile, setMobile] = useState("");
     const [otp, setOtp] = useState("");
     const [password, setPassword] = useState("");
@@ -78,6 +82,7 @@ const LoginModal = () => {
     const resetState = () => {
         setTabIndex(0);
         setEmail("");
+        setUsername("");
         setMobile("");
         setOtp("");
         setPassword("");
@@ -181,11 +186,13 @@ const LoginModal = () => {
         try {
             await axios.post(`${domain}/login/send-otpToEmail`, { email: email.toLowerCase(), otp });
             setSnackbarMessage('OTP has been sent successfully');
+            setSnackbarOpen(true);
             console.log('OTP sent successfully!');
             setShowOtpScreen(true);
         } catch (error) {
             console.error('Failed to send OTP:', error);
             setSnackbarMessage('Failed to send OTP');
+            setSnackbarOpen(true);
 
         }
     };
@@ -236,12 +243,13 @@ const LoginModal = () => {
         }
         setLoading(true);
         try {
-            const response = await axios.post(`${domain}/login/create-password`, { email, password });
+            const response = await axios.post(`${domain}/login/create-password`, { email, password, username });
             if (response.data.success) {
-                setSnackbarMessage("Password updated.");
+                console.log("User created successfully")
+                setSnackbarMessage(`Welcome ${username}.`);
                 setSnackbarOpen(true);
                 localStorage.setItem("id", response.data.userId);
-                localStorage.setItem('username', email.split('@')[0]);
+                localStorage.setItem('username', username);
                 localStorage.setItem('email', email);
                 window.dispatchEvent(new Event('storage'));
                 dispatch(setUserLoggedIn(true));
@@ -262,11 +270,14 @@ const LoginModal = () => {
         try {
             const response = await axios.post(`${domain}/login/login`, { email, password });
             if (response.data.success) {
+                console.log("User logged in successfully")
                 setSnackbarMessage("Login successful.");
+                setSnackbarMessage("User logged in")
                 setSnackbarOpen(true);
+                console.log("Snackbar Open:", snackbarOpen, "Message:", snackbarMessage);
                 dispatch(setUserId(response.data.userId));
                 localStorage.setItem("id", response.data.userId);
-                localStorage.setItem('username', email.split('@')[0]);
+                localStorage.setItem('username', username);
                 localStorage.setItem('email', email);
                 window.dispatchEvent(new Event('storage'));
                 dispatch(setUserLoggedIn(true));
@@ -285,7 +296,9 @@ const LoginModal = () => {
     const handleForgotPassword = async () => {
         setLoading(true);
         try {
+            setShowExstingUser(false);
             setShowOtpScreen(true);
+            handleSendOtp();
             // const response = await axios.post(`${domain}/login/forgot-password`, { email });
             // if (response.data.success) {
             //     setSnackbarMessage("Password reset link sent to your email.");
@@ -305,7 +318,7 @@ const LoginModal = () => {
         setLoading(true); // Show loading spinner
         try {
             // Check if the user exists
-            const response = await axios.post(`${domain}/login/find-user`, { email });
+            const response = await axios.post(`${domain}/login/find-user`, { email, username });
             const { isExistingUser, isPasswordAvailable } = response.data;
             console.log("finduser", response.data);
             if (isExistingUser) {
@@ -370,6 +383,8 @@ const LoginModal = () => {
                                     <SignInForm
                                         email={email}
                                         setEmail={setEmail}
+                                        username={username}
+                                        setUsername={setUsername}
                                         mobile={mobile}
                                         setMobile={setMobile}
                                         otp={otp}
@@ -401,7 +416,7 @@ const LoginModal = () => {
                     </Box>
                 </Box>
             </Modal>
-            <Snackbar open={snackbarOpen} autoHideDuration={6000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
+            <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
                 <Alert onClose={handleSnackbarClose} severity="info" sx={{ width: '100%' }}>
                     {snackbarMessage}
                 </Alert>
@@ -443,10 +458,14 @@ const LoginOptions = ({ setShowSignIn, handleGoogleLoginSuccess, handleGoogleLog
 );
 
 const SignInForm = ({
-    email, setEmail, mobile, setMobile, otp, setOtp, password, setPassword, confirmPassword, setConfirmPassword,
+    email, setEmail, username, setUsername, mobile, setMobile, otp, setOtp, password, setPassword, confirmPassword, setConfirmPassword,
     showOtpScreen, setShowOtpScreen, showContEmail, setShowContEmail, showExstingUser, setShowExstingUser, handleNext, handleSendOtp, handleVerifyOtp,
     handleCreatePassword, handleEmailLogin, handleForgotPassword, handleAdminLogin, loading, showCreatePasswd, setShowCreatePasswd
 }) => {
+        const [showPassword, setShowPassword] = useState(false);
+        const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+        
+    
     return (
         <>
             {showContEmail && !showExstingUser && !showOtpScreen && !showCreatePasswd && (
@@ -455,13 +474,22 @@ const SignInForm = ({
                         Enter Email
                     </Typography>
                     <TextField
+                        placeholder="Username"
+                        variant="outlined"
+                        fullWidth
+                        size="small"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        sx={{ mb: 2, margin: '1rem 0' }}
+                    />
+                    <TextField
                         placeholder="Email"
                         variant="outlined"
                         fullWidth
                         size="small"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        sx={{ mb: 2, margin: '1rem 0' }}
+                        sx={{ mb: 2, marginBottom: '1rem' }}
                     />
                     <Button onClick={handleNext} disableElevation fullWidth variant="contained" sx={{ color: "white", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", padding: { lg: "0.7rem 3rem", md: "0.5rem 2rem", xs: "0.3rem 0rem" } }}>
                         {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Next'}
@@ -478,23 +506,39 @@ const SignInForm = ({
                     </Typography>
                     <TextField
                         label="Password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         variant="outlined"
                         fullWidth
                         size="small"
                         value={password}
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={()=>setShowPassword(!showPassword)}
+                                            // onMouseDown={handleMouseDownPassword}
+                                        >
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            },
+                        }}
                         onChange={(e) => setPassword(e.target.value)}
                         sx={{ margin: "1rem 0" }}
                     />
+                    <Button onClick={handleForgotPassword} disableElevation fullWidth variant="text" sx={{ color: "#f09300", textTransform: 'none', fontWeight: "bold", borderRadius: "30px", padding: "0.7rem 3rem" }}>
+                        Forgot Password?
+                    </Button>
                     <Button onClick={handleEmailLogin} disableElevation fullWidth variant="contained" sx={{ marginTop: "1rem", color: "white", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", padding: { lg: "0.7rem 3rem", md: "0.5rem 2rem", xs: "0.3rem 0rem" } }}>
                         {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Sign In'}
                     </Button>
                     <Button onClick={handleAdminLogin} disableElevation fullWidth variant="contained" sx={{ marginTop: "1rem", color: "white", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", padding: { lg: "0.7rem 3rem", md: "0.5rem 2rem", xs: "0.3rem 0rem" } }}>
                         Admin Login
                     </Button>
-                    <Button onClick={handleForgotPassword} disableElevation fullWidth variant="text" sx={{ marginTop: "1rem", color: "#f09300", textTransform: 'none', fontWeight: "bold", borderRadius: "30px", padding: "0.7rem 3rem" }}>
-                        Forgot Password?
-                    </Button>
+
                 </>
             )}
             {showOtpScreen && (
@@ -529,23 +573,53 @@ const SignInForm = ({
                     </Typography>
                     <TextField
                         label="Password"
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         variant="outlined"
                         fullWidth
                         size="small"
                         value={password}
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={()=>setShowPassword(!showPassword)}
+                                            // onMouseDown={handleMouseDownPassword}
+                                        >
+                                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            },
+                        }}
                         onChange={(e) => setPassword(e.target.value)}
                         sx={{ margin: "1rem 0" }}
                     />
                     <TextField
                         label="Confirm Password"
-                        type="password"
+                        type={showConfirmPassword ? 'text' : 'password'}
                         variant="outlined"
                         fullWidth
                         size="small"
                         value={confirmPassword}
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={()=>setShowConfirmPassword(!showConfirmPassword)}
+                                            // onMouseDown={handleMouseDownPassword}
+                                        >
+                                            {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            },
+                        }}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        sx={{ margin: "1rem 0" }}
+                        sx={{ marginBottom: "1rem" }}
                     />
                     <Button onClick={handleCreatePassword} disableElevation fullWidth variant="contained" sx={{ marginTop: "1rem", color: "white", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", padding: { lg: "0.7rem 3rem", md: "0.5rem 2rem", xs: "0.3rem 0rem" } }}>
                         {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Create Password'}
