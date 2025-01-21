@@ -11,7 +11,6 @@ import Footer from './components/footer/footer';
 import LoginWithOTP from './pages/loginWithOtp.js/loginWithOTP';
 import CreateNewAccount from './pages/createNewAccount/createNewAccount';
 import Blog from './pages/blog/blog';
-import Audio_video from './pages/audio_video/audio_video';
 import ViewCart from './components/cart/cart';
 import Checkout from './components/checkout/checkout';
 import UserDashboard from './pages/userDashboard/userDashboard';
@@ -23,7 +22,7 @@ import NewLogin from './pages/login/NewLogin';
 import WhatsAppButton from './components/whatsapp/Whatsapp';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useSelector } from 'react-redux';
-
+import AudioVideo from './pages/audio_video/audio-video';
 
 const queryClient = new QueryClient();
 
@@ -46,7 +45,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <>
-        <Box sx={{ backgroundColor: "#FEF7F7" }}>
+        <Box sx={{ backgroundColor: "none" }}>
           <Box>
 
             <BrowserRouter>
@@ -77,7 +76,7 @@ function App() {
                   }
                 />
 
-                <Route path="/audio_video" element={<Audio_video />} />
+                <Route path="/audio_video" element={<AudioVideo />} />
                 <Route path='/blog' element={<Blog />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />

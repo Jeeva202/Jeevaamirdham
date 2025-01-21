@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Container } from '@mui/material';
-import AudioPlayerCard from './audio';
 import axios from 'axios';
 
-export default function Audio_video() {
+export default function VideoPlayerCard() {
     const [videoData, setVideoData] = useState([]);
     const [currentVideo, setCurrentVideo] = useState(null);
 
-    useEffect(() => {
+    useEffect(() => {  
         const fetchVideoData = async () => {
             try {
                 const response = await axios.get(process.env.REACT_APP_URL + `/audio-video-page/all_video_data`);
@@ -23,6 +22,7 @@ export default function Audio_video() {
 
     const handleVideoClick = (video) => {
         setCurrentVideo(video);
+        console.log("video",video);
     };
 
     return (
@@ -37,7 +37,7 @@ export default function Audio_video() {
                     <div className="main" style={{ flex: 2 }}>
                         {currentVideo && (
                             <div style={{ position: 'relative' }}>
-                                <video controls style={{ width: '100%', borderRadius: '8px', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)' }}>
+                                <video key={currentVideo.videofile_url} controls style={{ width: '100%',height:"100%", borderRadius: '8px', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)' }}>
                                     <source src={currentVideo.videofile_url} type="video/mp4" />
                                     Your browser does not support the video tag.
                                 </video>
@@ -76,13 +76,6 @@ export default function Audio_video() {
                         ))}
                     </div>
                 </div>
-            </div>
-            <div style={{marginTop:'3rem'}}>
-                <div className="text">
-                    <h3>Audios</h3>
-                </div>
-                <AudioPlayerCard />
-                <br />
             </div>
         </Container>
     );

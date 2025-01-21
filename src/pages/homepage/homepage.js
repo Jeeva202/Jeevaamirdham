@@ -13,6 +13,7 @@ import ArrowBackIosNewRoundedIcon from '@mui/icons-material/ArrowBackIosNewRound
 import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRounded';
 import { useSelector, useDispatch } from "react-redux"
 import { selectUserId, setUserId } from "../../redux/cartSlice"
+import VideoPlayerCard from "../audio_video/videoPlayerCard"
 export default function HomePage({selectedYear, setSelectedYear,allYears, setAllYears}) {
     const carouselImages = [
         "/assets/images/carousel1.svg",
@@ -159,6 +160,7 @@ export default function HomePage({selectedYear, setSelectedYear,allYears, setAll
                 </div>
                 <div className="YouTube">
                     <PranavamTV />
+                    <VideoPlayerCard />
                 </div>
                 <div className="News">
                     {/* <LatestNews/> */}

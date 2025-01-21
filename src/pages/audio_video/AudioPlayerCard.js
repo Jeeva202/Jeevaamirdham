@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, Container } from "@mui/material";
 import StopIcon from "@mui/icons-material/Stop";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import axios from "axios";
@@ -30,12 +30,19 @@ const AudioPlayerCard = () => {
     };
 
     return (
+        <Container maxWidth="lg">
+                        <div style={{marginTop:'3rem'}}>
+                <div className="text">
+                    <h3>Audios</h3>
+                </div>
+            </div>
         <div
             style={{
                 display: "flex",
                 flexWrap: "wrap",
                 gap: "16px",
                 justifyContent: "space-between",
+                marginBottom: "3rem",
             }}
         >
             {audioData.map((item, index) => (
@@ -149,6 +156,8 @@ const AudioPlayerCard = () => {
                 </div>
             ))}
         </div>
+</Container>
+
     );
 };
 

@@ -2,3 +2,11 @@
 *{
   font-family: 'Sora', sans-serif;
 }
+
+body {
+  background-image: url('/public/assets/images/appBackground.webp');
+  background-repeat: repeat; 
+  background-size: cover; 
+  background-position: center; 
+  margin: 0;
+}
