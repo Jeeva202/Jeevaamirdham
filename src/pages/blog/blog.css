@@ -138,3 +138,49 @@
     flex-direction: row;
     font-size: 0.8rem;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.pagination .MuiPagination-ul {
+    color: #667085 !important;
+}
+
+.pagination li:nth-child(n+2):nth-last-child(n+2) button {
+    color: #667085;
+}
+
+.pagination li:first-child button,
+.pagination li:last-child button {
+    font-family: 'Sora', sans-serif;
+    line-height: 20px;
+    font-weight: 500;
+    color: #344054;
+    border: 1px solid #D0D5DD;
+    gap: 10px;
+
+}
+
+.pagination li:first-child {
+    position: absolute;
+    left: 13lvw;
+}
+
+.pagination li:last-child {
+    position: absolute;
+    right: 13lvw;
+}
+
+.pagination .Mui-selected {
+    background-color: #FCCC4D !important;
+    /* Highlight color */
+    color: #7F56D9 !important;
+    /* Text color */
+    font-weight: bold;
+    /* Optional for better emphasis */
+    border-radius: 50%;
+    /* Optional: To make it more visually distinct */
+}
