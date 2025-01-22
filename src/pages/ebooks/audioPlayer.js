@@ -185,7 +185,7 @@ export default function AudioPlayer({
             <div className="img-details-section">
                 <img src={APIBookData.imgUrl} alt="" />
                 <div className="details">
-                    {APIBookData.details}
+                    {APIBookData.description}
                 </div>
             </div>
 

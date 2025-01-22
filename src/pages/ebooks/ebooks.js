@@ -28,6 +28,7 @@ import AudioPlayer from "./audioPlayer";
 import LoginModal from "../login/NewLogin";
 import { openLogin, setUserLoggedIn, selectUserId, setCartDetails, setBooksData,selectCartDetails } from '../../redux/cartSlice'
 import { Loader } from "../../components/loader/loader";
+import SubscriptionModal from "../../components/subscriptionModal/subscriptionModal";
 
 export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllYears}) {
     const [listenPage, setListenPage] = useState(false)
@@ -766,7 +767,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
                                                                             Login to listen
                                                                         </Button>
                                                                     </div>
-                                                                    <Modal open={openModal} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
+                                                                    {/* <Modal open={openModal} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
                                                                         <Box
                                                                             sx={{
                                                                                 position: 'absolute',
@@ -849,7 +850,8 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
                                                                                 </Grid>
                                                                             </Container>
                                                                         </Box>
-                                                                    </Modal>
+                                                                    </Modal> */}
+                                                                    <SubscriptionModal open={openModal} handleClose={handleClose} handleOpen={handleOpen} /> 
                                                                     <LoginModal open={showLoginModal} onClose={handleLoginClose} />
                                                                 </>
                                                         }
