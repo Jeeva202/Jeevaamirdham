@@ -248,9 +248,9 @@ const LoginModal = () => {
                 console.log("User created successfully")
                 setSnackbarMessage(`Welcome ${username}.`);
                 setSnackbarOpen(true);
-                localStorage.setItem("id", response.data.userId);
-                localStorage.setItem('username', username);
-                localStorage.setItem('email', email);
+                localStorage.setItem("id", response.data.user.id);
+                localStorage.setItem('username', response.data.user.username);
+                localStorage.setItem('email', response.data.user.email);
                 window.dispatchEvent(new Event('storage'));
                 dispatch(setUserLoggedIn(true));
                 dispatch(closeLogin());
@@ -275,10 +275,10 @@ const LoginModal = () => {
                 setSnackbarMessage("User logged in")
                 setSnackbarOpen(true);
                 console.log("Snackbar Open:", snackbarOpen, "Message:", snackbarMessage);
-                dispatch(setUserId(response.data.userId));
-                localStorage.setItem("id", response.data.userId);
-                localStorage.setItem('username', username);
-                localStorage.setItem('email', email);
+                dispatch(setUserId(response.data.user.id));
+                localStorage.setItem("id", response.data.user.id);
+                localStorage.setItem('username', response.data.user.username);
+                localStorage.setItem('email', response.data.user.email);
                 window.dispatchEvent(new Event('storage'));
                 dispatch(setUserLoggedIn(true));
                 dispatch(closeLogin());
@@ -320,8 +320,16 @@ const LoginModal = () => {
             // Check if the user exists
             const response = await axios.post(`${domain}/login/find-user`, { email, username });
             const { isExistingUser, isPasswordAvailable } = response.data;
-            console.log("finduser", response.data);
+
+            console.log("finduser", response.data, response.data.user.username);
+
             if (isExistingUser) {
+                localStorage.setItem("id", response.data.user.id);
+                localStorage.setItem('username', response.data.user.username);
+                localStorage.setItem('email', response.data.user.email);
+                window.dispatchEvent(new Event('storage'));
+                dispatch(setUserLoggedIn(true));
+
                 if (isPasswordAvailable) {
                     // If the user exists and has a password, go to password login
                     setShowContEmail(false);

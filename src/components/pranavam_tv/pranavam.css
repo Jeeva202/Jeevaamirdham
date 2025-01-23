@@ -44,9 +44,9 @@
     width: auto;
 }
 
-.PranavamTV .video-section .embed .video-title {
+/* .PranavamTV .video-section .embed .video-title {
     flex: 0 0 50%;
-}
+} */
 
 .youtubeEmbed {
     border-radius: 10px;

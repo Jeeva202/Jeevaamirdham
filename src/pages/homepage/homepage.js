@@ -159,7 +159,7 @@ export default function HomePage({selectedYear, setSelectedYear,allYears, setAll
                         setAllYears={setAllYears} />
                 </div>
                 <div className="YouTube">
-                    <PranavamTV />
+                    {/* <PranavamTV /> */}
                     <VideoPlayerCard />
                 </div>
                 <div className="News">
