@@ -73,9 +73,9 @@ export default function VideoPlayerCard() {
     const handleVideoClick = (video) => {
         if ((!isUserLoggedIn || userPlan === 'basic') && video !== videoData[0]) {
             setOpenModal(true)
+            return
         }
         setCurrentVideo(video);
-        console.log("video", video);
     };
 
     return (
@@ -137,7 +137,7 @@ export default function VideoPlayerCard() {
                                 onClick={() => handleVideoClick(item)}
                                 style={{
                                     cursor: (!isUserLoggedIn || userPlan === 'basic') && index !== 0 ? 'default' : 'pointer',
-                                    pointerEvents: (!isUserLoggedIn || userPlan === 'basic') && index !== 0 ? 'none' : 'auto',
+                                    // pointerEvents: (!isUserLoggedIn || userPlan === 'basic') && index !== 0 ? 'none' : 'auto',
                                     marginBottom: '6px',
                                     display: 'flex',
                                     alignItems: 'center',
@@ -164,7 +164,7 @@ export default function VideoPlayerCard() {
                                             alignItems: 'center',
                                         }}
                                     >
-                                        <IconButton sx={{background:'#44444426'}}>  
+                                        <IconButton sx={{background:'#44444426'}} onClick={() => handleVideoClick(item)} >  
                                         <LockIcon style={{ fontSize: '1.5rem' }} />
                                         </IconButton>
                                         

@@ -16,8 +16,8 @@ import { selectUserId, setUserId } from "../../redux/cartSlice"
 import VideoPlayerCard from "../audio_video/videoPlayerCard"
 export default function HomePage({selectedYear, setSelectedYear,allYears, setAllYears}) {
     const carouselImages = [
-        "/assets/images/carousel1.svg",
-        "/assets/images/carousel2.svg"
+        "/assets/images/Banner-1.png",
+        "/assets/images/Banner-2.png"
     ];
     const [step, setStep] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
@@ -86,7 +86,7 @@ export default function HomePage({selectedYear, setSelectedYear,allYears, setAll
                                         style={{
                                             width: '100%',
                                             height: '100%',
-                                            objectFit: 'cover',
+                                            objectFit: 'fill',
                                         }}
                                         onLoad={() => setIsLoading(false)}
                                     />
