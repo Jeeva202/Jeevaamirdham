@@ -191,7 +191,7 @@ export default function UpgradeNow({ open, planName, handleClose, handleOpen, pl
                                                 variant="contained"
                                                 style={{ ...plan.buttonStyle, width: "100%", padding: "10px 0" }}
                                             >
-                                                {upgradeCost > 0 ? "Upgrade Now" : "Purchase Now"}
+                                                {upgradeCost > 0 ? "Upgrade Now" : "Renew Now"}
                                             </Button>
                                         </Box>
                                     </Card>

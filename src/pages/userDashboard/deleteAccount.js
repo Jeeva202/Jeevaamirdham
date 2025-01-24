@@ -1,18 +1,33 @@
 import { Card, CardContent, TextField, Button, Typography, Box } from '@mui/material';
 import React, { useState } from 'react';
+import axios from 'axios';
 
-export default function DeleteAccount() {
+export default function DeleteAccount({userId}) {
     const [input, setInput] = useState('');
 
     const handleInputChange = (event) => {
         setInput(event.target.value);
     };
 
-    const handleDelete = () => {
+    const handleDelete = async () => {
         if (input === 'CONFIRM') {
-            alert('Account deleted successfully.');
+            // Call the API to delete the account
+            const response = await axios.post(process.env.REACT_APP_URL + "/deactivate_user", { userId });
+            if (response.status === 200) {
+                
+                alert('Account deleted successfully.');
+                localStorage.removeItem('id');
+        localStorage.removeItem('username');
+        localStorage.removeItem('email');
+
+        window.location.href = '/home'
+                
+            } else {
+                alert('Failed to delete account. Please try again later.');
+            }
         } else {
             alert('Please type "CONFIRM" correctly to proceed.');
+          
         }
     };
 
