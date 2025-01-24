@@ -80,6 +80,8 @@ export default function Dashboard() {
                     id: userId ? userId : localStorage.getItem('id')
                 }
             });
+            console.log("data",  plans.filter((e) => e.name === data[0]["plan"])[0]);
+            
             return plans.filter((e) => e.name === data[0]["plan"])[0];
         },
         queryKey: ["plan-detail", isUserLoggedIn],
@@ -106,12 +108,11 @@ export default function Dashboard() {
                     <p style={{fontSize:"1rem"}}>Current Subscription</p>
                     {planData ? (
                         <>
-                            <h3>{planData["name"].split(' ')
-                                                    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter of each word
+                            <h3>{planData?.name?.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter of each word
                                                      .join(' ')} Plan</h3>
 
                             <List>
-                                {planData["features"].map((detail, index) => (
+                                {planData?.features?.map((detail, index) => (
                                     <ListItem key={index}>
                                         <ListItemIcon>
                                             <CheckCircleIcon sx={{ color: 'green' }} />
@@ -120,8 +121,16 @@ export default function Dashboard() {
                                     </ListItem>
                                 ))}
                             </List>
+
                             <br />
-                            <Button variant="contained" sx={{ textTransform: "none", background: "#0ABB75" }} disableElevation onClick={handleOpen} >Upgrade Now</Button>
+                    <Alert severity="info">Your Magazine Subscription start from 24-Nov-2024 End on 24-Nov-2025
+                        <a href="#" style={{ textDecoration: "none" }}>
+                            <span style={{ color: "#f09300", fontWeight: "bold", marginLeft: "5px" }}  onClick={handleOpen}>
+                                Renew / Upgrade now
+                            </span>
+                        </a>
+                    </Alert>
+                            {/* <Button variant="contained" sx={{ textTransform: "none", background: "#0ABB75" }} disableElevation >Upgrade Now</Button> */}
                             <UpgradeNow open={openModal} planName={planData["name"]} handleClose={handleClose} handleOpen={handleOpen} plans={plans} />
                         </>
                     ) : (
