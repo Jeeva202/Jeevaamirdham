@@ -48,10 +48,16 @@ function a11yProps(index) {
 
 export default function UserDashboard() {
     const [value, setValue] = React.useState(0);
-
+    const [userName, setUserName] = React.useState("Username");
     const handleChange = (event, newValue) => {
         setValue(newValue); // Update tab value
     };
+    React.useEffect(() => {
+        const storedUsername = localStorage.getItem('username');
+        if (storedUsername) {
+            setUserName(storedUsername);
+        }
+    }, []);
 
     const tabs = [
         { label: "Dashboard", content: <Dashboard /> },
@@ -78,7 +84,7 @@ export default function UserDashboard() {
                         
                     }}>
                         <Avatar alt="User Avatar" sx={{ width: "5rem", height: "5rem" }} src="/static/images/avatar/1.jpg" />
-                        <h3>Username</h3>
+                        <h3>{userName}</h3>
                     </div>
 
                     <Tabs
