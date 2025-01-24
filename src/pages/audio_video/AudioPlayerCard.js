@@ -113,7 +113,7 @@ const AudioPlayerCard = () => {
           flexWrap: "wrap",
           marginBottom: "1rem"
         }}
-      >
+      > 
         <div className="text">
           <h3 style={{ margin: 0 }}>Audios</h3>
         </div>
