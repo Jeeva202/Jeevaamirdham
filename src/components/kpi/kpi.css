@@ -1,46 +1,119 @@
 .kpis {
-    padding: 1rem 0;
+    padding: 2rem 0;
     display: flex;
     justify-content: space-between;
+    gap: 2rem;
     flex-wrap: wrap;
 }
 
 .kpi-item {
-    border: 1px solid #c3c3c3;
-    border-radius: 15px;
+    flex: 1;
+    min-width: 280px;
+    padding: 2rem;
+    border-radius: 16px;
+    background: #FFFFFF;
+    border: 2px solid #FCCC4D;
     display: flex;
-    flex-direction: row;
-    width: 30%;
-    margin: 30px 0;
-    padding: 10px;
-    padding: 40px 10px;
     align-items: center;
+    gap: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-.kpi-item img {
-    width: 25%;
-    padding-right: 20px;
+.kpi-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(252, 204, 77, 0.15);
+}
+
+.kpi-icon {
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.kpi-icon img {
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.kpi-item:hover .kpi-icon img {
+    transform: scale(1.1);
 }
 
 .kpi {
+    flex: 1;
     display: flex;
     flex-direction: column;
 }
 
 .kpi .number {
-    font-size: 1.6rem;
-    font-weight: 600;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+    color: #DC6803; /* Consistent color for all numbers */
 }
 
 .kpi .text {
-    color: #999999;
-    font-size: 0.8rem;
-    font-weight: 400;
+    color: #666;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.loading-pulse {
+    animation: pulse 1.5s infinite;
+    opacity: 0.5;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+@media (max-width: 1024px) {
+    .kpis {
+        gap: 1.5rem;
+    }
+
+    .kpi-item {
+        padding: 1.5rem;
+        min-width: 240px;
+    }
+
+    .kpi .number {
+        font-size: 2rem;
+    }
 }
 
 @media (max-width: 768px) {
     .kpi-item {
-        width: 100%;
-        margin: 10px 0;
+        flex: 1 1 calc(50% - 1rem);
+        min-width: 220px;
+    }
+
+    .kpi-icon img {
+        width: 3rem;
+        height: 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .kpi-item {
+        flex: 1 1 100%;
+    }
+
+    .kpi .number {
+        font-size: 1.8rem;
+    }
+
+    .kpi-icon img {
+        width: 2.8rem;
+        height: 2.8rem;
     }
 }
