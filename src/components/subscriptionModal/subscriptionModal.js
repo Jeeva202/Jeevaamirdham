@@ -171,7 +171,7 @@ export default function SubscriptionModal({ open, handleClose, handleOpen }) {
                     bgcolor: 'background.paper',
                     boxShadow: 24,
                     borderRadius: '8px',
-                    p: 4,
+                    padding: '1rem',
                     display: 'flex',
                     flexDirection: 'column',
                     gap: 3,
@@ -189,7 +189,7 @@ export default function SubscriptionModal({ open, handleClose, handleOpen }) {
                     <CloseIcon />
                 </IconButton>
                 <Container maxWidth="md">
-                    <Box textAlign="center" my={4}>
+                    <Box textAlign="center" my={2}>
                         <Typography variant="h4" gutterBottom>
                             Choose Your Plan
                         </Typography>
