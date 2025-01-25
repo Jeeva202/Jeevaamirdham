@@ -8,7 +8,7 @@ export default function About() {
     return (
         <div>
             <Container maxWidth="lg">
-                <Typography variant="h4" component="div" sx={{ fontWeight: "bold", textAlign: "center", paddingTop: "6rem", paddingBottom: "2rem" }}>
+                <Typography variant="h4" component="div" sx={{ fontWeight: "bold", textAlign: "center", paddingTop: "3rem", paddingBottom: "2rem" }}>
                     About Us
                 </Typography>
                 <Typography variant="body1" sx={{ color: "#444", lineHeight: "30px" }}>
@@ -23,7 +23,7 @@ export default function About() {
                     Join us at Jeeva Amirdham and embark on a journey of self-discovery, inner bliss, and spiritual awakening.
                 </Typography>
 
-                <Typography variant="h4" component="div" sx={{ fontWeight: "bold", textAlign: "left", paddingTop: "6rem", paddingBottom: "2rem" }}>
+                <Typography variant="h4" component="div" sx={{ fontWeight: "bold", textAlign: "left", paddingTop: "3rem", paddingBottom: "2rem" }}>
                     Our Story
                 </Typography>
                 <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: "2rem" }}>
