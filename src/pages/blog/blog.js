@@ -9,10 +9,12 @@ import SearchIcon from "@mui/icons-material/Search";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useQuery } from "react-query";
 import { Loader } from "../../components/loader/loader";
+import SelectedBlog from "./selectedBlog";
 
 export default function Blog() {
     const [selectedCategory, setSelectedCategory] = useState("GNANAM");
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedBlog, setSelectedBlog] = useState(null);
     const { data: BlogData, isLoading: BlogIsLoading } = useQuery("blog", async () => {
         let url = process.env.REACT_APP_URL + "/blogs";
         const response = await fetch(url);
@@ -50,9 +52,16 @@ export default function Blog() {
     const handleCategoryClick = (categoryId) => {
         setSelectedCategory(categoryId);
     };
+    const openBlog =(id)=>{ 
+        console.log(BlogData.filter((d)=>d.id==id)[0]);
+              
+        setSelectedBlog(BlogData.filter((d)=>d.id==id)[0])
+    }
 
     return (
         <Container maxWidth="lg">
+            {selectedBlog ==null ?
+            (
             <div className="blog-page">
                 <div className="title">
                     Latest Blog
@@ -64,7 +73,7 @@ export default function Blog() {
                                 <img src={d.imgUrl} alt="" />
                                 <div className="subtext">
                                     <div className="dateAndAuthor">
-                                        {new Date(d.created_dt).toISOString().slice(0, 10)} / By Jeevaamirdham
+                                        {new Date(d.created_dt).toISOString().slice(0,10)} / By Jeevaamirdham
                                     </div>
                                 </div>
                                 <div className="title">{d.title}</div>
@@ -84,6 +93,7 @@ export default function Blog() {
                                                 alignItems: "center",
                                             }}
                                             endIcon={<KeyboardArrowRightIcon sx={{ color: "#F09300" }} />}
+                                            onClick={()=>openBlog(d.id)}
                                         >
                                             Read More
                                         </Button>
@@ -190,9 +200,9 @@ export default function Blog() {
                                     sx={{ paddingBottom: 0 }}
                                 />
                                 <Divider />
-                                <CardContent sx={{ paddingTop: 2 }}>
+                                <CardContent sx={{ paddingTop: 2, cursor:'pointer' }}>
                                     {recentBlogs.map((d) => (
-                                        <div key={d.id} className="post-card">
+                                        <div key={d.id} className="post-card" onClick={()=>openBlog(d.id)}>
                                             <img src={d.imgUrl} alt="" />
                                             <div className="text">
                                                 <div className="post-title">
@@ -229,12 +239,23 @@ export default function Blog() {
                         </div> */}
                     </div>
                 </div>
+                </div>
+                
+            ) : (<>
+                <SelectedBlog selectedBlog={selectedBlog} setSelectedBlog={setSelectedBlog} />
+                </>)}
                 <div className="playStore">
                     <Playstore />
                 </div>
                 <NewsLetter />
                 <KPI />
-            </div>
+
+
+
+
+
+
+
         </Container>
     );
 }
