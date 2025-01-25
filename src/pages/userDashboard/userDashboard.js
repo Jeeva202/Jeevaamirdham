@@ -96,8 +96,8 @@ export default function UserDashboard() {
         { label: "Account Details", content: <AccountDetails formData={formData} setFormData={setFormData} userData={userData} isLoading={userDataLoading} userId={userId} /> },
         // { label: "Magazine Subscription", content: <MagazineSubsricption /> },
         { label: "Your Order", content: "Your Order Content" },
-        { label: "E-Magazine last read", content: <LastRead /> },
-        { label: "Favorite", content: <Favorite/> },
+        // { label: "E-Magazine last read", content: <LastRead /> },
+        // { label: "Favorite", content: <Favorite/> },
         { label: "Delete Account", content: <DeleteAccount userId={userId}/> },
     ];
 

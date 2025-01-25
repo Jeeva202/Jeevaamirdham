@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useQuery } from 'react-query';
 import { Loader } from '../../components/loader/loader';
 import UpgradeNow from './upgradeNow';
+import Gif_Loader from '../../components/loader/Gif_Loader';
 
 const plans = [
     {
@@ -89,7 +90,8 @@ export default function Dashboard() {
     });
 
     if (planIsLoading) {
-        return <Loader />;
+        // return <Loader />;
+        return <Gif_Loader />;
     }
 
     if (planError) {

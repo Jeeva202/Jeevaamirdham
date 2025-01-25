@@ -264,12 +264,10 @@ export default function TopNavbar() {
                         <div style={{ display: "flex" }} >
                             {/* <img src={navBanner.icons.traslate} /> */}
                             {/* <bold className="text" style={{ marginLeft: "5px" }}>English</bold> */}
-                            <div id="google_translate_element" ></div>
+                            
+                            {/* <div id="google_translate_element" ></div> */}
 
                         </div>
-                        {/* <navBanner.icons.facebook sx={{ fontSize: "1rem" }} />
-                        <navBanner.icons.twitter sx={{ fontSize: "1rem" }} />
-                        <navBanner.icons.instagram sx={{ fontSize: "1rem" }} /> */}
                     </div>
                 </div>
             </Container>

@@ -5,6 +5,7 @@ import { Loader } from "../../components/loader/loader";
 import { useQuery } from "react-query";
 
 import axios from "axios";
+import Gif_Loader from "../../components/loader/Gif_Loader";
 export default function YearNavigation({ redirectToYearPage }) {
 
   const fetchMagazines = async () => {
@@ -28,7 +29,8 @@ export default function YearNavigation({ redirectToYearPage }) {
 
 
   if (isLoading) {
-    return <Loader/>;
+    // return <Loader/>;
+    return <Gif_Loader />;
   }
 
   return (

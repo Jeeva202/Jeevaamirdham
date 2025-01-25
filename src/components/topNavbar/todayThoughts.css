@@ -91,6 +91,7 @@
     .today-thoughts-content {
         padding: 0.6rem 1rem;
         gap: 0.8rem;
+        flex-direction: column;
     }
 
     .today-thoughts-text {
@@ -98,8 +99,9 @@
     }
 
     .nav-dot {
-        width: 6px;
-        height: 6px;
+        width: 15px;
+        height: 15px;
+        font-size: 8px;
     }
 }
 

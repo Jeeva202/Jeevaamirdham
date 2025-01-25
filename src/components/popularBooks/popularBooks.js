@@ -9,6 +9,7 @@ import { Loader } from "../loader/loader";
 import { useEffect } from "react";
 import { Button } from "@mui/material"
 import { selectIsUserLoggedIn, selectCartDetails } from "../../redux/cartSlice";
+import Gif_Loader from "../loader/Gif_Loader";
 export default function PopularBooks({ userId }) {
     const dispatch = useDispatch()
     const isOpen = useSelector(selectIsCartOpen)
@@ -56,11 +57,12 @@ export default function PopularBooks({ userId }) {
     };
 
     if (isBooksLoading) {
-        return <Loader />
+        // return <Loader />
+        return <Gif_Loader />
     }
     return (
         <div className="book-cards">
-            {booksData.map((book) => (
+            {booksData?.map((book) => (
                 <div className="card">
                     <div className="image">
                         <img style={{ width: "100%" }} src={book.imgUrl} alt="" srcset="" />

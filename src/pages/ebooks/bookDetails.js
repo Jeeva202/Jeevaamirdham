@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { Loader } from "../../components/loader/loader";
+import Gif_Loader from "../../components/loader/Gif_Loader";
 
 export default function BookDetails({ backToHomePage, booksData, catSelectedBook, changeBook, handleAddToCart, isOpen }) {
     const [quantity, setQuantity] = useState(1);
@@ -28,7 +29,8 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
 
     // Debugging: Log API response or errors
     if (isBookInfoLoading) {
-        return <Loader/>
+        // return <Loader/>
+        return <Gif_Loader />;
     }
 
     if (bookInfoError) {

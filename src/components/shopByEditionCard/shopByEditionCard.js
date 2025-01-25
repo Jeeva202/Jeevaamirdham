@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import { useQuery } from "react-query";
 import { Loader } from "../loader/loader";
+import Gif_Loader from "../loader/Gif_Loader";
 // import { useState } from "react";
 // import Modal from '@mui/material/Modal';
 // import Box from '@mui/material/Box';
@@ -50,12 +51,13 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
       );
 
         if (isLoading) {
-          return <Loader/>;
+        //   return <Loader/>;
+        return <Gif_Loader />;
         }
 
     return (
         <div className={`Cards ${isMobile ? 'mobile' : ''}`}>
-            {magazines.slice(0,4).map((e) => ( 
+            {magazines?.slice(0,4).map((e) => ( 
                 <div className="card" key={e.year}>
                     <div className="card-img">
                         <img style={{ width: "100%", height: "100%" }}  src={e.imgUrl} alt="" />

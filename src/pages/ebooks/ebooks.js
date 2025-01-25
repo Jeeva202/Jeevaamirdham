@@ -29,6 +29,7 @@ import LoginModal from "../login/NewLogin";
 import { openLogin, setUserLoggedIn, selectUserId, setCartDetails, setBooksData,selectCartDetails } from '../../redux/cartSlice'
 import { Loader } from "../../components/loader/loader";
 import SubscriptionModal from "../../components/subscriptionModal/subscriptionModal";
+import Gif_Loader from "../../components/loader/Gif_Loader";
 
 export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllYears}) {
     const [listenPage, setListenPage] = useState(false)
@@ -421,7 +422,8 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
      *  Data fetching for the Ebooks section ends here 
     */
     if (isLoading || isBooksLoading || isMonthImageLoading) {
-        return <Loader />;
+        return <Gif_Loader />;
+        // return <Loader />;
     }
 
     console.log("booksData", APIBookData);

@@ -9,6 +9,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useQuery } from "react-query";
 import { Loader } from "../../components/loader/loader";
+import Gif_Loader from "../../components/loader/Gif_Loader";
 
 export default function Blog() {
     const [selectedCategory, setSelectedCategory] = useState("GNANAM");
@@ -29,7 +30,8 @@ export default function Blog() {
 
 
         if (BlogIsLoading) {
-          return <Loader/>;
+        //   return <Loader/>;
+          return <Gif_Loader />;
         }
     // const blogcontent = [
     //     {

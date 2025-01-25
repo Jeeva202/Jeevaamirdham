@@ -18,7 +18,7 @@ export default function HomePage({selectedYear, setSelectedYear,allYears, setAll
     const carouselImages = [
         "/assets/images/Banner-1.png",
         "/assets/images/Banner-2.png"
-    ];
+    ]; 
     const [step, setStep] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
     const numSteps = carouselImages.length;

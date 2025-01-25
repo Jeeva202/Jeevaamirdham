@@ -225,11 +225,11 @@ const AudioPlayerCard = () => {
                                     height: "100%",
                                 }}
                             >
-                                <div style={{display:'flex', flexDirection:'column', width:"80%", alignItems:'center'}}>
+                                <div style={{display:'flex', flexDirection:'column', width:"80%", alignItems:'center', gap:"1rem"}}>
                                 <div
-                                    style={{ fontWeight: "bold", marginBottom: "8px", color:'#fff', textAlign: 'center'}}
+                                    style={{ fontWeight: "bold", color:'#fff', textAlign: 'center'}}
                                 >{item.title}</div>
-                                <div style={{fontWeight: "bold", marginBottom: "8px", color:'#fff', textAlign: 'center' }}>{item.subtitle}</div>
+                                <div style={{fontWeight: "bold", color:'#fff', textAlign: 'center', fontSize:"0.95rem" }}>{item.subtitle}</div>
                                 <audio
                                     controls
                                     autoPlay
@@ -251,7 +251,6 @@ const AudioPlayerCard = () => {
                                         textTransform: "none",
                                         fontWeight: "bold",
                                         borderRadius: "40px",
-                                        marginTop: "1rem",
                                         width:'2rem'
                                     }}
                                 >

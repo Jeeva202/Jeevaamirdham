@@ -5,6 +5,7 @@ import { selectUserId } from "../../redux/cartSlice";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { Loader } from "../../components/loader/loader";
+import Gif_Loader from "../../components/loader/Gif_Loader";
 export default function AccountDetails({formData, setFormData, userData, setUserData, isLoading, userId}) {
   const [isEditing, setIsEditing] = useState(false);  // Track if the user is editing
 
@@ -46,7 +47,8 @@ export default function AccountDetails({formData, setFormData, userData, setUser
 
   // If the user data is not yet loaded, show a loading state
   if (isLoading) {
-    return <Loader/>;
+    // return <Loader/>;
+    return <Gif_Loader />;
   }
 
   return (
@@ -100,8 +102,8 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter First Name"
             variant="outlined"
-            value={formData[0].firstName }
-            defaultValue={formData[0].firstName}
+            value={formData[0]?.firstName }
+            defaultValue={formData[0]?.firstName}
             onChange={handleInputChange}
             name="firstName"
             disabled={!isEditing}  // Disable if not editing
@@ -117,7 +119,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Last Name"
             variant="outlined"
-            value={formData[0].lastName }
+            value={formData[0]?.lastName }
             onChange={handleInputChange}
             name="lastName"
             disabled={!isEditing}  // Disable if not editing
@@ -133,7 +135,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Gender"
             variant="outlined"
-            value={formData[0].gender }
+            value={formData[0]?.gender }
             onChange={handleInputChange}
             name="gender"
             disabled={!isEditing}  // Disable if not editing
@@ -150,7 +152,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             type="date"
             placeholder="Enter Date of Birth"
             InputLabelProps={{ shrink: true }}
-            value={formData[0].dob }
+            value={formData[0]?.dob }
             onChange={handleInputChange}
             name="dob"
             disabled={!isEditing}  // Disable if not editing
@@ -166,7 +168,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Phone Number"
             variant="outlined"
-            value={formData[0].phone }
+            value={formData[0]?.phone }
             onChange={handleInputChange}
             name="phone"
             disabled={!isEditing}  // Disable if not editing
@@ -182,7 +184,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Email Address"
             variant="outlined"
-            value={formData[0].email }
+            value={formData[0]?.email }
             onChange={handleInputChange}
             name="email"
             disabled={!isEditing}  // Disable if not editing
@@ -198,7 +200,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Door Number"
             variant="outlined"
-            value={formData[0].doorNo }
+            value={formData[0]?.doorNo }
             onChange={handleInputChange}
             name="doorNo"
             disabled={!isEditing}  // Disable if not editing
@@ -213,7 +215,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Street Name"
             variant="outlined"
-            value={formData[0].streetName }
+            value={formData[0]?.streetName }
             onChange={handleInputChange}
             name="streetName"
             disabled={!isEditing}  // Disable if not editing
@@ -228,7 +230,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter City/Town"
             variant="outlined"
-            value={formData[0].city }
+            value={formData[0]?.city }
             onChange={handleInputChange}
             name="city"
             disabled={!isEditing}  // Disable if not editing
@@ -243,7 +245,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter State/Province"
             variant="outlined"
-            value={formData[0].state }
+            value={formData[0]?.state }
             onChange={handleInputChange}
             name="state"
             disabled={!isEditing}  // Disable if not editing
@@ -258,7 +260,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Country"
             variant="outlined"
-            value={formData[0].country }
+            value={formData[0]?.country }
             onChange={handleInputChange}
             name="country"
             disabled={!isEditing}  // Disable if not editing
@@ -273,7 +275,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Postal/Zip Code"
             variant="outlined"
-            value={formData[0].zipCode }
+            value={formData[0]?.zipCode }
             onChange={handleInputChange}
             name="zipCode"
             disabled={!isEditing}  // Disable if not editing
