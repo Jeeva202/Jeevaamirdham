@@ -20,7 +20,7 @@ export default function SelectedBlog({ selectedBlog, setSelectedBlog }) {
 
             <div className="home-navigation">
                 <a className="back" onClick={() => backToAllBlogsPage()}>
-                    Home
+                    Blogs
                 </a>
                 <img src={ebooks.icons.RightArrowStroke} alt="" />
                 <div className="nav-title">
