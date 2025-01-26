@@ -238,9 +238,14 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
         {
             // Ensure enabled is always a boolean
             enabled: Boolean(selectedYear && selectedMonth),  // Convert to boolean
+            cacheTime: 300000, // Optional: keep the data cached for 5 minutes (300000ms) after it's unused
         }
     );
 
+    useEffect(() => {
+        setCategoryCartFlag(false)
+        setAllYears(true)
+    },[]);
 
 
     const { data: OtherBooksData, isLoading:isOtherBooksLoading, error:isOtherBooksError } = useQuery(
@@ -556,6 +561,8 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
                                 const data = await res.json();
                                 console.log("Payment data saved successfully:", data);
                                 alert("Payment successful and subscription activated!");
+                                const response = await axios.get(process.env.REACT_APP_URL + `/emagazine-page/audiofile?uid=${userData?.id}&year=${selectedYear}&month=${selectedMonthNumber}`)
+                                setAudioData(response.data)
                             } else {
                                 console.error("Failed to update backend");
                                 alert("Payment was successful but could not update subscription. Please contact support.");
@@ -677,7 +684,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
                             </div>
                             <div className="monthlybook-buysection">
                                 <div className="book-imagesection">
-                                    <img src={APIBookData.imgUrl} alt="" />
+                                    <img src={APIBookData?.imgUrl} alt="" />
                                 </div>
                                 <div className="book-contentsection">
                                     <div className="book-navigator">
@@ -700,15 +707,15 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
                                     </div>
                                     <div className="title-section">
                                         <div className="title">
-                                            {APIBookData.title}
+                                            {APIBookData?.title}
                                         </div>
                                         <div className="subtext">
                                             <div className="author">
-                                                Author: {APIBookData.author}
+                                                Author: {APIBookData?.author}
                                             </div>
                                         </div>
                                         <div className="shortdesc">
-                                            {APIBookData.shortDesc}
+                                            {APIBookData?.shortDesc}
                                         </div>
                                         <div className="listen-copy-buy-section">
                                             <div className="tab-content">
@@ -871,7 +878,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
 
                                 <div className="desc-tab-content">
                                     <div className="desc">
-                                        {APIBookData.description}
+                                        {APIBookData?.description}
                                     </div>
                                 </div>
 

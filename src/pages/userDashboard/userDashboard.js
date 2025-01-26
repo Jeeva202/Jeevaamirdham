@@ -94,7 +94,7 @@ export default function UserDashboard() {
 
     const tabs = [
         { label: "Dashboard", content: <Dashboard /> },
-        { label: "Account Details", content: <AccountDetails formData={formData} setFormData={setFormData} userData={userData} isLoading={userDataLoading} userId={userId} /> },
+        { label: "Account Details", content: <AccountDetails formData={formData[0]} setFormData={setFormData} userData={userData} isLoading={userDataLoading} userId={userId} /> },
         // { label: "Magazine Subscription", content: <MagazineSubsricption /> },
         { label: "Your Order", content: <YourOrder /> },
         // { label: "E-Magazine last read", content: <LastRead /> },
