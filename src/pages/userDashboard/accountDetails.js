@@ -6,7 +6,12 @@ import axios from "axios";
 import { useQuery } from "react-query";
 import { Loader } from "../../components/loader/loader";
 import Gif_Loader from "../../components/loader/Gif_Loader";
-export default function AccountDetails({formData, setFormData, userData, setUserData, isLoading, userId}) {
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from "@mui/x-date-pickers";
+import dayjs from 'dayjs';
+export default function AccountDetails({ formData, setFormData, userData, setUserData, isLoading, userId }) {
   const [isEditing, setIsEditing] = useState(false);  // Track if the user is editing
 
   console.log("userData", userData);
@@ -31,11 +36,11 @@ export default function AccountDetails({formData, setFormData, userData, setUser
 
   // Handle the "Update" button click
   const handleUpdateClick = () => {
-    console.log("handleupdate", {...formData, userId});
-    
+    console.log("handleupdate", { ...formData, userId });
+
     // Send the updated form data to the server to update the DB
     axios
-      .post(process.env.REACT_APP_URL + "/updateUserDetails", {...formData, userId}) // Replace with actual API URL
+      .post(process.env.REACT_APP_URL + "/updateUserDetails", { ...formData, userId }) // Replace with actual API URL
       .then((response) => {
         console.log("User details updated:", response.data);
         setIsEditing(false); // Disable editing after update
@@ -52,7 +57,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
   }
 
   return (
-    <Box sx={{ maxWidth: "800px", padding: "2rem", background: "#fff", borderRadius: "8px" }}  key={JSON.stringify(formData)}>
+    <Box sx={{ maxWidth: "800px", padding: "2rem", background: "#fff", borderRadius: "8px" }} key={JSON.stringify(formData)}>
       <Box display={'flex'} justifyContent={'space-between'}>
         <Typography variant="h5" sx={{ marginBottom: "1.5rem", fontWeight: "bold" }}>
           Basic Information
@@ -102,7 +107,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter First Name"
             variant="outlined"
-            value={formData?.firstName }
+            value={formData?.firstName}
             defaultValue={formData?.firstName}
             onChange={handleInputChange}
             name="firstName"
@@ -119,7 +124,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Last Name"
             variant="outlined"
-            value={formData?.lastName }
+            value={formData?.lastName}
             onChange={handleInputChange}
             name="lastName"
             disabled={!isEditing}  // Disable if not editing
@@ -135,31 +140,31 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Gender"
             variant="outlined"
-            value={formData?.gender }
+            value={formData?.gender}
             onChange={handleInputChange}
             name="gender"
             disabled={!isEditing}  // Disable if not editing
           />
         </Grid>
 
-        {/* Date of Birth */}
-        <Grid item xs={12} md={6}>
-          <Typography variant="body2" sx={{ marginBottom: "0.3rem" }}>
-            Date of Birth *
-          </Typography>
-          <TextField
-            fullWidth
-            type="date"
-            placeholder="Enter Date of Birth"
-            InputLabelProps={{ shrink: true }}
-            value={formData?.dob }
-            onChange={handleInputChange}
-            name="dob"
-            disabled={!isEditing}  // Disable if not editing
-          />
-        </Grid>
+        {/* /* Date of Birth */ }
+          <Grid item xs={12} md={6}>
+            <Typography variant="body2" sx={{ marginBottom: "0.3rem" }}>
+              Date of Birth *
+            </Typography>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                fullWidth
+                inputFormat="MM/DD/YYYY"
+                renderInput={(params) => <TextField {...params} />}
+                value={formData?.dob ? dayjs(formData?.dob) : null} // Ensure it's a valid Dayjs object
+                onChange={(newValue) => handleInputChange({ target: { name: 'dob', value: newValue } })}
+                disabled={!isEditing}  // Disable if not editing
+              />
+            </LocalizationProvider>
+          </Grid>
 
-        {/* Phone Number */}
+          {/* Phone Number */}
         <Grid item xs={12} md={6}>
           <Typography variant="body2" sx={{ marginBottom: "0.3rem" }}>
             Phone Number *
@@ -168,7 +173,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Phone Number"
             variant="outlined"
-            value={formData?.phone }
+            value={formData?.phone}
             onChange={handleInputChange}
             name="phone"
             disabled={!isEditing}  // Disable if not editing
@@ -184,7 +189,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Email Address"
             variant="outlined"
-            value={formData?.email }
+            value={formData?.email}
             onChange={handleInputChange}
             name="email"
             disabled={!isEditing}  // Disable if not editing
@@ -200,7 +205,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Door Number"
             variant="outlined"
-            value={formData?.doorNo }
+            value={formData?.doorNo}
             onChange={handleInputChange}
             name="doorNo"
             disabled={!isEditing}  // Disable if not editing
@@ -215,7 +220,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Street Name"
             variant="outlined"
-            value={formData?.streetName }
+            value={formData?.streetName}
             onChange={handleInputChange}
             name="streetName"
             disabled={!isEditing}  // Disable if not editing
@@ -230,7 +235,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter City/Town"
             variant="outlined"
-            value={formData?.city }
+            value={formData?.city}
             onChange={handleInputChange}
             name="city"
             disabled={!isEditing}  // Disable if not editing
@@ -245,7 +250,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter State/Province"
             variant="outlined"
-            value={formData?.state }
+            value={formData?.state}
             onChange={handleInputChange}
             name="state"
             disabled={!isEditing}  // Disable if not editing
@@ -260,7 +265,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Country"
             variant="outlined"
-            value={formData?.country }
+            value={formData?.country}
             onChange={handleInputChange}
             name="country"
             disabled={!isEditing}  // Disable if not editing
@@ -275,7 +280,7 @@ export default function AccountDetails({formData, setFormData, userData, setUser
             fullWidth
             placeholder="Enter Postal/Zip Code"
             variant="outlined"
-            value={formData?.zipCode }
+            value={formData?.zipCode}
             onChange={handleInputChange}
             name="zipCode"
             disabled={!isEditing}  // Disable if not editing
