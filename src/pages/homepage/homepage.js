@@ -58,7 +58,7 @@ export default function HomePage({selectedYear, setSelectedYear,allYears, setAll
                         sx={{
                             position: 'relative',
                             width: '100%',
-                            height: '300px',
+                            height: '380px',
                             overflow: 'hidden',
                             borderRadius: '8px',
                             backgroundColor: '#FCEDEC'
@@ -77,7 +77,7 @@ export default function HomePage({selectedYear, setSelectedYear,allYears, setAll
                                     key={index}
                                     sx={{
                                         width: `${100 / numSteps}%`,
-                                        height: '300px',
+                                        height: '380px',
                                     }}
                                 >
                                     <img

@@ -110,7 +110,7 @@ export default function ViewCart() {
     // if(isUserLoggedIn == true){
       fetchCartData();
     // }
-  },
+  },[]
   // , [isUserLoggedIn]
 ); // Run only on component mount
 

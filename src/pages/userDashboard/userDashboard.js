@@ -18,6 +18,7 @@ import { selectUserId } from '../../redux/cartSlice';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useQuery } from 'react-query';
+import YourOrder from './YourOrder';
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -95,7 +96,7 @@ export default function UserDashboard() {
         { label: "Dashboard", content: <Dashboard /> },
         { label: "Account Details", content: <AccountDetails formData={formData} setFormData={setFormData} userData={userData} isLoading={userDataLoading} userId={userId} /> },
         // { label: "Magazine Subscription", content: <MagazineSubsricption /> },
-        { label: "Your Order", content: "Your Order Content" },
+        { label: "Your Order", content: <YourOrder /> },
         // { label: "E-Magazine last read", content: <LastRead /> },
         // { label: "Favorite", content: <Favorite/> },
         { label: "Delete Account", content: <DeleteAccount userId={userId}/> },

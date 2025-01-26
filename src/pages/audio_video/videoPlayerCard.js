@@ -82,7 +82,7 @@ export default function VideoPlayerCard() {
         <Container maxWidth="lg" sx={{ background: '#fff', borderRadius: '10px', marginTop:'2rem' }}>
             <div className="PranavamTV">
                 <div className="title">
-                    <div className="text">
+                    <div className="text" style={{fontWeight:'bold', color:'#B54708', fontSize:'2rem'}}>
                         Videos
                     </div>
                 </div>

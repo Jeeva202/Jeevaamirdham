@@ -8,9 +8,9 @@ export default function About() {
     return (
         <div>
             <Container maxWidth="lg">
-                <Typography variant="h4" component="div" sx={{ fontWeight: "bold", textAlign: "center", paddingTop: "3rem", paddingBottom: "2rem" }}>
+                <div component="div" style={{ fontWeight: "bold", textAlign: "center", paddingTop: "2rem", paddingBottom: "2rem", color:'#B54708', fontSize:"2rem" }}>
                     About Us
-                </Typography>
+                </div>
                 <Typography variant="body1" sx={{ color: "#444", lineHeight: "30px" }}>
                     Jeeva Amirdham is a spiritual sanctuary dedicated to promoting the essence of self-realization, inner peace, and universal harmony. Located in a serene environment, Jeeva Amirdham offers a haven for those seeking deeper spiritual connections, holistic well-being, and a transformative journey towards enlightenment.
                     <br />
@@ -23,9 +23,9 @@ export default function About() {
                     Join us at Jeeva Amirdham and embark on a journey of self-discovery, inner bliss, and spiritual awakening.
                 </Typography>
 
-                <Typography variant="h4" component="div" sx={{ fontWeight: "bold", textAlign: "left", paddingTop: "3rem", paddingBottom: "2rem" }}>
+                <div component="div" style={{ fontWeight: "bold", textAlign: "left", paddingTop: "3rem", paddingBottom: "2rem", color:'#B54708', fontSize:"2rem" }}>
                     Our Story
-                </Typography>
+                </div>
                 <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: "2rem" }}>
                     <Typography variant="body1" sx={{ flex: 1, color: "#444", lineHeight: "30px" }}>
                         The story of Jeeva Amirdham began with a simple yet profound vision: to create a space where individuals could reconnect with their inner selves, find peace, and embark on a transformative spiritual journey. It all started when our founder, [Founder’s Name], deeply moved by the timeless wisdom of ancient spiritual teachings, sought to bring these teachings to people in a way that was both accessible and transformative.

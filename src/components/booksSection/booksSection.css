@@ -31,14 +31,16 @@
 }
 
 .left-side > .subtitle {
-    font-size: 1.2rem;
+    font-size: 1.8rem;
     letter-spacing: -0.5px;
     padding: 20px 0;
+    color: #B54708;
 }
 
 .right-side .subtitle {
-    font-size: 1.2rem;
+    font-size: 1.8rem;
     padding: 20px 0;
+    color: #B54708;
 
 }
 

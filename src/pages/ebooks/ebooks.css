@@ -1072,9 +1072,9 @@
 
 .ebook .title .emagazine
  {
-    font-size: 1.2rem;
+    font-size: 2rem;
     font-weight: 800;
-    background:#f09300;
+    background: #B54708;
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -1082,7 +1082,7 @@
     display: inline-block;
 }
 
-.ebook .title .emagazine::after {
+/* .ebook .title .emagazine::after {
     content: '';
     position: absolute;
     bottom: -16px;
@@ -1091,7 +1091,7 @@
     height: 4px;
     background: #f09300;
     border-radius: 2px;
-}
+} */
 
 .ebooks-one-year .title .emagazine {
     font-size: 1.2rem;

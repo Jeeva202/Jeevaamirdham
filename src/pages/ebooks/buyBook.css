@@ -1,0 +1,107 @@
+.shop-section .title .shop-book {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #B54708
+}
+
+.shop-section .shopcontent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.shop-section .buy-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: space-between;
+}
+
+.shop-section .book-card {
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    justify-content: space-between;
+    cursor: pointer;
+}
+
+.shop-section .book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.shop-section .img-section {
+    width: 100% !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.shop-section .book-image {
+    width: 100%;
+    height: auto;
+    /* flex: 0; */
+    object-fit: contain;
+}
+
+.shop-section .content-section {
+    padding: 1rem;
+    width: 100%;
+    padding-bottom: 0 !important;
+    flex: none
+}
+
+.shop-section .content-section .title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 0.5rem;
+}
+
+.shop-section .content-section .subtitle {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 0.5rem;
+}
+
+.shop-section .content-section .desc {
+    font-size: 0.9rem;
+    color: #777;
+    margin-bottom: 1rem;
+}
+
+.shop-section .content-section .price {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #F09300;
+    margin-bottom: 1rem;
+}
+
+.shop-section .content-section .buyButton {
+    width: 100%;
+    background: linear-gradient(90deg, #F09300 0%, #FFB800 100%);
+    color: black;
+    text-transform: none;
+    font-weight: bold;
+    border-radius: 40px;
+    padding: 0.5rem 0;
+}
+
+.shop-section .content-section .cart-icon {
+    width: 1rem;
+    margin-right: 0.5rem;
+}
+
+.shop-section .pagination {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+}
