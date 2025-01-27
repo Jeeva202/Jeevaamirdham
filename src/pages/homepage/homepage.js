@@ -43,7 +43,7 @@ export default function HomePage({selectedYear, setSelectedYear,allYears, setAll
     };
 
     useEffect(() => {
-        const timer = setTimeout(handleNextStep, 4000);
+        const timer = setTimeout(handleNextStep, 15000);
         return () => clearTimeout(timer);
     }, [step]);
     return (

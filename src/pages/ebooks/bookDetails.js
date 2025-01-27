@@ -56,75 +56,146 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
 
     return (
         <>
-            <div className="category-navigation">
-                <a className="back" onClick={() => backToHomePage()}>
+            <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                padding: '1rem 0',
+                margin: '0 2rem'
+            }}>
+                <a style={{
+                    cursor: 'pointer',
+                    color: '#F09300',
+                    textDecoration: 'none'
+                }} onClick={() => backToHomePage()}>
                     Home
                 </a>
-                <img src={ebooks.icons.RightArrowStroke} alt="" />
-                <div className="nav-category">CATEGORY</div>
-                <img src={ebooks.icons.RightArrowStroke} alt="" />
-                <div className="nav-book">{bookInfoData.title}</div>
+                <img src={ebooks.icons.RightArrowStroke} alt="" style={{ width: '0.8rem' }} />
+                <div style={{ color: '#666' }}>CATEGORY</div>
+                <img src={ebooks.icons.RightArrowStroke} alt="" style={{ width: '0.8rem' }} />
+                <div style={{ color: '#333', fontWeight: '500' }}>{bookInfoData.title}</div>
             </div>
-            <div className="categorybook-buysection">
-                <div className="book-imagesection">
-                    <img src={bookInfoData.imgUrl} alt="" />
+
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'minmax(300px, 1fr) 2fr',
+                gap: '2rem',
+                padding: '2rem',
+                margin: '1rem 2rem',
+                backgroundColor: '#fff',
+                borderRadius: '8px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            }}>
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <img src={bookInfoData.imgUrl} alt="" style={{
+                        maxWidth: '100%',
+                        height: 'auto',
+                        borderRadius: '8px'
+                    }} />
                 </div>
-                <div className="book-contentsection">
-                    <div className="book-navigator">
+
+                <div style={{ padding: '1rem' }}>
+                    <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '1.5rem'
+                    }}>
                         <div
-                            className="stock"
-                            style={bookInfoData.availability === "IN STOCK" ? { backgroundColor: "#24FF0033" } : { backgroundColor: "red" }}
+                            style={{
+                                padding: '0.5rem 1rem',
+                                borderRadius: '4px',
+                                backgroundColor: bookInfoData.availability === "IN STOCK" ? "#24FF0033" : "red",
+                                color: bookInfoData.availability === "IN STOCK" ? "#008000" : "#fff"
+                            }}
                         >
                             {bookInfoData.availability}
                         </div>
-                        <div className="prev-next">
-                            <div className="prev">
+                        <div style={{
+                            display: 'flex',
+                            gap: '2rem',
+                            alignItems: 'center'
+                        }}>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                cursor: 'pointer'
+                            }}>
                                 <img
                                     src={ebooks.icons.Previous}
                                     alt="Left Arrow"
-                                    disabled={catSelectedBook === "0"}
+                                    style={{ opacity: catSelectedBook === "0" ? 0.5 : 1 }}
                                     onClick={() => changeBook("cat-prev")}
                                 />
-                                &nbsp; PREV
+                                <span style={{ marginLeft: '0.5rem' }}>PREV</span>
                             </div>
-                            <div className="nxt">
-                                NEXT
-                                &nbsp;
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                cursor: 'pointer'
+                            }}>
+                                <span style={{ marginRight: '0.5rem' }}>NEXT</span>
                                 <img
                                     src={ebooks.icons.Next}
                                     alt="Right Arrow"
-                                    disabled={parseInt(catSelectedBook) === bookInfoData.length - 1}
                                     onClick={() => changeBook("cat-nxt")}
                                 />
                             </div>
                         </div>
                     </div>
-                    <div className="title-section">
-                        <div className="title">{bookInfoData.title}</div>
-                        <div className="subtext">
-                            <div className="author">Author: {bookInfoData.author}</div>
-                            {/* <div className="id">{bookInfoData.id}</div> */}
+                    <div style={{ marginBottom: '2rem' }}>
+                        <div style={{
+                            fontSize: '2rem',
+                            fontWeight: '600',
+                            marginBottom: '1rem'
+                        }}>{bookInfoData.title}</div>
+                        <div style={{
+                            display: 'flex',
+                            gap: '1rem',
+                            color: '#666',
+                            marginBottom: '1rem'
+                        }}>
+                            <div>Author: {bookInfoData.author}</div>
                         </div>
-                        <div className="shortdesc">{bookInfoData.shortdesc}</div>
-                        <div className="category-buy-section">
-                            <div className="tab-content">
-                                <div className="quantity-select">
-                                    <div className="count-subscribe">
-                                        Quantity
-                                        <br />
-                                        <br />
-                                        <div className="counter">
-                                            <span className="decrease" onClick={() => decrease(quantity)}>
-                                                {" "}
-                                                -{" "}
-                                            </span>
-                                            &nbsp;
-                                            <span className="quantity"> {quantity} </span>
-                                            &nbsp;
-                                            <span className="increase" onClick={() => increase(quantity)}>
-                                                {" "}
-                                                +{" "}
-                                            </span>
+                        <div style={{
+                            color: '#444',
+                            lineHeight: '1.6',
+                            marginBottom: '2rem'
+                        }}>{bookInfoData.shortdesc}</div>
+                        <div>
+                            <div>
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '2rem'
+                                }}>
+                                    <div style={{
+                                        padding: '1rem',
+                                        borderRadius: '8px'
+                                    }}>
+                                        <div style={{ marginBottom: '0.5rem', fontWeight: '500' }}>Quantity</div>
+                                        <div style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: '1rem'
+                                        }}>
+                                            <span onClick={() => decrease(quantity)} style={{
+                                                cursor: 'pointer',
+                                                padding: '0.5rem 1rem',
+                                                backgroundColor: '#fff',
+                                                borderRadius: '4px'
+                                            }}>-</span>
+                                            <span>{quantity}</span>
+                                            <span onClick={() => increase(quantity)} style={{
+                                                cursor: 'pointer',
+                                                padding: '0.5rem 1rem',
+                                                backgroundColor: '#fff',
+                                                borderRadius: '4px'
+                                            }}>+</span>
                                         </div>
                                     </div>
                                     <Button
@@ -135,7 +206,6 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
                                             p: "10px",
                                             background: "#F09300",
                                             textTransform: "none",
-                                            marginTop: "2rem",
                                             color: "#ffffff",
                                             fontWeight: "700",
                                             justifyContent: "space-evenly",
@@ -147,49 +217,95 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
                                     </Button>
                                     <CartModal open={isOpen} />
                                 </div>
-{/* 
-                                <div className="cat-tag">
-                                    Categories: {bookInfoData.category_tag}
-                                    <br />
-                                    Tags: {bookInfoData.tag}
-                                </div> */}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="desc-info">
-                <div className="desc-info-tabs">
-                    <button className={`tab-underscore active`}>Description</button>
+            <div style={{
+                margin: '2rem',
+                padding: '2rem',
+                backgroundColor: '#fff',
+                borderRadius: '8px',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            }}>
+                <div>
+                    <button style={{
+                        borderBottom: '2px solid #F09300',
+                        border:'none',
+                        background:'none',
+                        paddingBottom: '0.5rem',
+                        marginBottom: '1rem',
+                        fontSize:'1.3rem',
+                        fontWeight:'bold',
+                        paddingLeft:'0'
+                    }}>Description</button>
                 </div>
 
-                <div className="desc-tab-content">
-                    <div className="desc">{bookInfoData.description}</div>
+                <div>
+                    <div style={{
+                        lineHeight: '1.8',
+                        color: '#444'
+                    }}>{bookInfoData.description}</div>
                 </div>
             </div>
-            <div className="otherbooks">
-            <div className="otherbooks-title">
-                <div className="text">
+            <div style={{
+                padding: '2rem'
+            }}>
+            <div style={{
+                marginBottom: '2rem',
+                textAlign: 'center'
+            }}>
+                <div style={{
+                    fontSize: '1.5rem',
+                    fontWeight: '600',
+                    marginBottom: '1rem',
+                    textAlign:'left'
+                }}>
                     Related products
                 </div>
-                <div className="hdivider">
-                    <img src={ebooks.icons.HorizontalDivider} alt="" />
-                </div>
+
             </div>
-            <div className="book-cards">
+            <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                gap: '2rem',
+                padding: '1rem'
+            }}>
                 {booksData.map((e, i) => {
 
                     if (i != catSelectedBook) {
                         return (
 
-                            <div className="cat-book-card" onClick={(e) => changeBook(i, "catgeorypage")}>
-                                <img src={e.imgUrl} alt="" />
-                                <div className="text">
-                                    {e.title}
-                                    <br />
-                                    {e.author}
+                            <div key={i} style={{
+                                cursor: 'pointer',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                backgroundColor: '#fff',
+                                transition: 'transform 0.2s',
+                                '&:hover': {
+                                    transform: 'translateY(-5px)'
+                                }
+                            }} onClick={(e) => changeBook(i, "catgeorypage")}>
+                                <img src={e.imgUrl} alt="" style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    borderRadius: '4px',
+                                    marginBottom: '1rem'
+                                }} />
+                                <div style={{
+                                    textAlign: 'center',
+                                    marginBottom: '1rem'
+                                }}>
+                                    <h3 style={{ marginBottom: '0.5rem' }}>{e.title}</h3>
+                                    <p style={{ color: '#666' }}>{e.author}</p>
                                 </div>
-                                <button className="read-now" value={i} >{e.offPrice}</button>
+                                <div style={{
+                                    textAlign: 'center',
+                                    color: '#F09300',
+                                    fontWeight: '600'
+                                }}>{e.offPrice}</div>
                             </div>
 
                         )

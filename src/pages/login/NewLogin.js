@@ -21,8 +21,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import PrivacyPolicyModal from './PrivacyPolicyModal';
-import TermsOfServiceModal from './TermsOfServiceModal';
 import { openLogin, selectIsLoginOpen, closeLogin, setUserLoggedIn, setUserId, setAdminLoggedIn, setLoginOtp, clearLoginOtp, selectLoginOtp, selectLoginExpiry } from "../../redux/cartSlice";
 import { navBanner } from '../../constants/screenData';
 import './NewLogin.css';
@@ -60,8 +58,6 @@ const LoginModal = () => {
     const [loading, setLoading] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
-    const [privacyPolicyOpen, setPrivacyPolicyOpen] = useState(false);
-    const [termsOfServiceOpen, setTermsOfServiceOpen] = useState(false);
     const isOpen = useSelector(selectIsLoginOpen);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -147,31 +143,8 @@ const LoginModal = () => {
         setSnackbarOpen(false);
     };
 
-    const handlePrivacyPolicyOpen = () => {
-        setPrivacyPolicyOpen(true);
-    };
-
-    const handlePrivacyPolicyClose = () => {
-        setPrivacyPolicyOpen(false);
-    };
-
-    const handleTermsOfServiceOpen = () => {
-        setTermsOfServiceOpen(true);
-    };
-
-    const handleTermsOfServiceClose = () => {
-        setTermsOfServiceOpen(false);
-    };
-
     const handleAdminLogin = () => {
-        if (email === "jeevaamirdhamweb@gmail.com" && password === "JAmirdham@30") {
-            alert("Admin login successful!");
-            dispatch(setAdminLoggedIn(true));
-            navigate("/admin/overview");
-            dispatch(closeLogin());
-        } else {
-            alert("Invalid admin credentials");
-        }
+
     };
 
     const handleSendOtp = async () => {
@@ -321,7 +294,7 @@ const LoginModal = () => {
             const response = await axios.post(`${domain}/login/find-user`, { email, username });
             const { isExistingUser, isPasswordAvailable } = response.data;
 
-            console.log("finduser", response.data, response.data.user.username);
+            // console.log("finduser", response.data, response.data.user.username);
 
             if (isExistingUser) {
                 localStorage.setItem("id", response.data.user.id);
@@ -348,6 +321,7 @@ const LoginModal = () => {
             }
         } catch (error) {
             console.error("Error during user check:", error);
+            console.log("Error during user check:", error);
             setSnackbarMessage("An error occurred. Please try again.");
             setSnackbarOpen(true);
         }
@@ -384,8 +358,7 @@ const LoginModal = () => {
                                         handleGoogleLoginError={handleGoogleLoginError}
                                         handleFacebookLogin={handleFacebookLogin}
                                         responseFacebook={responseFacebook}
-                                        handlePrivacyPolicyOpen={handlePrivacyPolicyOpen}
-                                        handleTermsOfServiceOpen={handleTermsOfServiceOpen}
+                                        navigate={navigate}
                                     />
                                 ) : (
                                     <SignInForm
@@ -429,13 +402,11 @@ const LoginModal = () => {
                     {snackbarMessage}
                 </Alert>
             </Snackbar>
-            <PrivacyPolicyModal open={privacyPolicyOpen} onClose={handlePrivacyPolicyClose} />
-            <TermsOfServiceModal open={termsOfServiceOpen} onClose={handleTermsOfServiceClose} />
         </>
     );
 };
 
-const LoginOptions = ({ setShowSignIn, handleGoogleLoginSuccess, handleGoogleLoginError, handleFacebookLogin, responseFacebook, handlePrivacyPolicyOpen, handleTermsOfServiceOpen }) => (
+const LoginOptions = ({ setShowSignIn, handleGoogleLoginSuccess, handleGoogleLoginError, handleFacebookLogin, responseFacebook, navigate }) => (
     <>
         <GoogleLogin onSuccess={handleGoogleLoginSuccess} onError={handleGoogleLoginError} />
         <FacebookLogin
@@ -458,9 +429,9 @@ const LoginOptions = ({ setShowSignIn, handleGoogleLoginSuccess, handleGoogleLog
         </Button>
         <div style={{ fontSize: "12px", textAlign: "center", marginTop: "20px", color: "#999" }}>
             By proceeding, you agree to our{" "}
-            <span style={{ color: "#f09300", cursor: "pointer" }} onClick={handlePrivacyPolicyOpen}>Privacy Policy</span>{" "}
+            <span style={{ color: "#f09300", cursor: "pointer" }} onClick={() => window.open("/privacyPolicy", "_blank")}>Privacy Policy</span>{" "}
             and{" "}
-            <span style={{ color: "#f09300", cursor: "pointer" }} onClick={handleTermsOfServiceOpen}>Terms of Services</span>.
+            <span style={{ color: "#f09300", cursor: "pointer" }} onClick={() => window.open("/termsAndCondition", "_blank")}>Terms of Services</span>.
         </div>
     </>
 );
@@ -558,9 +529,9 @@ const SignInForm = ({
                     <Button onClick={handleEmailLogin} disableElevation fullWidth variant="contained" sx={{ marginTop: "1rem", color: "white", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", padding: { lg: "0.7rem 3rem", md: "0.5rem 2rem", xs: "0.3rem 0rem" } }}>
                         {loading ? <CircularProgress size={24} sx={{ color: 'white' }} /> : 'Sign In'}
                     </Button>
-                    <Button onClick={handleAdminLogin} disableElevation fullWidth variant="contained" sx={{ marginTop: "1rem", color: "white", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", padding: { lg: "0.7rem 3rem", md: "0.5rem 2rem", xs: "0.3rem 0rem" } }}>
+                    {/* <Button onClick={handleAdminLogin} disableElevation fullWidth variant="contained" sx={{ marginTop: "1rem", color: "white", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", padding: { lg: "0.7rem 3rem", md: "0.5rem 2rem", xs: "0.3rem 0rem" } }}>
                         Admin Login
-                    </Button>
+                    </Button> */}
 
                 </>
             )}

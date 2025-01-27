@@ -54,11 +54,11 @@ function a11yProps(index) {
 
 export default function UserDashboard() {
 
+    localStorage.getItem('username')
     const [value, setValue] = React.useState(0);
-    const [userName, setUserName] = React.useState("Username");
+    const [userName, setUserName] = React.useState(localStorage.getItem('username') || localStorage.getItem('email'));
     const [formData, setFormData] = useState({});  // Store editable form data
     const userId = useSelector(selectUserId) || localStorage.getItem("id");  // Get the user ID from Redux
-  
     // Fetch user data on component mount
     const { data: userData, isLoading:userDataLoading, isError, error } = useQuery(
       ["userDetails", userId],  // Query key (this is how react-query knows about the query)
@@ -116,7 +116,7 @@ export default function UserDashboard() {
                                         paddingTop: "1rem",
                                         
                                     }}>
-                                        <Avatar alt="User Avatar" sx={{ width: "5rem", height: "5rem" }} src="/static/images/avatar/1.jpg" />
+                                        <Avatar alt="User Avatar" sx={{ width: "5rem", height: "5rem", backgroundColor: "#DC6803", fontSize: "2rem", fontWeight: "bold" }}>{userName?.slice(0,1).toUpperCase()}</Avatar>
                                         <h3>{userName}</h3>
                                     </div>
 

@@ -46,7 +46,7 @@ export default function BuyBook({ categories, handleCategoryClick, currentItems,
                                 <Typography variant="h6" className="price">
                                     ₹{e.offPrice}
                                 </Typography>
-                                <Button variant="contained" className="buyButton" onClick={() => handleAddToCart(e, 1)} >
+                                <Button variant="contained" className="buyButton" sx={{zIndex:'10'}} onClick={() => handleAddToCart(e, 1)} >
                                     Buy Now
                                 </Button>
                             </CardContent>

@@ -93,6 +93,7 @@
     align-items: flex-start;
     gap: 3%;
     justify-content: center;
+    margin-top: 1rem;
 }
 
 .img-details-section img {
@@ -100,8 +101,9 @@
 }
 
 .img-details-section>.details {
-    /* padding-top: 5%; */
-    width: 20%;
+    padding-top: 1rem;
+    width: 50%;
+    line-height: 1.7;
 }
 
 .audio-section {
@@ -1072,7 +1074,7 @@
 
 .ebook .title .emagazine
  {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 800;
     background: #B54708;
     -webkit-background-clip: text;
@@ -1259,7 +1261,7 @@
     }
     
     .ebook .title .emagazine {
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
 }
 
@@ -1282,7 +1284,7 @@
     }
     
     .ebook .title .emagazine {
-        font-size: 1.75rem;
+        font-size: 1.2rem;
     }
 }
 

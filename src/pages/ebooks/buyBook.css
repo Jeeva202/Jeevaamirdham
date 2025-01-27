@@ -1,5 +1,5 @@
 .shop-section .title .shop-book {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
     text-align: center;
     margin-bottom: 2rem;
@@ -93,6 +93,7 @@
     font-weight: bold;
     border-radius: 40px;
     padding: 0.5rem 0;
+    z-index: 10;
 }
 
 .shop-section .content-section .cart-icon {

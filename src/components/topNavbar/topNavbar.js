@@ -95,7 +95,7 @@ export default function TopNavbar() {
             dispatch(setUserId(storeId))
         }
 
-
+console.log("cart", cart_details)
         const handleStorageChange = () => {
             const updatedUsername = localStorage.getItem('username');
             const updatedEmail = localStorage.getItem('email');
@@ -155,7 +155,7 @@ export default function TopNavbar() {
         setEmail(null);
         dispatch(setUserLoggedIn(false));
         handleMenuClose();
-        // navigate('/home')
+        navigate('/home')
     };
 
     const handleDrawerToggle = () => {
@@ -254,7 +254,7 @@ export default function TopNavbar() {
         // boxShadow: "0px 5px 14px 0px rgba(0, 0, 0, 0.16)",
         <><div style={{ background: "#FFF", zIndex: "1", position: "relative" }}>
             <Container maxWidth="lg">
-                <div className="topContainer">
+                {/* <div className="topContainer">
                     <div className="topLeft">
                         <bold className="text">Helpline</bold>
                         <img src={navBanner.icons.phone} />
@@ -262,14 +262,10 @@ export default function TopNavbar() {
                     </div>
                     <div className="topRight">
                         <div style={{ display: "flex" }} >
-                            {/* <img src={navBanner.icons.traslate} /> */}
-                            {/* <bold className="text" style={{ marginLeft: "5px" }}>English</bold> */}
-                            
-                            {/* <div id="google_translate_element" ></div> */}
 
                         </div>
                     </div>
-                </div>
+                </div> */}
             </Container>
             <div style={{ borderBottom: "1px solid #E6E6E6" }}></div>
             <Container maxWidth="lg">
