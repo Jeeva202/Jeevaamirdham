@@ -97,6 +97,9 @@ export default function Checkout() {
 
                       if (res.ok) {
                           const data = await res.json();
+                          const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
+                          const cartData = response.data.cart_details; 
+                          setCartDetails(cartData)
                           console.log("Payment data saved successfully:", data);
                           alert("Payment successful.");
                       } else {

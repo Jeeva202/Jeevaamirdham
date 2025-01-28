@@ -106,13 +106,10 @@ export default function ViewCart() {
   
 
   // Fetch cart data when the component mounts
-  useEffect(() => {
-    // if(isUserLoggedIn == true){
-      fetchCartData();
-    // }
-  },[]
-  // , [isUserLoggedIn]
-); // Run only on component mount
+useEffect(() => {
+  fetchCartData();
+  console.log("cart data", rows);
+}, [isUserLoggedIn, userId]); // Empty dependency array to run only on mount
 
   // Handle delete from cart
   const handleDelete = async (id) => {
