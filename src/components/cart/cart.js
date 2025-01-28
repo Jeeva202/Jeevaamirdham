@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Button } from "@mui/material";
+import { Container, Button, Typography } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -14,47 +14,53 @@ import axios from "axios"; // Ensure axios is installed
 import { useSelector } from "react-redux";
 import { selectUserId, selectBooksData, selectIsUserLoggedIn, selectCartDetails, setCartDetails } from "../../redux/cartSlice";
 import { useDispatch } from "react-redux";
+import CircularProgress from '@mui/material/CircularProgress';
+import Alert from '@mui/material/Alert';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import { ReactComponent as EmptyCartIcon } from "../../assets/images/empty_cart.svg"; // Import an empty cart icon
+import { closeCart, removeFromCart } from "../../redux/cartSlice";
+
+
 export default function ViewCart() {
-  const [rows, setRows] = useState([]); // Initially empty, will be populated with real cart data
+  const [rows, setRows] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const navigate = useNavigate();
   let userId = useSelector(selectUserId);
   let isUserLoggedIn = useSelector(selectIsUserLoggedIn)
   let booksDataFromStore = useSelector(selectBooksData)
   let cartDetails = useSelector(selectCartDetails)
-  // const bookdata = useSelector(selectBooksData);
   let totalAmount = rows.reduce((total, row) => total + row.subtotal, 0).toFixed(2);
   const dispatch = useDispatch()
   const handleProceedToCheckout = () => {
     navigate("/checkout", { state: { totalAmount } });
   };
 
-  // Fallback to localStorage if userId is not in Redux
   if (!userId) {
     userId = localStorage.getItem("id");
   }
 
-  // Function to fetch the user's cart data
-
-  
-
-  // Function to fetch book details from the API
   const fetchBookDetails = async (cartData) => {
     try {
       const bookIds = cartData.map(item => item.book_id);
       const bookDetails = await Promise.all(bookIds.map(async (bookId) => {
         const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/book-info?id=${bookId}`);
-        return response.data; // Ensure response has title and offPrice
+        return response.data;
       }));
-  
-      // Mapping cartData with the fetched book details
+
       const updatedRows = cartData.map((item) => {
-        const book = bookDetails.find(book => book.id === item.book_id); // Ensure the structure matches
+        const book = bookDetails.find(book => book.id === item.book_id);
         return {
-          name: book ? book.title : 'Unknown Title',  // Correct field: title
-          price: book ? parseFloat(book.offPrice) : 0, // Correct field: offPrice
+          name: book ? book.title : 'Unknown Title',
+          price: book ? parseFloat(book.offPrice) : 0,
           quantity: item.quantity,
           subtotal: (book ? parseFloat(book.offPrice) : 0) * item.quantity,
-          id: item.book_id,  // Using book_id for the delete and quantity functions
+          id: item.book_id,
         };
       });
       setRows(updatedRows);
@@ -62,97 +68,72 @@ export default function ViewCart() {
       console.error("Error fetching book details:", error);
     }
   };
-  
 
-  // Fetch cart data when the component mounts
   useEffect(() => {
-    // if(isUserLoggedIn == true){
-      const fetchCartData = async () => {
-        try {
-          if (isUserLoggedIn) {
-            const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
-            const cartData = response.data.cart_details; // Assuming cart_details is the array of books in the cart
-      
-            // Always fetch book details from API regardless of Redux data
-            await fetchBookDetails(cartData);
-          } else {
-            let book_id = cartDetails.map(item => item.book_id);
-            console.log("books", book_id);
-            
-            // Fetch book details based on book_id from booksDataFromStore
-            let book_details = book_id.map(id => {
-              console.log("book from store", booksDataFromStore);
-              
-              // Find the book data from the store based on id
-              const book = booksDataFromStore.find(book => book.id === id);
-              console.log("book filtered", book);
-              
-              if (book) {
-                return {
-                  id: book.id,
-                  availability: book.availability,
-                  author: book.author,
-                  title: book.title,
-                  shortdesc: book.shortdesc,
-                  offPrice: book.offPrice,
-                  img: book.img,
-                  description: book.description
-                };
-              }
-              return null; // In case the book is not found
-            }).filter(book => book !== null); // Remove any null values in case the book was not found
-            console.log("before setting it to state",book_details);
-            
-            setRows(book_details); // Set the fetched book details to your state
-          }
-        } catch (error) {
-          console.error("Error fetching cart data:", error);
+    const fetchCart = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        if (isUserLoggedIn) {
+          const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
+          const cartData = response.data.cart_details;
+          await fetchBookDetails(cartData);
+        } else {
+          const cartFromStore = cartDetails.map(item => {
+            const book = booksDataFromStore.find(b => b.id === item.book_id);
+            return {
+              id: book.id,
+              name: book.title,
+              price: parseFloat(book.offPrice),
+              quantity: item.quantity,
+              subtotal: parseFloat(book.offPrice) * item.quantity
+            };
+          });
+          setRows(cartFromStore);
         }
-      };
-      fetchCartData();
-    // }
-  },[]
-  // , [isUserLoggedIn]
-); // Run only on component mount
+      } catch (err) {
+        setError("Failed to load cart items. Please try again.");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  // Handle delete from cart
+    fetchCart();
+  }, [isUserLoggedIn, userId]);
+
   const handleDelete = async (id) => {
     try {
       if (isUserLoggedIn) {
-        // Make an API call to remove from cart for logged-in users
         await axios.post(process.env.REACT_APP_URL + "/ebooks/remove_from_cart", { userId, book_id: id });
+        dispatch(removeFromCart({ book_id: id }));
+
       } else {
-        // For non-logged-in users, simply update the Redux cartDetails
         const updatedCart = cartDetails.filter((item) => item.book_id !== id);
-        dispatch(setCartDetails(updatedCart));  // Update Redux store
+        dispatch(removeFromCart({ book_id: id }));
+        dispatch(setCartDetails(updatedCart));
+
       }
-  
-      // Update the local state (rows)
       setRows(rows.filter((row) => row.id !== id));
     } catch (error) {
       console.error("Error removing item from cart:", error);
     }
   };
-console.log("cart", selectCartDetails)
-console.log("cart")
-  
+
   const handleQuantityChange = async (bookId, newQuantity) => {
     try {
       if (isUserLoggedIn) {
-        // Make an API call to update quantity for logged-in users
         await axios.post(process.env.REACT_APP_URL + "/ebooks/update_quantity", { userId, book_id: bookId, quantity: newQuantity });
       } else {
-        // For non-logged-in users, update the quantity in the Redux store
         const updatedCart = cartDetails.map((item) => {
           if (item.book_id === bookId) {
             return { ...item, quantity: newQuantity };
           }
           return item;
         });
-        dispatch(setCartDetails(updatedCart));  // Update Redux store
+        dispatch(setCartDetails(updatedCart));
       }
-  
-      // Update the local state (rows)
+
       setRows(rows.map((row) => {
         if (row.id === bookId) {
           return { ...row, quantity: newQuantity, subtotal: row.price * newQuantity };
@@ -163,102 +144,198 @@ console.log("cart")
       console.error("Error updating quantity:", error);
     }
   };
-  
 
-  // Handle increase quantity
   const increase = (bookId, quantity) => {
     handleQuantityChange(bookId, quantity + 1);
   };
-  
-  // Handle decrease quantity
+
   const decrease = (bookId, quantity) => {
     if (quantity > 1) {
       handleQuantityChange(bookId, quantity - 1);
     }
   };
 
+  if (isLoading) {
+    return (
+      <Container style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '50vh'
+      }}>
+        <CircularProgress />
+      </Container>
+    );
+  }
+
   return (
-    <Container maxWidth="lg">
-      <div style={{ fontSize: "2rem", fontWeight: "bold", textAlign: "center", paddingTop: "4rem", paddingBottom: "2rem" }}>
-        Cart
+    <Container maxWidth="lg" style={{ padding: '2rem 0' }}>
+      <div style={{
+        fontSize: isMobile ? "1rem" : "1.5rem",
+        fontWeight: "bold",
+        textAlign: "center",
+        marginBottom: "2rem"
+      }}>
+        Shopping Cart
       </div>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "2rem" }}>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell></TableCell>
-                <TableCell sx={{ fontWeight: "Bold" }}>PRODUCT</TableCell>
-                <TableCell sx={{ fontWeight: "Bold" }} align="right">
-                  PRICE
-                </TableCell>
-                <TableCell sx={{ fontWeight: "Bold" }} align="right">
-                  QUANTITY
-                </TableCell>
-                <TableCell sx={{ fontWeight: "Bold" }} align="right">
-                  SUBTOTAL
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow key={row.name} sx={{ "&:last-child td, &:last-child th": { border: 0 } }}>
-                  <TableCell>
-                    <IconButton onClick={() => handleDelete(row.id)}>
-                      <ClearIcon fontSize="small" />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="right">{row.price}</TableCell>
-                  <TableCell align="right">
-                    <div className="counter">
-                      <span className="decrease" onClick={() => decrease(row.id, row.quantity)}>
-                        {" "}
-                        -{" "}
-                      </span>
-                      &nbsp;
-                      <span className="quantity"> {row.quantity} </span>
-                      &nbsp;
-                      <span className="increase" onClick={() => increase(row.id, row.quantity)}>
-                        {" "}
-                        +{" "}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell align="right">{row.subtotal}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <div style={{ background: "#fff", padding: "2rem", border: "1px solid #e6e6e6", borderRadius: "5px", width:{lg:'30%', xs: '30%'} }}>
-          <p style={{ fontSize: "1.5rem", margin: "10px 0" }}>Cart Total</p>
-          <div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <p>Subtotal</p>
-              <p>₹ {rows.reduce((total, row) => total + row.subtotal, 0).toFixed(2)}</p> {/* Calculate subtotal dynamically */}
+
+      {error && (
+        <Alert severity="error" style={{ marginBottom: '1rem' }}>{error}</Alert>
+      )}
+
+      <div style={{
+        display: "flex",
+        flexDirection: isMobile ? "column" : "row",
+        gap: "2rem"
+      }}>
+        <div style={{ flex: 1, overflowX: 'auto' }}>
+          {rows.length === 0 ? (
+            <div style={{
+              textAlign: 'center',
+              padding: '2rem',
+              background: '#fff',
+              borderRadius: '8px'
+            }}>
+
+              <EmptyCartIcon style={{ width: "150px", height: "150px" }} />
+              <Typography sx={{ textAlign: "center" }}>Your cart is empty</Typography>
             </div>
-            <hr color="#d5d5d5" style={{ margin: "0.8rem 0" }} />
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <p>Total</p>
-              <p>₹ {rows.reduce((total, row) => total + row.subtotal, 0).toFixed(2)}</p> {/* Same for the total */}
+          ) : (
+            <TableContainer component={Paper} style={{
+              borderRadius: '8px',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+            }}>
+              <Table aria-label="cart table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell></TableCell>
+                    <TableCell sx={{
+                      fontWeight: "600",
+                      display: isMobile ? 'none' : 'table-cell'
+                    }}>PRODUCT</TableCell>
+                    <TableCell sx={{ fontWeight: "600" }} align="left">PRICE</TableCell>
+                    <TableCell sx={{ fontWeight: "600" }} align="left">QTY</TableCell>
+                    <TableCell sx={{ fontWeight: "600" }} align="left">TOTAL</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow key={row.id}>
+                      <TableCell style={{ padding: isMobile ? '8px' : '16px' }}>
+                        <IconButton
+                          onClick={() => handleDelete(row.id)}
+                          size={isMobile ? "small" : "medium"}
+                        >
+                          <ClearIcon fontSize={isMobile ? "0.7rem" : "0.9rem"} />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        style={{
+                          display: isMobile ? 'none' : 'table-cell',
+                          fontWeight: '500'
+                        }}
+                      >
+                        {row.name}
+                      </TableCell>
+                      <TableCell align="left" >₹{row.price}</TableCell>
+                      <TableCell align="left">
+                        <div style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'flex-start',
+                          gap: '0.5rem'
+                        }}>
+                          <IconButton
+                            size="small"
+                            onClick={() => decrease(row.id, row.quantity)}
+                            style={{
+                              border: '1px solid #ddd',
+                              // padding: '4px'
+                            }}
+                          >
+                            <RemoveIcon size="small" sx={{ fontSize: "0.8rem" }} />
+
+                          </IconButton>
+                          <span>{row.quantity}</span>
+                          <IconButton
+                            size="small"
+                            onClick={() => increase(row.id, row.quantity)}
+                            style={{
+                              border: '1px solid #ddd',
+                              // padding: '4px'
+                            }}
+                          >
+                            <AddIcon size="small" sx={{ fontSize: "0.8rem" }} />
+                          </IconButton>
+                        </div>
+                      </TableCell>
+                      <TableCell align="left">₹{row.subtotal}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
+        </div>
+
+        <div style={{
+          background: "#fff",
+          padding: "1.5rem",
+          border: "1px solid #e6e6e6",
+          borderRadius: "8px",
+          width: isMobile ? 'auto' : '300px',
+          alignSelf: isMobile ? 'stretch' : 'flex-start'
+        }}>
+          <h2 style={{
+            fontSize: "1.25rem",
+            marginBottom: "1.5rem",
+            fontWeight: "600"
+          }}>Cart Summary</h2>
+
+          <div style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem"
+          }}>
+            <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontSize: '0.9rem'
+            }}>
+              <span>Subtotal</span>
+              <span>₹{totalAmount}</span>
             </div>
+            <hr style={{ margin: "0.5rem 0", border: "none", borderTop: "1px solid #eee" }} />
+            <div style={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontWeight: "600",
+              fontSize: '1rem'
+            }}>
+              <span>Total</span>
+              <span>₹{totalAmount}</span>
+            </div>
+
             <Button
-              variant="text"
+              variant="contained"
               sx={{
-                borderRadius: "40px",
+                borderRadius: "8px",
                 width: "100%",
                 background: "#F09300",
                 color: "White",
-                fontSize: "0.8rem",
-                fontWeight: "bold",
+                fontSize: "0.9rem",
+                fontWeight: "600",
                 textTransform: "none",
-                marginTop: "0.5rem",
-                padding: "0.8rem 2rem",
+                marginTop: "1rem",
+                padding: "0.8rem",
+                '&:hover': {
+                  background: "#d67e00"
+                }
               }}
               onClick={handleProceedToCheckout}
+              disabled={rows.length === 0}
             >
               Proceed to checkout
             </Button>

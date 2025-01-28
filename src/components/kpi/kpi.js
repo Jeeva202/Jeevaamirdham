@@ -28,7 +28,7 @@ export default function KPI() {
             }
         };
 
-        fetchStats();
+        // fetchStats();
     }, []);
 
     const kpiData = [
@@ -61,15 +61,15 @@ export default function KPI() {
                     </div>
                     <div className="kpi">
                         <div className="number">
-                            {loading ? (
+                            {/* {loading ? (
                                 <span className="loading-pulse">...</span>
-                            ) : (
+                            ) : ( */}
                                 <CountUp 
                                     end={item.number} 
-                                    duration={2.5}
+                                    duration={3.5}
                                     separator=","
                                 />
-                            )}
+                            {/* // )} */}
                         </div>
                         <div className="text">{item.text}</div>
                     </div>

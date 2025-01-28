@@ -28,7 +28,7 @@ const YourOrder = () => {
     const isUserLoggedInFromStore = useSelector((state) => state.cart.isUserLoggedIn);
     const isUserLoggedIn = isUserLoggedInFromStore !== undefined ? isUserLoggedInFromStore : !!localStorage.getItem('id');
     const cartDetails = useSelector(selectCartDetails)
-    const handleAddToCart = async (bookId, quantity) => {
+    const handleAddToCart_NotUsed = async (bookId, quantity) => {
         console.log("add to cart",bookId, quantity)
         if(isUserLoggedIn){
             console.log("user id", userId);
@@ -49,8 +49,35 @@ const YourOrder = () => {
         else{
             dispatch(setCartDetails([...cartDetails, {book_id:bookId, quantity: quantity || 1}]))
         }
+        console.log("cartdetails",cartDetails);
 
         dispatch(openCart()); // Open the cart modal
+    };
+    const handleAddToCart = async (bookId, quantity) => {
+        if(isUserLoggedIn){
+            console.log("user id", userId);
+                const addtocart = await axios.post(process.env.REACT_APP_URL+'/ebooks/add_to_cart', {
+    
+                userId: userId,
+                book: bookId,
+                quantity: quantity
+            });
+            const cartDetailsfromAPI = addtocart.data.cart_details;
+    
+            console.log(addtocart, "Buy Now");
+    
+            // Dispatch an action to update the Redux store with the updated cart details
+            dispatch(setCartDetails(cartDetailsfromAPI)); // This will update the cartDetails in Redux
+        }
+        else{
+            let noLoginCartData = [...cartDetails, {book_id:bookId, quantity: quantity || 1}]
+            console.log("no login", noLoginCartData);
+            
+            dispatch(setCartDetails(noLoginCartData))
+        }
+        console.log(cartDetails);
+        
+        dispatch(openCart()); 
     };
     useEffect(() => {
         const fetchOrders = async () => {

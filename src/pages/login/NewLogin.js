@@ -116,23 +116,33 @@ const LoginModal = () => {
                 if (createUserResponse.data.user) {
                     dispatch(setUserId(createUserResponse.data.user.id));
                     localStorage.setItem('id', createUserResponse.data.user.id);
-                    alert(`Welcome, ${name}!`);
+                    setSnackbarMessage(`Welcome, ${name}!`);
+                    setSnackbarOpen(true);
+                    // alert(`Welcome, ${name}!`);
                 } else {
-                    alert("There was an error while creating your account.");
+                    setSnackbarMessage(`There was an error while creating your account.`);
+                    setSnackbarOpen(true);
+                    // alert("There was an error while creating your account.");
                 }
             }
         } catch (error) {
-            alert("An error occurred. Please try again.");
+            setSnackbarMessage(`An error occurred. Please try again.`);
+            setSnackbarOpen(true);
+            // alert("An error occurred. Please try again.");
         }
         dispatch(setUserLoggedIn(true));
     };
 
     const handleGoogleLoginError = () => {
-        alert("Google login failed. Please try again.");
+        setSnackbarMessage(`Google login failed. Please try again.`);
+        setSnackbarOpen(true);
+        // alert("Google login failed. Please try again.");
     };
 
     const handleFacebookLogin = () => {
         alert("Facebook login is not yet implemented.");
+        setSnackbarMessage(`Facebook login is not yet implemented.`);
+        setSnackbarOpen(true);
     };
 
     const responseFacebook = (response) => {
@@ -147,67 +157,108 @@ const LoginModal = () => {
 
     };
 
+    // const handleSendOtp = async () => {
+    //     dispatch(clearLoginOtp());
+    //     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    //     const expiry = Date.now() + 5 * 60 * 1000; // 5 minutes from now
+    //     console.log(otp, expiry);
+    //     // Store OTP in Redux
+    //     dispatch(setLoginOtp({ otp, expiry }));
+    //     console.log('New OTP sent successfully!', loginOtp);
+    //     // Simulate sending OTP via email
+    //     try {
+    //         await axios.post(`${domain}/login/send-otpToEmail`, { email: email.toLowerCase(), otp });
+    //         setSnackbarMessage('OTP has been sent successfully');
+    //         setSnackbarOpen(true);
+    //         console.log('OTP sent successfully!');
+    //         setShowOtpScreen(true);
+    //     } catch (error) {
+    //         console.error('Failed to send OTP:', error);
+    //         setSnackbarMessage('Failed to send OTP');
+    //         setSnackbarOpen(true);
+
+    //     }
+    // };
     const handleSendOtp = async () => {
-        dispatch(clearLoginOtp());
-        const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        const expiry = Date.now() + 5 * 60 * 1000; // 5 minutes from now
-        console.log(otp, expiry);
-        // Store OTP in Redux
-        dispatch(setLoginOtp({ otp, expiry }));
-        console.log('New OTP sent successfully!', loginOtp);
-        // Simulate sending OTP via email
         try {
-            await axios.post(`${domain}/login/send-otpToEmail`, { email: email.toLowerCase(), otp });
-            setSnackbarMessage('OTP has been sent successfully');
-            setSnackbarOpen(true);
-            console.log('OTP sent successfully!');
-            setShowOtpScreen(true);
+            const response = await axios.post(`${process.env.REACT_APP_URL}/login/send-otpToEmail`, {
+                email: email.toLowerCase(),
+            });
+    
+            if (response.data.success) {
+                setSnackbarMessage(response.data.message || "OTP sent successfully!");
+                setSnackbarOpen(true);
+                setShowOtpScreen(true);
+            } else {
+                setSnackbarMessage(response.data.error || "Failed to send OTP.");
+                setSnackbarOpen(true);
+            }
         } catch (error) {
-            console.error('Failed to send OTP:', error);
-            setSnackbarMessage('Failed to send OTP');
-            setSnackbarOpen(true);
-
-        }
-    };
-    console.log('check otp!', loginOtp);
-
-    const handleVerifyOtp = () => {
-        console.log("Verify OTP!", otp, loginOtp, loginOtpExpiry);
-        const storedOtp = loginOtp
-        console.log('verify otppp!', storedOtp)
-        const expiry = loginOtpExpiry;
-        // Validate OTP and expiry
-        if (!storedOtp || !expiry) {
-            console.log("OTP or expiry not set.");
-            setSnackbarMessage("OTP not set. Please request a new OTP.");
-            setSnackbarOpen(true);
-            dispatch(clearLoginOtp());
-            return;
-        }
-        // Check if the OTP is expired
-        const currentTime = Date.now();
-        if (currentTime > expiry) {
-            console.log("OTP expired.");
-            setSnackbarMessage("OTP expired. Please request a new OTP.");
-            setSnackbarOpen(true);
-            dispatch(clearLoginOtp());
-            return;
-        }
-        // Compare the input OTP with the stored OTP
-        if (otp === storedOtp) {
-            console.log("OTP verified successfully!");
-            setSnackbarMessage("OTP verified successfully.");
-            setSnackbarOpen(true);
-            dispatch(clearLoginOtp()); // Clear OTP from Redux after successful verification
-            setShowOtpScreen(false); // Hide OTP screen
-            setShowCreatePasswd(true); // Show create password fields after OTP is verified
-        } else {
-            console.log("Invalid OTP.");
-            setSnackbarMessage("Invalid OTP. Please try again.");
+            console.error("Failed to send OTP:", error);
+            setSnackbarMessage(error.response?.data?.error || "Failed to send OTP.");
             setSnackbarOpen(true);
         }
     };
-
+    
+    // const handleVerifyOtp = () => {
+    //     console.log("Verify OTP!", otp, loginOtp, loginOtpExpiry);
+    //     const storedOtp = loginOtp
+    //     console.log('verify otppp!', storedOtp)
+    //     const expiry = loginOtpExpiry;
+    //     // Validate OTP and expiry
+    //     if (!storedOtp || !expiry) {
+    //         console.log("OTP or expiry not set.");
+    //         setSnackbarMessage("OTP not set. Please request a new OTP.");
+    //         setSnackbarOpen(true);
+    //         dispatch(clearLoginOtp());
+    //         return;
+    //     }
+    //     // Check if the OTP is expired
+    //     const currentTime = Date.now();
+    //     if (currentTime > expiry) {
+    //         console.log("OTP expired.");
+    //         setSnackbarMessage("OTP expired. Please request a new OTP.");
+    //         setSnackbarOpen(true);
+    //         dispatch(clearLoginOtp());
+    //         return;
+    //     }
+    //     // Compare the input OTP with the stored OTP
+    //     if (otp === storedOtp) {
+    //         console.log("OTP verified successfully!");
+    //         setSnackbarMessage("OTP verified successfully.");
+    //         setSnackbarOpen(true);
+    //         dispatch(clearLoginOtp()); // Clear OTP from Redux after successful verification
+    //         setShowOtpScreen(false); // Hide OTP screen
+    //         setShowCreatePasswd(true); // Show create password fields after OTP is verified
+    //     } else {
+    //         console.log("Invalid OTP.");
+    //         setSnackbarMessage("Invalid OTP. Please try again.");
+    //         setSnackbarOpen(true);
+    //     }
+    // };
+    const handleVerifyOtp = async () => {
+        try {
+            const response = await axios.post(`${process.env.REACT_APP_URL}/login/verify-otp`, {
+                email: email.toLowerCase(),
+                otp: otp, // User-entered OTP
+            });
+    
+            if (response.data.success) {
+                setSnackbarMessage(response.data.message || "OTP verified successfully!");
+                setSnackbarOpen(true);
+                setShowOtpScreen(false); // Hide OTP screen
+                setShowCreatePasswd(true); // Proceed to create password
+            } else {
+                setSnackbarMessage(response.data.error || "Invalid OTP. Please try again.");
+                setSnackbarOpen(true);
+            }
+        } catch (error) {
+            console.error("Failed to verify OTP:", error);
+            setSnackbarMessage(error.response?.data?.error || "Invalid OTP. Please try again.");
+            setSnackbarOpen(true);
+        }
+    };
+    
     const handleCreatePassword = async () => {
         if (password !== confirmPassword) {
             setSnackbarMessage("Passwords do not match. Please try again.");

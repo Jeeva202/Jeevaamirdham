@@ -74,15 +74,21 @@ export default function TopNavbar() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const cart_details = useSelector(selectCartDetails)
-    const userIdfromstore = useSelector(selectUserId) 
+    const userIdfromstore = useSelector(selectUserId)
     const userId = userIdfromstore ? userIdfromstore : localStorage.getItem('id')
-    const badgeNumber = cart_details && Array.isArray(cart_details) ? cart_details.length : 0;
     const isUserLoggedIn = useSelector(selectIsUserLoggedIn)
+    const getBadgeCount = () => {
+        if (isUserLoggedIn) {
+            return cart_details && Array.isArray(cart_details) ? cart_details.length : 0;
+        } else {
+            return cart_details ? cart_details.length : 0;
+        }
+    };
     useEffect(() => {
         const storedUsername = localStorage.getItem('username');
         const storedEmail = localStorage.getItem('email');
         const storeId = localStorage.getItem("id")
-        if(storedEmail || storedUsername || storeId){
+        if (storedEmail || storedUsername || storeId) {
             dispatch(setUserLoggedIn(true));
         }
         if (storedUsername) {
@@ -91,11 +97,11 @@ export default function TopNavbar() {
         if (storedEmail) {
             setEmail(storedEmail);
         }
-        if(storeId){
+        if (storeId) {
             dispatch(setUserId(storeId))
         }
 
-console.log("cart", cart_details)
+        console.log("cart", cart_details)
         const handleStorageChange = () => {
             const updatedUsername = localStorage.getItem('username');
             const updatedEmail = localStorage.getItem('email');
@@ -114,24 +120,42 @@ console.log("cart", cart_details)
     }, []);
 
     useEffect(() => {
-        const routes = ['/', '/emagazine', '/audio_video', '/blog', '/about', '/contact'];
-        const currentPath = window.location.pathname;
-        const currentIndex = routes.indexOf(currentPath);
-        if (currentIndex !== -1) {
-            setValue(currentIndex);
-        } else {
-            setValue(false);
-        }
-    }, []);
+        const updateTabValue = () => {
+            const routes = ['/', '/emagazine', '/audio_video', '/blog', '/about', '/contact'];
+            const currentPath = window.location.pathname;
+            
+            // Handle '/home' route same as '/'
+            const pathToCheck = currentPath === '/home' ? '/' : currentPath;
+            const currentIndex = routes.indexOf(pathToCheck);
+            
+            if (currentIndex !== -1) {
+                setValue(currentIndex);
+            } else {
+                setValue(false);
+            }
+        };
 
+        updateTabValue();
+        // Add event listener for route changes
+        window.addEventListener('popstate', updateTabValue);
+        return () => window.removeEventListener('popstate', updateTabValue);
+    }, [window.location.pathname]); // Add pathname as dependency
 
-    useEffect(async ()=>{
-        if(isUserLoggedIn == true){
-            const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
-            const cartData = response.data.cart_details;
-            setCartDetails(cartData)
-        }
-    }, [])
+    useEffect(() => {
+        const fetchCartData = async () => {
+            try {
+                if (isUserLoggedIn && userId) {
+                    const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
+                    const cartData = response.data.cart_details;
+                    dispatch(setCartDetails(cartData));
+                }
+            } catch (error) {
+                console.error("Error fetching cart data:", error);
+            }
+        };
+
+        fetchCartData();
+    }, [isUserLoggedIn, userId, dispatch]);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -156,6 +180,7 @@ console.log("cart", cart_details)
         dispatch(setUserLoggedIn(false));
         handleMenuClose();
         navigate('/home')
+        window.location.reload();
     };
 
     const handleDrawerToggle = () => {
@@ -166,10 +191,15 @@ console.log("cart", cart_details)
         setDrawerOpen(false);
     };
 
+    const handleLogoClick = () => {
+        setValue(0); // Set to home tab
+        navigate('/home');
+    };
+
     const drawer = (
         <Box onClick={handleDrawerClose} sx={{ width: 250, background: '#fbf1e6', height: '-webkit-fill-available' }}>
             <Box sx={{ display: "flex", justifyContent: 'center', padding: '2rem 0' }}>
-                <img src={navBanner.logo} alt='logo' style={{ width: "10rem", cursor: "pointer" }} onClick={() => { navigate('/home') }} />
+                <img src={navBanner.logo} alt='logo' style={{ width: "10rem", cursor: "pointer" }} onClick={handleLogoClick} />
             </Box>
             <Typography sx={{ fontSize: '2rem', fontWeight: 'bold', paddingLeft: '1rem', paddingBottom: '1rem' }}>Menu</Typography>
             <Divider />
@@ -204,52 +234,54 @@ console.log("cart", cart_details)
         </Box>
     );
 
-    useEffect(() => {
-        const addGoogleTranslateScript = () => {
-            const script = document.createElement('script');
-            script.src = `https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit`;
-            script.async = true;
-            script.onerror = () => {
-                console.error("Failed to load Google Translate script");
-            };
-            document.body.appendChild(script);
-        };
+    // useEffect(() => {
+    //     const addGoogleTranslateScript = () => {
+    //         const script = document.createElement('script');
+    //         script.src = `https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit`;
+    //         script.async = true;
+    //         script.onerror = () => {
+    //             console.error("Failed to load Google Translate script");
+    //         };
+    //         document.body.appendChild(script);
+    //     };
 
-        window.googleTranslateElementInit = () => {
-            if (window.google && window.google.translate) {
-                new window.google.translate.TranslateElement(
-                    {
-                        pageLanguage: 'en',
-                        includedLanguages: 'en,ta',
-                        layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-                        autoDisplay: false
-                    },
-                    'google_translate_element'
-                );
-            } else {
-                console.error("Google Translate is not available");
-            }
-        };
+    //     window.googleTranslateElementInit = () => {
+    //         if (window.google && window.google.translate) {
+    //             new window.google.translate.TranslateElement(
+    //                 {
+    //                     pageLanguage: 'en',
+    //                     includedLanguages: 'en,ta',
+    //                     layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+    //                     autoDisplay: false
+    //                 },
+    //                 'google_translate_element'
+    //             );
+    //         } else {
+    //             console.error("Google Translate is not available");
+    //         }
+    //     };
 
-        addGoogleTranslateScript();
-    }, []);
-    useEffect(() => {
-        const customizeGoogleTranslate = () => {
-            const translateElement = document.querySelector('#google_translate_element select');
-            if (translateElement) {
-                translateElement.style.backgroundColor = '#25D366';
-                translateElement.style.color = 'white';
-                translateElement.style.border = 'none';
-                translateElement.style.padding = '5px';
-                translateElement.style.borderRadius = '5px';
-            }
-        };
+    //     addGoogleTranslateScript();
+    // }, []);
 
-        const observer = new MutationObserver(customizeGoogleTranslate);
-        observer.observe(document.body, { childList: true, subtree: true });
+    // useEffect(() => {
+    //     const customizeGoogleTranslate = () => {
+    //         const translateElement = document.querySelector('#google_translate_element select');
+    //         if (translateElement) {
+    //             translateElement.style.backgroundColor = '#25D366';
+    //             translateElement.style.color = 'white';
+    //             translateElement.style.border = 'none';
+    //             translateElement.style.padding = '5px';
+    //             translateElement.style.borderRadius = '5px';
+    //         }
+    //     };
 
-        return () => observer.disconnect();
-    }, []);
+    //     const observer = new MutationObserver(customizeGoogleTranslate);
+    //     observer.observe(document.body, { childList: true, subtree: true });
+
+    //     return () => observer.disconnect();
+    // }, []);
+
     return (
         // boxShadow: "0px 5px 14px 0px rgba(0, 0, 0, 0.16)",
         <><div style={{ background: "#FFF", zIndex: "1", position: "relative" }}>
@@ -283,7 +315,7 @@ console.log("cart", cart_details)
                         </Drawer>
                     </div>
 
-                    <img src={navBanner.logo} alt='logo' style={{ width: "10rem", cursor: "pointer" }} onClick={() => { navigate('/home') }} />
+                    <img src={navBanner.logo} alt='logo' style={{ width: "10rem", cursor: "pointer" }} onClick={handleLogoClick} />
 
                     <div className="desktopMenu">
                         <StyledTabs
@@ -341,13 +373,9 @@ console.log("cart", cart_details)
                         )}
                         <Button disableRipple variant="text" sx={{ textTransform: "none", gap: "0.8rem", fontWeight: 600, fontSize: "0.75rem", color: "#444" }}
                             onClick={() => { navigate('/cart') }}>
-                            {/* <StyledBadge badgeContent={
-                                cart_details != []? cart_details.length : cart_details
-                                }> */}
-                                <StyledBadge badgeContent={badgeNumber}>
+                            <StyledBadge badgeContent={getBadgeCount()} max={99} showZero={false}>
                                 <img src={navBanner.icons.cart} style={{ width: "1rem" }} />
                             </StyledBadge>
-                            {/* Items */}
                         </Button>
                     </div>
                 </div>
