@@ -60,7 +60,7 @@ export default function Footer() {
                             <div className="sections">
                                 <a href="/emagazine">Books</a> <br />
                                 <a style={{ cursor: "pointer" }} onClick={handleOpen}>Subscription Plan</a> <br /> 
-                                <a style={{ cursor: "pointer" }} >Sitemap</a> <br />
+                                {/* <a style={{ cursor: "pointer" }} >Sitemap</a> <br /> */}
                             </div>
 
                         </div>
@@ -69,10 +69,10 @@ export default function Footer() {
                                 Legal
                             </div>
                             <div className="policies">
-                                <a href="">Terms & Conditions</a> <br />
-                                <a href="">Returns Policy</a> <br />
-                                <a href="">Privacy & Policy</a> <br />
-                                <a href="">Cancellation policy</a> <br />
+                                <a href="/termsAndCondition">Terms & Conditions</a> <br />
+                                {/* <a href="">Returns Policy</a> <br /> */}
+                                <a href="/privacyPolicy">Privacy & Policy</a> <br />
+                                {/* <a href="">Cancellation policy</a> <br /> */}
                             </div>
                         </div>
                         <div className="categ">
@@ -82,7 +82,7 @@ export default function Footer() {
                             <div className="book-cat">
                                 <a href="">Gnanam</a> <br />
                                 <a href="">Sindhanai</a> <br />
-                                <a href="">Varalaru</a> <br />
+                                <a href="">Maruthuvam</a> <br />
                                 <a href="">Arul</a> <br />
                             </div>
                         </div>

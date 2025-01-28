@@ -23,6 +23,8 @@ import WhatsAppButton from './components/whatsapp/Whatsapp';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useSelector } from 'react-redux';
 import AudioVideo from './pages/audio_video/audio-video';
+import PrivacyPolicy from './pages/login/PrivacyPolicy';
+import TermsAndCondition from './pages/login/TermsAndCondition';
 
 const queryClient = new QueryClient();
 
@@ -41,7 +43,7 @@ function App() {
   const closeLoginPopup = () => {
     setIsLoginOpen(false); // Close the modal
   };
-  console.log("googleENV",process.env.REACT_APP_GOOGLE_CLIENT_ID)
+  console.log("googleENV", process.env.REACT_APP_GOOGLE_CLIENT_ID)
   return (
     <QueryClientProvider client={queryClient}>
       <>
@@ -50,13 +52,13 @@ function App() {
 
             <BrowserRouter>
               {!isAdminLoggedIn && <TopNavbar setIsUserLoggedIn={setIsUserLoggedIn} />}
-              <NewLogin isUserLoggedIn={isUserLoggedIn} setIsUserLoggedIn={setIsUserLoggedIn} /> 
+              <NewLogin isUserLoggedIn={isUserLoggedIn} setIsUserLoggedIn={setIsUserLoggedIn} />
               {!isAdminLoggedIn && <WhatsAppButton phoneNumber="9176564723" />}
               <Routes>
                 <Route path="/" element={<Navigate to={"/home"} replace />} />
                 <Route path="/home" element={<HomePage selectedYear={selectedYear} setSelectedYear={setSelectedYear}
-                                        allYears={allYears}
-                                        setAllYears={setAllYears}
+                  allYears={allYears}
+                  setAllYears={setAllYears}
                 />} />
                 <Route
                   path="/emagazine"
@@ -85,13 +87,15 @@ function App() {
                 <Route path="/cart" element={<ViewCart />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/dashboard" element={<UserDashboard />} />
+                <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
+                <Route path="/termsAndCondition" element={<TermsAndCondition />} />
                 <Route path="/admin/overview" element={
                   // <AdminPanel />
                   <ProtectedRoute>
-                  <AdminPanel />
-                </ProtectedRoute>
-              
-                  } />
+                    <AdminPanel />
+                  </ProtectedRoute>
+
+                } />
               </Routes>
               {!isAdminLoggedIn && <Footer />}
             </BrowserRouter>

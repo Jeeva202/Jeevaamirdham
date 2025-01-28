@@ -8,7 +8,7 @@ export default function About() {
     return (
         <div>
             <Container maxWidth="lg">
-                <div component="div" style={{ fontWeight: "bold", textAlign: "center", paddingTop: "2rem", paddingBottom: "2rem", color:'#B54708', fontSize:"2rem" }}>
+                <div component="div" style={{ fontWeight: "bold", textAlign: "center", paddingTop: "2rem", paddingBottom: "2rem", color:'#B54708', fontSize:"1.5rem" }}>
                     About Us
                 </div>
                 <Typography variant="body1" sx={{ color: "#444", lineHeight: "30px" }}>

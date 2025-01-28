@@ -34,48 +34,7 @@ export default function ViewCart() {
   }
 
   // Function to fetch the user's cart data
-  const fetchCartData = async () => {
-    try {
-      if (isUserLoggedIn) {
-        const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
-        const cartData = response.data.cart_details; // Assuming cart_details is the array of books in the cart
-  
-        // Always fetch book details from API regardless of Redux data
-        await fetchBookDetails(cartData);
-      } else {
-        let book_id = cartDetails.map(item => item.book_id);
-        console.log("books", book_id);
-        
-        // Fetch book details based on book_id from booksDataFromStore
-        let book_details = book_id.map(id => {
-          console.log("book from store", booksDataFromStore);
-          
-          // Find the book data from the store based on id
-          const book = booksDataFromStore.find(book => book.id === id);
-          console.log("book filtered", book);
-          
-          if (book) {
-            return {
-              id: book.id,
-              availability: book.availability,
-              author: book.author,
-              title: book.title,
-              shortdesc: book.shortdesc,
-              offPrice: book.offPrice,
-              img: book.img,
-              description: book.description
-            };
-          }
-          return null; // In case the book is not found
-        }).filter(book => book !== null); // Remove any null values in case the book was not found
-        console.log("before setting it to state",book_details);
-        
-        setRows(book_details); // Set the fetched book details to your state
-      }
-    } catch (error) {
-      console.error("Error fetching cart data:", error);
-    }
-  };
+
   
 
   // Function to fetch book details from the API
@@ -106,10 +65,55 @@ export default function ViewCart() {
   
 
   // Fetch cart data when the component mounts
-useEffect(() => {
-  fetchCartData();
-  console.log("cart data", rows);
-}, [isUserLoggedIn, userId]); // Empty dependency array to run only on mount
+  useEffect(() => {
+    // if(isUserLoggedIn == true){
+      const fetchCartData = async () => {
+        try {
+          if (isUserLoggedIn) {
+            const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
+            const cartData = response.data.cart_details; // Assuming cart_details is the array of books in the cart
+      
+            // Always fetch book details from API regardless of Redux data
+            await fetchBookDetails(cartData);
+          } else {
+            let book_id = cartDetails.map(item => item.book_id);
+            console.log("books", book_id);
+            
+            // Fetch book details based on book_id from booksDataFromStore
+            let book_details = book_id.map(id => {
+              console.log("book from store", booksDataFromStore);
+              
+              // Find the book data from the store based on id
+              const book = booksDataFromStore.find(book => book.id === id);
+              console.log("book filtered", book);
+              
+              if (book) {
+                return {
+                  id: book.id,
+                  availability: book.availability,
+                  author: book.author,
+                  title: book.title,
+                  shortdesc: book.shortdesc,
+                  offPrice: book.offPrice,
+                  img: book.img,
+                  description: book.description
+                };
+              }
+              return null; // In case the book is not found
+            }).filter(book => book !== null); // Remove any null values in case the book was not found
+            console.log("before setting it to state",book_details);
+            
+            setRows(book_details); // Set the fetched book details to your state
+          }
+        } catch (error) {
+          console.error("Error fetching cart data:", error);
+        }
+      };
+      fetchCartData();
+    // }
+  },[]
+  // , [isUserLoggedIn]
+); // Run only on component mount
 
   // Handle delete from cart
   const handleDelete = async (id) => {
@@ -129,8 +133,9 @@ useEffect(() => {
       console.error("Error removing item from cart:", error);
     }
   };
+console.log("cart", selectCartDetails)
+console.log("cart")
   
-
   const handleQuantityChange = async (bookId, newQuantity) => {
     try {
       if (isUserLoggedIn) {

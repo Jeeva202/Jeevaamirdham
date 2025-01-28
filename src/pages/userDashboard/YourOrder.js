@@ -17,6 +17,8 @@ import { setCartDetails, openCart, selectIsCartOpen, setBooksData } from "../../
 // import { Loader } from "../loader/loader";
 import { selectIsUserLoggedIn, selectCartDetails } from "../../redux/cartSlice";
 // import Gif_Loader from "../loader/Gif_Loader";
+import { ReactComponent as EmptyCartIcon } from "../../assets/images/empty_cart.svg"; // Import an empty cart icon
+
 const YourOrder = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -73,6 +75,20 @@ const YourOrder = () => {
             <Box sx={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
                 <Typography>Loading...</Typography>
             </Box>
+        );
+    }
+
+    if (orders.length === 0) {
+        return (
+                <Card>
+                    <CardContent sx={{ display: "flex", alignItems: "center", flexDirection: "column", }}>
+                        <Typography>
+                         <EmptyCartIcon style={{ width: "150px", height: "150px" }} />
+                           <Typography sx={{textAlign:"center"}}>No orders found.</Typography> 
+                        </Typography>
+                    </CardContent>
+                </Card>
+
         );
     }
 
@@ -134,13 +150,16 @@ const YourOrder = () => {
                                         </Typography>
                                     </Tooltip>
                                 </Box>
+                                <Box>
+                                <Button variant="outlined" size="small" sx={{textTransform:"none", background:'#fff'}}><a target="_blank" href="https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx" style={{color:'#000'}}>Track Order</a></Button>
+                                </Box>
                             </Box>
                             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                 <Typography
                                     sx={{ fontWeight: "bold", fontSize: '0.9rem' }}
                                 >
-                                    Delivery:
-                                    {order.status}
+                                    Shipping Address: {order.status}
+                                    
                                     <Typography
                                         sx={{ marginTop: "0rem", fontSize: '0.8rem', color: '#333' }}
                                     >
@@ -148,8 +167,8 @@ const YourOrder = () => {
                                     </Typography>
                                 </Typography>
                                 <Typography sx={{ fontSize: '0.8rem', fontWeight: 'bold' }}>
-                                    Return Policy:
-                                    <Typography sx={{ fontSize: '0.8rem' }}>{order.returnWindow}</Typography>
+                                Develivered within 5 to 7 working days.
+                                    {/* <Typography sx={{ fontSize: '0.8rem' }}>{order.returnWindow}</Typography> */}
                                 </Typography>
                             </Box>
 
@@ -213,7 +232,7 @@ const YourOrder = () => {
                                                 >
                                                     Buy again
                                                 </Button>
-                                                <Button
+                                                {/* <Button
                                                     variant="outlined"
                                                     color="secondary"
                                                     size="small"
@@ -226,7 +245,7 @@ const YourOrder = () => {
                                                     }}
                                                 >
                                                     View book
-                                                </Button>
+                                                </Button> */}
 
                                             </Box>
                                         </Box>

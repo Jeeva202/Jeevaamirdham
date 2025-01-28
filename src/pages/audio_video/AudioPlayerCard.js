@@ -115,7 +115,7 @@ const AudioPlayerCard = () => {
                 }}
             >
                 <div className="text">
-                    <h3 style={{ margin: 0, color:'#B54708', fontSize:'2rem' }}>Audios</h3>
+                    <h3 style={{ margin: 0, color:'#B54708', fontSize:'1.5rem' }}>Audios</h3>
                 </div>
                 <div>
                     <div
