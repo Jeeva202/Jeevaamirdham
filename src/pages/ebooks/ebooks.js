@@ -86,7 +86,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
             
             dispatch(setCartDetails(noLoginCartData))
         }
-        console.log(cartDetails);
+        console.log("cartdetails",cartDetails);
         
         dispatch(openCart()); 
     };
