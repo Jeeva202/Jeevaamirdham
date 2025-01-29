@@ -27,10 +27,19 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
 
   // Handle changes in DatePicker
   const handleDateChange = (newValue) => {
-    setLocalFormData((prevData) => ({
-      ...prevData,
-      dob: newValue ? newValue.toISOString() : null,
-    }));
+    // Check if the newValue is a valid dayjs object
+    if (newValue && newValue.isValid()) {
+      setLocalFormData((prevData) => ({
+        ...prevData,
+        dob: newValue.toISOString(), // Convert to ISO string only if valid
+      }));
+    } else {
+      // If the date is invalid, set it to null or handle it appropriately
+      setLocalFormData((prevData) => ({
+        ...prevData,
+        dob: null,
+      }));
+    }
   };
 
   // Handle the "Edit" button click

@@ -2,7 +2,7 @@ import { ebooks } from "../../constants/screenData";
 import ViewAll from "../../components/viewAllButton/viewAll";
 import { Button } from "@mui/material";
 import CartModal from "../../components/cart/cartModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { Loader } from "../../components/loader/loader";
@@ -12,7 +12,13 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
     const [quantity, setQuantity] = useState(1);
     console.log("catselect", catSelectedBook);
     const bookId = parseInt(catSelectedBook) + 1
+
+    // Scroll to the top of the page when the component rerenders
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     // Fetch book information using React Query
+
     const { data: bookInfoData, error: bookInfoError, isLoading: isBookInfoLoading } = useQuery(
         ["book-info", bookId],
         async () => {
@@ -305,7 +311,7 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
                                     textAlign: 'center',
                                     color: '#F09300',
                                     fontWeight: '600'
-                                }}>{e.offPrice}</div>
+                                }}>₹ {e.offPrice}</div>
                             </div>
 
                         )

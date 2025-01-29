@@ -470,6 +470,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
         // console.log(month);
 
         setSelectedMonth(month)
+        window.scrollTo(0, 0);
     }
 
 
@@ -506,7 +507,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
         else {
             setWhichBook(e)
         }
-
+        window.scrollTo(0, 0);
 
     }
     const backToHomePage = () => {
