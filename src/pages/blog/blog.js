@@ -38,7 +38,7 @@ export default function Blog() {
         { id: "Uncategorized", label: "Uncategorized" }
     ];
 
-    const recentBlogs = BlogData.sort((a, b) => new Date(b.created_dt) - new Date(a.created_dt)).slice(0, 5);
+    const recentBlogs = BlogData?.sort((a, b) => new Date(b.created_dt) - new Date(a.created_dt)).slice(0, 5);
 
     const blogsPerPage = 4;
     const totalBlogs = BlogData.length;
@@ -117,7 +117,10 @@ export default function Blog() {
                                             },
                                             '&:hover': {
                                                 bgcolor: '#f5f5f5'
-                                            }
+                                            },
+                                            '&.Mui-selected:hover': {
+                                                bgcolor: '#f5f5f5'},
+
                                         }
                                     }}
                                 />

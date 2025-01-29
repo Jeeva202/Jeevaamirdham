@@ -302,3 +302,9 @@
     text-align: end;
     font-weight: 600;
 }
+
+@media (max-width: 768px) {
+    .blog-page > .content {
+        flex-direction: column-reverse;
+    }
+}

@@ -43,7 +43,6 @@ function App() {
   const closeLoginPopup = () => {
     setIsLoginOpen(false); // Close the modal
   };
-  console.log("googleENV", process.env.REACT_APP_GOOGLE_CLIENT_ID)
   return (
     <QueryClientProvider client={queryClient}>
       <>
@@ -86,14 +85,14 @@ function App() {
                 <Route path="/createNewUser" element={<CreateNewAccount />} />
                 <Route path="/cart" element={<ViewCart />} />
                 <Route path="/checkout" element={<Checkout />} />
-                <Route path="/dashboard" element={<UserDashboard />} />
+                <Route path="/dashboard" element={localStorage.getItem("id") ? <UserDashboard /> : <Navigate to="/home" />} />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 <Route path="/termsAndCondition" element={<TermsAndCondition />} />
                 <Route path="/admin/overview" element={
                   // <AdminPanel />
                   <ProtectedRoute>
                     <AdminPanel />
-                  </ProtectedRoute>
+                   </ProtectedRoute>
 
                 } />
               </Routes>

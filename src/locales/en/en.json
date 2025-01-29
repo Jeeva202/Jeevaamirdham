@@ -1,0 +1,38 @@
+{
+    "selectLanguage": "Select Language",
+    "homepage": "Homepage",
+    "eMagazine": "E-Magazine",
+    "audioVideo": "Audio & Video",
+    "blog": "Blog",
+    "aboutUs": "About Us",
+    "contact": "Contact",
+    "cart": "Cart",
+    "myProfile": "My Profile",
+    "logout": "Logout",
+    "login": "Login",
+    "user": "User",
+    "footer": {
+        "aboutSummary": "Who are the Siddhars? What is ideology? Who are the saints? Who are the sages? What is Jiva Samadhi? What is the true spirituality created by the Siddhas? Every Month more than ten Siddhas, histories of saints, spiritual Videos. How can a Guru realize himself and not wander somewhere in search of a lost Guru? How to give a clear ideology in the name of spirituality without being deceived anywhere?",
+        "needHelp": "Need Help",
+        "contactNumber": "+(91) - 9176564723",
+        "address": "Address: 11/6, Bharathi 4th street, N Usman Rd, T. Nagar, Chennai, Tamil Nadu 600017",
+        "quickLinks": "Quick Links",
+        "books": "Books",
+        "subscriptionPlan": "Subscription Plan",
+        "legal": "Legal",
+        "termsAndConditions": "Terms & Conditions",
+        "privacyPolicy": "Privacy & Policy",
+        "exploreCategories": "Explore Categories",
+        "gnanam": "Gnanam",
+        "sindhanai": "Sindhanai",
+        "maruthuvam": "Maruthuvam",
+        "arul": "Arul",
+        "copyright": "Copyright © 2024 Jeevaamirdham . All rights reserved.",
+        "socialMedia": {
+            "facebook": "Facebook",
+            "twitter": "Twitter",
+            "instagram": "Instagram",
+            "pinterest": "Pinterest"
+        }
+    }
+}

@@ -1268,7 +1268,7 @@
 @media (max-width: 768px) {
     .ebook .year-wise,
     .ebooks-one-year .month-wise {
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
         gap: 20px;
     }
     

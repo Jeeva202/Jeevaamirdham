@@ -16,6 +16,12 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useSelector, useDispatch } from 'react-redux';
 import { openLogin, setUserLoggedIn, setUserId, selectCartDetails, selectUserId, setCartDetails, selectIsLoginOpen, selectIsUserLoggedIn } from '../../redux/cartSlice';
 import axios from 'axios';
+import CloseIcon from '@mui/icons-material/Close';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { useTranslation } from "react-i18next";
+
 
 const StyledTabs = styled((props) => (
     <Tabs
@@ -77,6 +83,14 @@ export default function TopNavbar() {
     const userIdfromstore = useSelector(selectUserId)
     const userId = userIdfromstore ? userIdfromstore : localStorage.getItem('id')
     const isUserLoggedIn = useSelector(selectIsUserLoggedIn)
+    const { i18n, t } = useTranslation();
+    const currentLanguage = i18n.language || "en";
+    const handleLangChange = (event) => {
+        const selectedLang = event.target.value;
+        i18n.changeLanguage(selectedLang);
+        localStorage.setItem("language", selectedLang);
+    };
+
     const getBadgeCount = () => {
         if (isUserLoggedIn) {
             return cart_details && Array.isArray(cart_details) ? cart_details.length : 0;
@@ -123,11 +137,11 @@ export default function TopNavbar() {
         const updateTabValue = () => {
             const routes = ['/', '/emagazine', '/audio_video', '/blog', '/about', '/contact'];
             const currentPath = window.location.pathname;
-            
+
             // Handle '/home' route same as '/'
             const pathToCheck = currentPath === '/home' ? '/' : currentPath;
             const currentIndex = routes.indexOf(pathToCheck);
-            
+
             if (currentIndex !== -1) {
                 setValue(currentIndex);
             } else {
@@ -201,10 +215,15 @@ export default function TopNavbar() {
             <Box sx={{ display: "flex", justifyContent: 'center', padding: '2rem 0' }}>
                 <img src={navBanner.logo} alt='logo' style={{ width: "10rem", cursor: "pointer" }} onClick={handleLogoClick} />
             </Box>
-            <Typography sx={{ fontSize: '2rem', fontWeight: 'bold', paddingLeft: '1rem', paddingBottom: '1rem' }}>Menu</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '1rem', paddingRight: '0.8rem' }}>
+                <Typography sx={{ fontSize: '2rem', fontWeight: 'bold', paddingLeft: '1rem' }}>Menu</Typography>
+                <IconButton onClick={handleDrawerClose}>
+                    <CloseIcon />
+                </IconButton>
+            </Box>
             <Divider />
             <List>
-                {['Homepage', 'E-Magazine', 'Audio & Video', 'Blog', 'About Us', 'Contact'].map((text, index) => (
+                {[t('homepage'), t('eMagazine'), t('audioVideo'), t('blog'), t('aboutUs'), t('contact')].map((text, index) => (
                     <><ListItem button key={text} onClick={() => handleChange(null, index)}>
                         <ListItemText primary={text}
                             sx={{
@@ -212,7 +231,7 @@ export default function TopNavbar() {
                                     fontWeight: 'bold',
                                 },
                             }} />
-                        <ListItemIcon>
+                        <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
                             <ChevronRightIcon />
                         </ListItemIcon>
                     </ListItem>
@@ -221,66 +240,18 @@ export default function TopNavbar() {
 
                 ))}
                 <ListItem button onClick={() => navigate('/cart')}>
-                    <ListItemText primary="Cart" sx={{
+                    <ListItemText primary={t('cart')} sx={{
                         "& .MuiTypography-root": {
                             fontWeight: 'bold',
                         },
                     }} />
-                    <ListItemIcon>
+                    <ListItemIcon sx={{ justifyContent: 'flex-end' }}>
                         <ChevronRightIcon />
                     </ListItemIcon>
                 </ListItem>
             </List>
         </Box>
     );
-
-    // useEffect(() => {
-    //     const addGoogleTranslateScript = () => {
-    //         const script = document.createElement('script');
-    //         script.src = `https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit`;
-    //         script.async = true;
-    //         script.onerror = () => {
-    //             console.error("Failed to load Google Translate script");
-    //         };
-    //         document.body.appendChild(script);
-    //     };
-
-    //     window.googleTranslateElementInit = () => {
-    //         if (window.google && window.google.translate) {
-    //             new window.google.translate.TranslateElement(
-    //                 {
-    //                     pageLanguage: 'en',
-    //                     includedLanguages: 'en,ta',
-    //                     layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-    //                     autoDisplay: false
-    //                 },
-    //                 'google_translate_element'
-    //             );
-    //         } else {
-    //             console.error("Google Translate is not available");
-    //         }
-    //     };
-
-    //     addGoogleTranslateScript();
-    // }, []);
-
-    // useEffect(() => {
-    //     const customizeGoogleTranslate = () => {
-    //         const translateElement = document.querySelector('#google_translate_element select');
-    //         if (translateElement) {
-    //             translateElement.style.backgroundColor = '#25D366';
-    //             translateElement.style.color = 'white';
-    //             translateElement.style.border = 'none';
-    //             translateElement.style.padding = '5px';
-    //             translateElement.style.borderRadius = '5px';
-    //         }
-    //     };
-
-    //     const observer = new MutationObserver(customizeGoogleTranslate);
-    //     observer.observe(document.body, { childList: true, subtree: true });
-
-    //     return () => observer.disconnect();
-    // }, []);
 
     return (
         // boxShadow: "0px 5px 14px 0px rgba(0, 0, 0, 0.16)",
@@ -294,6 +265,7 @@ export default function TopNavbar() {
                     </div>
                     <div className="topRight">
                         <div style={{ display: "flex" }} >
+
 
                         </div>
                     </div>
@@ -323,17 +295,36 @@ export default function TopNavbar() {
                             onChange={handleChange}
                             aria-label="styled tabs example"
                         >
-                            <StyledTab label="Homepage" />
-                            <StyledTab label="E-Magazine" />
-                            <StyledTab label="Audio & Video" />
-                            <StyledTab label="Blog" />
-                            <StyledTab label="About Us" />
-                            <StyledTab label="Contact" />
+                            <StyledTab label={t('homepage')} />
+                            <StyledTab label={t('eMagazine')} />
+                            <StyledTab label={t('audioVideo')} />
+                            <StyledTab label={t('blog')} />
+                            <StyledTab label={t('aboutUs')} />
+                            <StyledTab label={t('contact')} />
                             {/* <StyledTab label="Dashboard" /> */}
                         </StyledTabs>
                         <div sx={{ p: 2 }} />
                     </div>
-
+                    <FormControl sx={{ m: 1, minWidth: 90, border:'none' }} size="small">
+                        <InputLabel id="demo-select-small-label" sx={{fontSize:'0.9rem'}}>Language</InputLabel>
+                        <Select
+                            labelId="demo-select-small-label"
+                            id="demo-select-small"
+                            value={currentLanguage} 
+                            label="Language"
+                            onChange={handleLangChange}
+                            sx={{
+                                "&.MuiOutlinedInput-root": { border: "none" },
+                                "& fieldset": { border: "none" }, // Removes the default outline
+                                "&:hover fieldset": { border: "none" },
+                                "&.Mui-focused fieldset": { border: "none" },
+                                fontSize:'0.9rem'
+                            }}
+                        >
+                            <MenuItem value="en" sx={{fontSize:'0.9rem'}}>English</MenuItem>
+                            <MenuItem value="ta" sx={{fontSize:'0.9rem'}}>Tamil</MenuItem>
+                        </Select>
+                    </FormControl>
                     <div style={{ display: "flex", gap: "0rem" }}>
                         {username ? (
                             <>
@@ -356,19 +347,19 @@ export default function TopNavbar() {
                                         <ListItemIcon>
                                             <AccountCircleIcon fontSize="small" />
                                         </ListItemIcon>
-                                        My Profile
+                                        {t('myProfile')}
                                     </MenuItem>
                                     <MenuItem sx={{ fontSize: "14px" }} onClick={handleLogout}>
                                         <ListItemIcon>
                                             <LogoutIcon fontSize="small" />
                                         </ListItemIcon>
-                                        Logout
+                                        {t('logout')}
                                     </MenuItem>
                                 </Menu>
                             </>
                         ) : (
                             <Button disableRipple onClick={() => dispatch(openLogin())} variant="text" sx={{ textTransform: "none", fontWeight: 600, fontSize: "0.75rem", color: "#444" }} startIcon={<img src={navBanner.icons.user} style={{ width: "0.9rem" }} />} >
-                                Login
+                                {t('login')}
                             </Button>
                         )}
                         <Button disableRipple variant="text" sx={{ textTransform: "none", gap: "0.8rem", fontWeight: 600, fontSize: "0.75rem", color: "#444" }}
