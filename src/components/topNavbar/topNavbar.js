@@ -306,7 +306,7 @@ export default function TopNavbar() {
                         <div sx={{ p: 2 }} />
                     </div>
                     <FormControl sx={{ m: 1, minWidth: 90, border:'none' }} size="small">
-                        <InputLabel id="demo-select-small-label" sx={{fontSize:'0.9rem'}}>Language</InputLabel>
+                        {/* <InputLabel id="demo-select-small-label" sx={{fontSize:'0.9rem'}}>Language</InputLabel> */}
                         <Select
                             labelId="demo-select-small-label"
                             id="demo-select-small"
