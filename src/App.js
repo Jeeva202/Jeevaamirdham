@@ -34,6 +34,7 @@ function App() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false)
   const isAdminLoggedIn = useSelector((state) => state.cart.isAdminLoggedIn);
   const [selectedYear, setSelectedYear] = useState(NaN);
+  const [selectedMonth, setSelectedMonth] = useState(null);
   const [allYears, setAllYears] = useState(true);
 
   const loginPopup = () => {
@@ -58,6 +59,7 @@ function App() {
                 <Route path="/home" element={<HomePage selectedYear={selectedYear} setSelectedYear={setSelectedYear}
                   allYears={allYears}
                   setAllYears={setAllYears}
+                  setSelectedMonth={setSelectedMonth}
                 />} />
                 <Route
                   path="/emagazine"
@@ -70,6 +72,8 @@ function App() {
                         setSelectedYear={setSelectedYear}
                         allYears={allYears}
                         setAllYears={setAllYears}
+                        selectedMonth={selectedMonth}
+                        setSelectedMonth={setSelectedMonth}
                       />
                       {/* {isLoginOpen && <LoginModal onClose={closeLoginPopup} />} */}
                       {isLoginOpen && <NewLogin isUserLoggedIn={isUserLoggedIn} setIsUserLoggedIn={setIsUserLoggedIn} />}

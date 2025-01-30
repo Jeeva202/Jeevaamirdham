@@ -31,10 +31,9 @@ import { Loader } from "../../components/loader/loader";
 import SubscriptionModal from "../../components/subscriptionModal/subscriptionModal";
 import Gif_Loader from "../../components/loader/Gif_Loader";
 
-export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllYears}) {
+export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllYears, selectedMonth, setSelectedMonth }) {
     const [listenPage, setListenPage] = useState(false)
     const [categoryCartFlag, setCategoryCartFlag] = useState(false)
-    const [selectedMonth, setSelectedMonth] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState(["GNANAM"]);
     const [catSelectedBook, setCatSelectedBook] = useState("0")
     const [audioData, setAudioData] = useState(null);
@@ -80,11 +79,22 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
             // Dispatch an action to update the Redux store with the updated cart details
             dispatch(setCartDetails(cartDetailsfromAPI)); // This will update the cartDetails in Redux
         }
-        else{
-            let noLoginCartData = [...cartDetails, {book_id:book.id, quantity: quantity || 1}]
+        else {
+            let noLoginCartData = [...cartDetails]; // Create a shallow copy of cartDetails
+            const existingBookIndex = noLoginCartData.findIndex(item => item.book_id === book.id);
+    
+            if (existingBookIndex !== -1) {
+                // Create a new object for the existing book to avoid direct mutation
+                noLoginCartData[existingBookIndex] = {
+                    ...noLoginCartData[existingBookIndex],
+                    quantity: noLoginCartData[existingBookIndex].quantity + quantity // Update quantity
+                };
+            } else {
+                noLoginCartData.push({ book_id: book.id, quantity: quantity || 1 });
+            }
+    
             console.log("no login", noLoginCartData);
-            
-            dispatch(setCartDetails(noLoginCartData))
+            dispatch(setCartDetails(noLoginCartData)); // Update the cart details in Redux
         }
         console.log("cartdetails",cartDetails);
         
@@ -243,8 +253,10 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
     );
 
     useEffect(() => {
+        if(!selectedYear && !selectedMonth){
         setCategoryCartFlag(false)
         setAllYears(true)
+        }
     },[]);
 
 

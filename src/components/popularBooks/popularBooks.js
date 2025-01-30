@@ -33,11 +33,9 @@ export default function PopularBooks({ userId }) {
         }
     }, [booksData]);
     const handleAddToCart = async (book, quantity) => {
-        if(isUserLoggedIn){
+        if (isUserLoggedIn) {
             console.log("user id", userId);
-            // const addtocart = await axios.post(process.env.REACT_APP_URL+'/ebooks/add_to_cart', {
-                const addtocart = await axios.post(process.env.REACT_APP_URL+'/ebooks/add_to_cart', {
-    
+            const addtocart = await axios.post(process.env.REACT_APP_URL + '/ebooks/add_to_cart', {
                 userId: userId,
                 book: book.id,
                 quantity: quantity
@@ -48,13 +46,27 @@ export default function PopularBooks({ userId }) {
     
             // Dispatch an action to update the Redux store with the updated cart details
             dispatch(setCartDetails(cartDetails)); // This will update the cartDetails in Redux
+        } else {
+            let noLoginCartData = [...cartDetails]; // Create a shallow copy of cartDetails
+            const existingBookIndex = noLoginCartData.findIndex(item => item.book_id === book.id);
+    
+            if (existingBookIndex !== -1) {
+                // Create a new object for the existing book to avoid direct mutation
+                noLoginCartData[existingBookIndex] = {
+                    ...noLoginCartData[existingBookIndex],
+                    quantity: noLoginCartData[existingBookIndex].quantity + quantity // Update quantity
+                };
+            } else {
+                noLoginCartData.push({ book_id: book.id, quantity: quantity || 1 });
+            }
+    
+            console.log("no login", noLoginCartData);
+            dispatch(setCartDetails(noLoginCartData)); // Update the cart details in Redux
         }
-        else{
-            dispatch(setCartDetails([...cartDetails, {book_id:book.id, quantity: quantity || 1}]))
-        }
-
+    
         dispatch(openCart()); // Open the cart modal
     };
+    
 
     if (isBooksLoading) {
         // return <Loader />

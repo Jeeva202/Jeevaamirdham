@@ -6,15 +6,16 @@ import axios from 'axios';
 import { useQuery } from "react-query";
 import { Loader } from "../loader/loader";
 import Gif_Loader from "../loader/Gif_Loader";
+import React from "react";
 // import { useState } from "react";
-// import Modal from '@mui/material/Modal';
-// import Box from '@mui/material/Box';
-// import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 
 
-export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYears, setAllYears }) {
+export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYears, setAllYears, setSelectedMonth }) {
     const [isMobile, setIsMobile] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
@@ -32,10 +33,20 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
 
     // Function to handle year selection
     const handleOnClick = (year) => {
+        if(year != 2022){
+            console.log(year)
             navigate("/emagazine");
             setSelectedYear(year);
             setAllYears(false);
+            setSelectedMonth(null);
+        }
+        else{
+            setIsModalOpen(true);
+        }
     };
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+      };
     const fetchMagazines = async () => {
         const response = await axios.get(process.env.REACT_APP_URL + '/emagazine-page/magazine-yearwise');
         return response.data.reverse(); // Reverse the data here to match your original behavior
@@ -70,36 +81,74 @@ export default function ShopByEditionCard({ selectedYear, setSelectedYear, allYe
                 </div>
             ))}
 
-            {/* Modal for non-2024 years */}
-            {/* <Modal
-                open={isModalVisible}
-                onClose={closeModal}
-                aria-labelledby="modal-title"
-                aria-describedby="modal-description"
+<Modal
+        open={isModalOpen}
+        onClose={handleCloseModal}
+        aria-labelledby="updating-modal"
+        aria-describedby="updating-modal-description"
+      >
+        <Box sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: { xs: '80%', sm: 400 },
+          bgcolor: 'background.paper',
+          borderRadius: '16px',
+          boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
+          p: 4,
+          textAlign: 'center',
+          outline: 'none',
+          backdropFilter: 'blur(5px)',
+        }}>
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2
+          }}>
+            <img 
+              src="https://cdn-icons-png.flaticon.com/512/6897/6897039.png" 
+              alt="Update Coming Soon"
+              style={{ width: '100px', height: '100px' }}
+            />
+            <h2 style={{ 
+              color: '#1a365d',
+              margin: '10px 0',
+              fontSize: '1.5rem'
+            }}>
+              Coming Soon!
+            </h2>
+            <p style={{
+              color: '#4a5568',
+              marginBottom: '20px',
+              fontSize: '1rem'
+            }}>
+              This content is currently being updated. Please check back later.
+            </p>
+            <Button
+              onClick={handleCloseModal}
+              variant="contained"
+              disableElevation
+              sx={{
+                bgcolor: '#F09300',
+                color: 'white',
+                '&:hover': {
+                  bgcolor: '#d68200',
+                },
+                borderRadius: '8px',
+                px: 4,
+                py: 1,
+                textTransform: 'none',
+                fontSize: '1rem'
+              }}
             >
-                <Box sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 300,
-                    bgcolor: 'background.paper',
-                    borderRadius: 2,
-                    boxShadow: 24,
-                    p: 4,
-                    textAlign: 'center',
-                }}>
-                    <h2 id="modal-title">Updating Soon...</h2>
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={closeModal}
-                        sx={{ marginTop: 2 }}
-                    >
-                        Close
-                    </Button>
-                </Box>
-            </Modal> */}
+              Got it
+            </Button>
+          </Box>
+        </Box>
+      </Modal>
+
         </div>
     );
 }

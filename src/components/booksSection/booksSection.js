@@ -5,7 +5,7 @@ import ViewAll from "../viewAllButton/viewAll"
 import { homePage } from "../../constants/screenData"
 import { Button } from "@mui/material"
 import { useNavigate } from "react-router-dom"
-export default function BooksSection({userId, selectedYear, setSelectedYear,allYears, setAllYears}) {
+export default function BooksSection({userId, selectedYear, setSelectedYear,allYears, setAllYears, setSelectedMonth}) {
     const navigate = useNavigate()
     return (
         <div className="container">
@@ -13,8 +13,7 @@ export default function BooksSection({userId, selectedYear, setSelectedYear,allY
                 <div className="subtitle">
                     E-Magazine Edition
                 </div>
-                <ShopByEditionCard selectedYear={selectedYear} setSelectedYear={setSelectedYear}  allYears={allYears}
-                        setAllYears={setAllYears} />
+                <ShopByEditionCard selectedYear={selectedYear} setSelectedYear={setSelectedYear}  allYears={allYears} setSelectedMonth={setSelectedMonth} setAllYears={setAllYears} />
             </div>
             <div className="right-side">
                 <div className="subtitle-row">
