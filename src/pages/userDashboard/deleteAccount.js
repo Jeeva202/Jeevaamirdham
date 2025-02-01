@@ -10,7 +10,7 @@ export default function DeleteAccount({userId}) {
     const handleInputChange = (event) => {
         setInput(event.target.value);
     };
-
+ 
     const handleDelete = async () => {
         if (input === 'CONFIRM') {
             // Call the API to delete the account
