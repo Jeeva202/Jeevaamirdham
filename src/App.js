@@ -25,6 +25,10 @@ import { useSelector } from 'react-redux';
 import AudioVideo from './pages/audio_video/audio-video';
 import PrivacyPolicy from './pages/login/PrivacyPolicy';
 import TermsAndCondition from './pages/login/TermsAndCondition';
+import { selectIsUserLoggedIn, setUserId } from './redux/cartSlice';
+import GlobalSnackbar from './components/Snackbar/SnackBar';
+import { showSnackbar } from './redux/SnackBarSlice';
+import {useDispatch } from 'react-redux';
 
 const queryClient = new QueryClient();
 
@@ -36,14 +40,19 @@ function App() {
   const [selectedYear, setSelectedYear] = useState(NaN);
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [allYears, setAllYears] = useState(true);
-
+  let check = !! localStorage.getItem("id")
+  let userCheck = useSelector(selectIsUserLoggedIn)
+// console.log("id check",check);
   const loginPopup = () => {
     setIsLoginOpen(true); // Open the modal
   };
+  const dispatch = useDispatch();
 
+  // console.log("id 1", useSelector(selectIsUserLoggedIn))
   const closeLoginPopup = () => {
     setIsLoginOpen(false); // Close the modal
   };
+  
   return (
     <QueryClientProvider client={queryClient}>
       <>
@@ -89,7 +98,7 @@ function App() {
                 <Route path="/createNewUser" element={<CreateNewAccount />} />
                 <Route path="/cart" element={<ViewCart />} />
                 <Route path="/checkout" element={<Checkout />} />
-                <Route path="/dashboard" element={localStorage.getItem("id") ? <UserDashboard /> : <Navigate to="/home" />} />
+                <Route path="/dashboard" element={userCheck ? <UserDashboard /> : <Navigate to="/home" />} />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 <Route path="/termsAndCondition" element={<TermsAndCondition />} />
                 <Route path="/admin/overview" element={
@@ -102,6 +111,7 @@ function App() {
               </Routes>
               {!isAdminLoggedIn && <Footer />}
             </BrowserRouter>
+            <GlobalSnackbar />
           </Box>
         </Box>
 

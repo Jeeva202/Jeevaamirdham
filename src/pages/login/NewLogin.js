@@ -27,6 +27,7 @@ import './NewLogin.css';
 import InputAdornment from '@mui/material/InputAdornment';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { showSnackbar } from "../../redux/SnackBarSlice";
 
 const style = {
     position: "absolute",
@@ -104,7 +105,8 @@ const LoginModal = () => {
         localStorage.setItem('email', decoded.email);
         window.dispatchEvent(new Event('storage'));
         setSnackbarMessage(`Welcome, ${decoded.name}!`);
-        setSnackbarOpen(true);
+        dispatch(showSnackbar({ message: `Welcome ${decoded.name}`, severity: "success" }));
+        // setSnackbarOpen(true);
         dispatch(closeLogin());
         try {
             const checkUserResponse = await axios.post(`${domain}/check-user`, { email });
@@ -276,6 +278,7 @@ const LoginModal = () => {
                 localStorage.setItem('username', response.data.user.username);
                 localStorage.setItem('email', response.data.user.email);
                 window.dispatchEvent(new Event('storage'));
+                dispatch(showSnackbar({ message: `Welcome ${response.data.user.username}`, severity: "success" }));
                 dispatch(setUserLoggedIn(true));
                 dispatch(closeLogin());
             } else {
@@ -293,12 +296,10 @@ const LoginModal = () => {
         setLoading(true);
         try {
             const response = await axios.post(`${domain}/login/login`, { email, password });
+            response.data.success && setSnackbarOpen(true);
             if (response.data.success) {
                 console.log("User logged in successfully")
-                setSnackbarMessage("Login successful.");
-                setSnackbarMessage("User logged in")
-                setSnackbarOpen(true);
-                console.log("Snackbar Open:", snackbarOpen, "Message:", snackbarMessage);
+                dispatch(showSnackbar({ message: `Welcome ${response.data.user.username}`, severity: "success" }));
                 dispatch(setUserId(response.data.user.id));
                 localStorage.setItem("id", response.data.user.id);
                 localStorage.setItem('username', response.data.user.username);
@@ -311,8 +312,14 @@ const LoginModal = () => {
                 setSnackbarOpen(true);
             }
         } catch (error) {
-            setSnackbarMessage("An error occurred. Please try again.");
-            setSnackbarOpen(true);
+            if(error.response.data.error ){
+                setSnackbarMessage("Invalid email or password. Please try again.");
+                setSnackbarOpen(true);
+            }
+            else{
+                setSnackbarMessage("An error occurred. Please try again.");
+                setSnackbarOpen(true);
+            }
         }
         setLoading(false);
     };
@@ -348,12 +355,6 @@ const LoginModal = () => {
             // console.log("finduser", response.data, response.data.user.username);
 
             if (isExistingUser) {
-                localStorage.setItem("id", response.data.user.id);
-                localStorage.setItem('username', response.data.user.username);
-                localStorage.setItem('email', response.data.user.email);
-                window.dispatchEvent(new Event('storage'));
-                dispatch(setUserLoggedIn(true));
-
                 if (isPasswordAvailable) {
                     // If the user exists and has a password, go to password login
                     setShowContEmail(false);
@@ -460,7 +461,7 @@ const LoginModal = () => {
 const LoginOptions = ({ setShowSignIn, handleGoogleLoginSuccess, handleGoogleLoginError, handleFacebookLogin, responseFacebook, navigate }) => (
     <>
         <GoogleLogin onSuccess={handleGoogleLoginSuccess} onError={handleGoogleLoginError} />
-        <FacebookLogin
+        {/* <FacebookLogin
             appId="1088597931155576"
             autoLoad={false}
             fields="name,email,picture"
@@ -473,7 +474,7 @@ const LoginOptions = ({ setShowSignIn, handleGoogleLoginSuccess, handleGoogleLog
                 </Box>
             )}
             callback={responseFacebook}
-        />
+        /> */}
         <Divider sx={{ margin: "1rem 0" }}><Typography variant="caption" color="#999">Or sign in with</Typography></Divider>
         <Button onClick={() => setShowSignIn(true)} disableElevation fullWidth variant="contained" sx={{ color: "white", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", padding: { lg: "0.7rem 3rem", md: "0.5rem 2rem", xs: "0.3rem 0rem" } }}>
             Continue with Email ID

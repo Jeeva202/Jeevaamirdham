@@ -5,6 +5,8 @@ import { navBanner } from "../../constants/screenData"
 import SubscriptionModal from "../subscriptionModal/subscriptionModal";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import YouTubeIcon from '@mui/icons-material/YouTube';
+
 export default function Footer() {
 
     const [openModal, setOpenModal] = useState(false);
@@ -83,9 +85,10 @@ export default function Footer() {
                         </div>
                         <div className="socialmedia">
                             <navBanner.icons.facebook sx={{ fontSize: "1rem", fill: "#999999" }} />
-                            <navBanner.icons.twitter sx={{ fontSize: "1rem", fill: "#999999" }} />
+                            {/* <navBanner.icons.twitter sx={{ fontSize: "1rem", fill: "#999999" }} /> */}
                             <navBanner.icons.instagram sx={{ fontSize: "1rem", fill: "#999999" }} />
-                            <img src={navBanner.icons.pinterest} alt="" srcset="" />
+                            {/* <img src={navBanner.icons.pinterest} alt="" srcset="" /> */}
+                            <YouTubeIcon sx={{ fontSize: "1.1rem", fill: "#999999" }} />
                         </div>
                     </div>
                 </div>

@@ -19,6 +19,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useQuery } from 'react-query';
 import YourOrder from './YourOrder';
+import {useNavigate, useLocation} from 'react-router-dom'
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -55,7 +56,7 @@ function a11yProps(index) {
 export default function UserDashboard() {
 
     localStorage.getItem('username')
-    const [value, setValue] = React.useState(0);
+    // const [value, setValue] = React.useState(0);
     const [userName, setUserName] = React.useState(localStorage.getItem('username') || localStorage.getItem('email'));
     const [formData, setFormData] = useState({});  // Store editable form data
     const userId = useSelector(selectUserId) || localStorage.getItem("id");  // Get the user ID from Redux
@@ -82,8 +83,21 @@ export default function UserDashboard() {
         setFormData(userData);
       }
     }, [userData]);
+    
+    const location = useLocation();
+    const navigate = useNavigate();
+    
+    // Get tab index from query parameter, default to 0 (Dashboard)
+    const queryParams = new URLSearchParams(location.search);
+    const defaultTab = parseInt(queryParams.get("tab")) || 0;
+
+    const [value, setValue] = React.useState(defaultTab);
+
     const handleChange = (event, newValue) => {
         setValue(newValue); // Update tab value
+        
+        // Update URL with selected tab
+        navigate(`/dashboard?tab=${newValue}`);
     };
     React.useEffect(() => {
         const storedUsername = localStorage.getItem('username');

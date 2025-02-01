@@ -30,6 +30,7 @@ import { openLogin, setUserLoggedIn, selectUserId, setCartDetails, setBooksData,
 import { Loader } from "../../components/loader/loader";
 import SubscriptionModal from "../../components/subscriptionModal/subscriptionModal";
 import Gif_Loader from "../../components/loader/Gif_Loader";
+import { showSnackbar } from "../../redux/SnackBarSlice";
 
 export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllYears, selectedMonth, setSelectedMonth }) {
     const [listenPage, setListenPage] = useState(false)
@@ -573,16 +574,20 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
                             if (res.ok) {
                                 const data = await res.json();
                                 console.log("Payment data saved successfully:", data);
-                                alert("Payment successful and subscription activated!");
+                                // alert("Payment successful and subscription activated!");
+                                dispatch(showSnackbar({ message: "Payment successful and subscription activated!", severity: "success" }));
+
                                 const response = await axios.get(process.env.REACT_APP_URL + `/emagazine-page/audiofile?uid=${userData?.id}&year=${selectedYear}&month=${selectedMonthNumber}`)
                                 setAudioData(response.data)
                             } else {
                                 console.error("Failed to update backend");
-                                alert("Payment was successful but could not update subscription. Please contact support.");
+                                // alert("Payment was successful but could not update subscription. Please contact support.");
+                                dispatch(showSnackbar({ message: "Payment successful but could not update subscription. Please contact support.", severity: "error" }));
                             }
                         } catch (error) {
                             console.error("Error while updating backend:", error);
-                            alert("An error occurred. Please contact support.");
+                            // alert("An error occurred. Please contact support.");
+                            dispatch(showSnackbar({ message: "An error occurred. Please contact support.", severity: "error" }));
                         }
                     },
                     prefill: {
@@ -600,11 +605,14 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
                 razorpay.open();
             } else {
                 console.error('Error fetching plan price');
-                alert('Error fetching plan price');
+                // alert('Error fetching plan price');
+                dispatch(showSnackbar({ message: "Error fetching plan price", severity: "error" }));
+
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred while fetching plan details');
+            // alert('An error occurred while fetching plan details');
+            dispatch(showSnackbar({ message: "An error occurred while fetching plan details", severity: "error" }));
         }
     };
     

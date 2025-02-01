@@ -2,20 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { Button, Container, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from "react-router-dom"
 import { selectIsUserLoggedIn, setUserLoggedIn, openLogin, selectCartDetails, selectUserId, setCartDetails } from '../../redux/cartSlice';
 import LoginModal from '../../pages/login/NewLogin';
 import axios from 'axios';
+import { showSnackbar } from '../../redux/SnackBarSlice';
 export default function Checkout() {
   // Get totalAmount passed via location
   // const [openModal, setOpenModal] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
-    const isUserLoggedInFromStore = useSelector((state) => state.cart.isUserLoggedIn);
-    const isUserLoggedIn = isUserLoggedInFromStore !== undefined ? isUserLoggedInFromStore : !!localStorage.getItem('id');
+  const isUserLoggedInFromStore = useSelector((state) => state.cart.isUserLoggedIn);
+  const isUserLoggedIn = isUserLoggedInFromStore !== undefined ? isUserLoggedInFromStore : !!localStorage.getItem('id');
   let userId = useSelector(selectUserId);
   // const isUserLoggedIn = useSelector(selectIsUserLoggedIn)? useSelector(selectIsUserLoggedIn) : localStorage.getItem('username') && localStorage.getItem('email') ? true : false
   const location = useLocation();
   const [totalAmount, setTotalAmount] = useState(0); // Use state to store totalAmount
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const cartDetails = useSelector(selectCartDetails)
   // const handleOpen = () => setOpenModal(true);
   // const handleClose = () => setOpenModal(false);
@@ -51,14 +54,14 @@ export default function Checkout() {
     });
   };
 
-  const razorpay_payment = async (totalAmount)=>{
+  const razorpay_payment = async (totalAmount) => {
     const userData = {
       name: localStorage.getItem('username') || null,
       email: localStorage.getItem('email') || null,
       id: localStorage.getItem('id') || null
-  };
+    };
 
-  try {
+    try {
 
       // Fetch the price of the selected plan from the backend
       // const response = await fetch(process.env.REACT_APP_URL + `/ebooks/get-book-amount?id=${userData.id}`);
@@ -67,71 +70,82 @@ export default function Checkout() {
       // if (response.ok) {
       //     const amount = data.price;
 
-          const options = {
-              key: "rzp_live_tjwWB1t6xxjHG1", // Your Razorpay key
-              amount: totalAmount * 100, // Amount in paise
-              currency: "INR",
-              name: "Jeevaamirdham",
-              description: "Subscription Payment",
-              handler: async function (response) {
-                  console.log("Payment successful:", response);
+      const options = {
+        key: "rzp_live_tjwWB1t6xxjHG1", // Your Razorpay key
+        amount: totalAmount * 100, // Amount in paise
+        currency: "INR",
+        name: "Jeevaamirdham",
+        description: "Subscription Payment",
+        handler: async function (response) {
+          console.log("Payment successful:", response);
 
-                  // Prepare payment data to send to the backend
-                  const paymentData = {
-                      razorpay_payment_id: response.razorpay_payment_id,
-                      amount: totalAmount,
-                      user_id: userData?.id || null,
-                      userDetails:userDetails,
-                      cartDetails:cartDetails 
-                  };
-
-                  // Send payment data to your backend to store it
-                  try {
-                      const res = await fetch(process.env.REACT_APP_URL+"/ebooks/payment-success", {
-                          method: "POST",
-                          headers: {
-                              "Content-Type": "application/json",
-                          },
-                          body: JSON.stringify(paymentData),
-                      });
-
-                      if (res.ok) {
-                          const data = await res.json();
-                          const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
-                          const cartData = response.data.cart_details; 
-                          setCartDetails(cartData)
-                          console.log("Payment data saved successfully:", data);
-                          alert("Payment successful.");
-                      } else {
-                          console.error("Failed to update backend");
-                          alert("Payment was successful but could not update subscription. Please contact support.");
-                      }
-                  } catch (error) {
-                      console.error("Error while updating backend:", error);
-                      alert("An error occurred. Please contact support.");
-                  }
-              },
-              prefill: {
-                  name: userData?.name || "",
-                  email: userData?.email || "",
-                  contact: userData?.contact || "",
-                  id: userData?.id || "",
-              },
-              theme: {
-                  color: "#7C3AED",
-              },
+          // Prepare payment data to send to the backend
+          const paymentData = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            amount: totalAmount,
+            user_id: userData?.id || null,
+            userDetails: userDetails,
+            cartDetails: cartDetails
           };
 
-          const razorpay = new window.Razorpay(options);
-          razorpay.open();
+          // Send payment data to your backend to store it
+          try {
+            const res = await fetch(process.env.REACT_APP_URL + "/ebooks/payment-success", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(paymentData),
+            });
+
+            if (res.ok) {
+              const data = await res.json();
+              const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
+              const cartData = response.data.cart_details;
+              setCartDetails(cartData)
+              console.log("Payment data saved successfully:", data);
+              // alert("Payment successful.");
+              dispatch(showSnackbar({ message: "Payment successful.", severity: "success" }));
+
+              window.location.reload();
+              navigate('/dashboard?tab=2');
+
+            } else {
+              console.error("Failed to update backend");
+              // alert("Payment was successful but could not update subscription. Please contact support.");
+              dispatch(showSnackbar({ message: "Payment was successful but could not update subscription. Please contact support.", severity: "error" }));
+
+            }
+          } catch (error) {
+            console.error("Error while updating backend:", error);
+            // alert("An error occurred. Please contact support.");
+            dispatch(showSnackbar({ message: "An error occurred. Please contact support.", severity: "error" }));
+
+          }
+        },
+        prefill: {
+          name: userData?.name || "",
+          email: userData?.email || "",
+          contact: userData?.contact || "",
+          id: userData?.id || "",
+        },
+        theme: {
+          color: "#7C3AED",
+        },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
       // } else {
       //     console.error('Error fetching plan price');
       //     alert('Error fetching plan price');
       // }
-  } catch (error) {
+    } catch (error) {
       console.error('Error:', error);
-      alert('An error occurred while fetching plan details');
-  }
+      // alert('An error occurred while fetching plan details');
+      dispatch(showSnackbar({ message: "An error occurred while fetching plan details", severity: "error" }));
+
+    }
   }
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -153,31 +167,32 @@ export default function Checkout() {
     const missingFields = requiredFields.filter((field) => !userDetails[field]);
 
     if (missingFields.length > 0) {
-      alert('Please fill in all required fields.');
+      // alert('Please fill in all required fields.');
+      dispatch(showSnackbar({ message: "Please fill in all required fields.", severity: "warning" }));
       return;
     }
-    if(cartDetails == []){
+    if (cartDetails == []) {
       if (!userId) {
         userId = localStorage.getItem("id");
       }
       try {
         const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
         const cartData = response.data.cart_details; // Assuming cart_details is the array of books in the cart
-  
+
         setCartDetails(cartData)
       } catch (error) {
         console.error("Error fetching cart data:", error);
       }
     }
     console.log("cart", cartDetails);
-    
+
     // If all required fields are filled, proceed with the order submission
-      if(isUserLoggedIn){
-        razorpay_payment(totalAmount)
-      }
-      else{
-        dispatch(openLogin())
-      }
+    if (isUserLoggedIn) {
+      razorpay_payment(totalAmount)
+    }
+    else {
+      dispatch(openLogin())
+    }
     // console.log('Order submitted', userDetails, totalAmount);
     // Add your logic to handle the order placement (e.g., API call)
   };
@@ -190,8 +205,7 @@ export default function Checkout() {
             fontSize: '2rem',
             fontWeight: 'bold',
             textAlign: 'center',
-            paddingTop: '4rem',
-            paddingBottom: '2rem',
+            padding: '2rem 0',
           }}
         >
           Checkout
@@ -211,7 +225,7 @@ export default function Checkout() {
               style={{
                 fontSize: '1.5rem',
                 textAlign: 'left',
-                paddingTop: '2rem',
+                paddingTop: '0',
                 paddingBottom: '2rem',
               }}
             >
@@ -296,7 +310,7 @@ export default function Checkout() {
               required
             />
 
-            <label>Zipcode <span style={requiredStyle}>*</span></label>
+            <label>Zipcode/Pincode <span style={requiredStyle}>*</span></label>
             <input
               type="text"
               name="zipcode"
@@ -411,6 +425,7 @@ const inputStyle = {
   width: '100%',
   border: '1px solid #E6E6E6',
   marginTop: '1rem',
+  marginBottom: '1.5rem',
 };
 
 // Textarea style for consistency

@@ -1,4 +1,4 @@
-import { Box, Divider, Typography, Button, Badge, Container, Menu, MenuItem, ListItemIcon, IconButton, Drawer, List, ListItem, ListItemText } from '@mui/material'
+import { Box, Divider, Typography, Button, Badge, Container, Menu, MenuItem, ListItemIcon, IconButton, Drawer, List, ListItem, ListItemText, colors } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import { navBanner } from '../../constants/screenData'
 import "./topNavbar.css"
@@ -21,7 +21,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { useTranslation } from "react-i18next";
-
+import Avatar from '@mui/material/Avatar';
 
 const StyledTabs = styled((props) => (
     <Tabs
@@ -211,7 +211,7 @@ export default function TopNavbar() {
     };
 
     const drawer = (
-        <Box onClick={handleDrawerClose} sx={{ width: 250, background: '#fbf1e6', height: '-webkit-fill-available' }}>
+        <Box sx={{ width: 250, background: '#fbf1e6', height: '-webkit-fill-available' }}>
             <Box sx={{ display: "flex", justifyContent: 'center', padding: '2rem 0' }}>
                 <img src={navBanner.logo} alt='logo' style={{ width: "10rem", cursor: "pointer" }} onClick={handleLogoClick} />
             </Box>
@@ -257,22 +257,42 @@ export default function TopNavbar() {
         // boxShadow: "0px 5px 14px 0px rgba(0, 0, 0, 0.16)",
         <><div style={{ background: "#FFF", zIndex: "1", position: "relative" }}>
             <Container maxWidth="lg">
-                {/* <div className="topContainer">
+                <div className="topContainer">
                     <div className="topLeft">
-                        <bold className="text">Helpline</bold>
-                        <img src={navBanner.icons.phone} />
-                        <bold className='text'>+91 9176564723</bold>
+                        <bold className="text">For Any Queries:</bold>
+                        {/* <img src={navBanner.icons.phone} /> */}
+                        <bold className='text' style={{color:'#F09300'}}>admin@jeevaamirdham.org</bold>
                     </div>
                     <div className="topRight">
                         <div style={{ display: "flex" }} >
 
-
+                        <FormControl sx={{ minWidth: 90, border:'none' }} size="small">
+                        {/* <InputLabel id="demo-select-small-label" sx={{fontSize:'0.9rem'}}>Language</InputLabel> */} 
+                        <Select
+                            labelId="demo-select-small-label"
+                            id="demo-select-small"
+                            value={currentLanguage} 
+                            label="Language"
+                            size='small'
+                            onChange={handleLangChange}
+                            sx={{
+                                "&.MuiOutlinedInput-root": { border: "none" },
+                                "& fieldset": { border: "none" }, // Removes the default outline
+                                "&:hover fieldset": { border: "none" },
+                                "&.Mui-focused fieldset": { border: "none" },
+                                fontSize:'0.9rem'
+                            }}
+                        >
+                            <MenuItem value="en" sx={{fontSize:'0.9rem'}}>English</MenuItem>
+                            <MenuItem value="ta" sx={{fontSize:'0.9rem'}}>தமிழ்</MenuItem>
+                        </Select>
+                    </FormControl>
                         </div>
                     </div>
-                </div> */}
+                </div>
             </Container>
             <div style={{ borderBottom: "1px solid #E6E6E6" }}></div>
-            <Container maxWidth="lg">
+            <Container maxWidth="lg" sx={{zoom:{xs:'80%', sm:'100%', md:'100%', lg:'100%'}}}>
                 <div className='navContainer'>
                     <div className="mobileMenu">
                         <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerToggle}>
@@ -305,32 +325,17 @@ export default function TopNavbar() {
                         </StyledTabs>
                         <div sx={{ p: 2 }} />
                     </div>
-                    <FormControl sx={{ m: 1, minWidth: 90, border:'none' }} size="small">
-                        {/* <InputLabel id="demo-select-small-label" sx={{fontSize:'0.9rem'}}>Language</InputLabel> */}
-                        <Select
-                            labelId="demo-select-small-label"
-                            id="demo-select-small"
-                            value={currentLanguage} 
-                            label="Language"
-                            onChange={handleLangChange}
-                            sx={{
-                                "&.MuiOutlinedInput-root": { border: "none" },
-                                "& fieldset": { border: "none" }, // Removes the default outline
-                                "&:hover fieldset": { border: "none" },
-                                "&.Mui-focused fieldset": { border: "none" },
-                                fontSize:'0.9rem'
-                            }}
-                        >
-                            <MenuItem value="en" sx={{fontSize:'0.9rem'}}>English</MenuItem>
-                            <MenuItem value="ta" sx={{fontSize:'0.9rem'}}>Tamil</MenuItem>
-                        </Select>
-                    </FormControl>
+
                     <div style={{ display: "flex", gap: "0rem" }}>
                         {username ? (
                             <>
-                                <Button disableRipple onClick={handleMenuOpen} variant="text" sx={{ textTransform: "none", fontWeight: 600, fontSize: "0.75rem", color: "#444" }} endIcon={<KeyboardArrowDownIcon />}>
+                                {/* <Button disableRipple onClick={handleMenuOpen} variant="text" sx={{ textTransform: "none", fontWeight: 600, fontSize: "0.75rem", color: "#444" }} endIcon={<KeyboardArrowDownIcon />}>
                                     {username.charAt(0).toUpperCase() + username.slice(1)}
-                                </Button>
+                                </Button> */}
+                                <Box onClick={handleMenuOpen} sx={{display:'flex', alignItems:'center', gap:'0.3rem', cursor:'pointer'}}>
+                                <Avatar  sx={{ background:'#ff5722', width:'2rem', height:'2rem' }}>{username.toUpperCase().slice(0, 1)}</Avatar>
+                                <KeyboardArrowDownIcon />
+                                </Box>
                                 <Menu
                                     anchorEl={anchorEl}
                                     open={Boolean(anchorEl)}

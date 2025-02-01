@@ -1,10 +1,12 @@
 import { Card, CardContent, TextField, Button, Typography, Box } from '@mui/material';
 import React, { useState } from 'react';
 import axios from 'axios';
+import { showSnackbar } from '../../redux/SnackBarSlice';
+import { useDispatch } from 'react-redux'
 
 export default function DeleteAccount({userId}) {
     const [input, setInput] = useState('');
-
+    const  dispatch = useDispatch();
     const handleInputChange = (event) => {
         setInput(event.target.value);
     };
@@ -15,7 +17,9 @@ export default function DeleteAccount({userId}) {
             const response = await axios.post(process.env.REACT_APP_URL + "/deactivate_user", { userId });
             if (response.status === 200) {
                 
-                alert('Account deleted successfully.');
+                // alert('Account deleted successfully.');
+                dispatch(showSnackbar({ message: "Account deleted successfully", severity: "success" }));
+
                 localStorage.removeItem('id');
         localStorage.removeItem('username');
         localStorage.removeItem('email');
@@ -23,16 +27,22 @@ export default function DeleteAccount({userId}) {
         window.location.href = '/home'
                 
             } else {
-                alert('Failed to delete account. Please try again later.');
+                // alert('Failed to delete account. Please try again later.');
+                dispatch(showSnackbar({ message: "Failed to delete account. Please try again later.", severity: "error" }));
+
+
             }
         } else {
-            alert('Please type "CONFIRM" correctly to proceed.');
+            // alert('Please type "CONFIRM" correctly to proceed.');
+            dispatch(showSnackbar({ message: `Please type "CONFIRM" correctly to proceed.`, severity: "warning" }));
           
         }
     };
 
     const handleCancel = () => {
-        alert('Account deletion cancelled.');
+        // alert('Account deletion cancelled.');
+        dispatch(showSnackbar({ message: "Account deletion cancelled.", severity: "info" }));
+        
     };
 
     return (

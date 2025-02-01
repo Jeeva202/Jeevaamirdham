@@ -10,7 +10,7 @@ const CartModal = ({ open }) => {
     const booksData = useSelector(state => state.cart.booksData); // Books data from Redux
     const userId = useSelector(state => state.cart.userId); // Assuming userId is set in the store
     const navigate = useNavigate();
-    const totalAmount = cartDetails.reduce((total, item) => {
+    const totalAmount = cartDetails?.reduce((total, item) => {
         const book = booksData.find((book) => book.id === item.book_id);
         return book ? total + item.quantity * book.offPrice : total;
     }, 0);
@@ -18,7 +18,6 @@ const CartModal = ({ open }) => {
         dispatch(closeCart());
         navigate("/checkout", { state: { totalAmount } });
       };
-    console.log(totalAmount, "from carModal");
     
     // Handle removing an item from the cart
     const handleRemoveFromCart = async (bookId) => {
@@ -62,10 +61,10 @@ const CartModal = ({ open }) => {
 
                     {/* Cart details rendering */}
                     <div style={{ flex: 1, overflowY: "auto" }}>
-                        {cartDetails.length === 0 ? (
+                        {cartDetails?.length === 0 ? (
                             <p>Your cart is empty</p>
                         ) : (
-                            cartDetails.map((item) => {
+                            cartDetails?.map((item) => {
                                 // Match book_id from cartDetails to booksData
                                 const book = booksData.find((book) => book.id === item.book_id);
                                 if (!book) return null; // Skip if book not found
@@ -94,7 +93,7 @@ const CartModal = ({ open }) => {
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem" }}>
                             <p style={{ fontSize: "0.9rem", margin: "0" }}>Subtotal:</p>
                             <p style={{ fontSize: "0.9rem", margin: "0" }}>
-                                Rs. {cartDetails.reduce((total, item) => {
+                                Rs. {cartDetails?.reduce((total, item) => {
                                     const book = booksData.find((book) => book.id === item.book_id);
                                     return book ? total + item.quantity * book.offPrice : total;
                                 }, 0)}

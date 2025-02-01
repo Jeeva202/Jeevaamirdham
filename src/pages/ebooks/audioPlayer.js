@@ -7,6 +7,10 @@ import { ebooks } from '../../constants/screenData';
 import Playstore from '../../components/playstore/playstore';
 import NewsLetter from '../../components/newsLetter/newsletter';
 import KPI from '../../components/kpi/kpi';
+import { showSnackbar } from '../../redux/SnackBarSlice';
+import { useSelector, useDispatch } from 'react-redux';
+
+
 const no_image = "/assets/images/no_image_available.jpeg"
 const plans = [
     {
@@ -89,7 +93,7 @@ export default function AudioPlayer({
     const [expandedState, setExpandedState] = useState(null); // Track expanded state for non-basic plans
     const [currentAudioIndex, setCurrentAudioIndex] = useState(null); // Current audio index for autoplay
     const [isPlayingAll, setIsPlayingAll] = useState(false); // Track if "Play All" is activated
-
+    const dispatch = useDispatch();
 
     const handleChapterClick = (index) => {
         if (plan === 'basic' && index !== 0) {
@@ -135,7 +139,9 @@ export default function AudioPlayer({
     const handleUpgradeClick = (planName) => {
         if (planName === 'basic') {
             // Handle basic plan logic (if any)
-            alert('You are already on the basic plan!');
+            // alert('You are already on the basic plan!');
+      dispatch(showSnackbar({ message: "You are already on the basic plan!", severity: "info" }));
+
         } else {
             // Call the payNow function for elite and premium plans
             payNow(planName);

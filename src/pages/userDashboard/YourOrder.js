@@ -165,7 +165,7 @@ const YourOrder = () => {
                                 </Box>
                                 <Box>
                                     <Typography variant="caption" color="textSecondary">
-                                        Order ID
+                                        Transaction ID
                                     </Typography>
                                     <Tooltip title="View Order Details">
                                         <Typography
@@ -177,9 +177,11 @@ const YourOrder = () => {
                                         </Typography>
                                     </Tooltip>
                                 </Box>
-                                <Box>
-                                <Button variant="outlined" size="small" sx={{textTransform:"none", background:'#fff'}}><a target="_blank" href="https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx" style={{color:'#000'}}>Track Order</a></Button>
-                                </Box>
+                                {/* <Box>
+                                <Button variant="outlined" size="small" sx={{textTransform:"none", background:'#fff'}}>
+                                    <a target="_blank" href="https://www.indiapost.gov.in/_layouts/15/dop.portal.tracking/trackconsignment.aspx" style={{color:'#000'}}>Track Order</a>
+                                    </Button>
+                                </Box> */}
                             </Box>
                             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                                 <Typography

@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { openLogin } from '../../redux/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { showSnackbar } from '../../redux/SnackBarSlice';
 
 export default function UpgradeNow({ open, planName, handleClose, handleOpen, plans }) {
     const [upgradePlans, setUpgradePlans] = useState([]);
@@ -70,14 +71,19 @@ export default function UpgradeNow({ open, planName, handleClose, handleOpen, pl
                             if (res.ok) {
                                 const data = await res.json();
                                 console.log("Payment data saved successfully:", data);
-                                alert("Payment successful and subscription activated!");
+                                // alert("Payment successful and subscription activated!");
+                                dispatch(showSnackbar({ message: "Payment successful and subscription activated!", severity: "success" }));
+
+                                
                             } else {
                                 console.error("Failed to update backend");
-                                alert("Payment was successful but could not update subscription. Please contact support.");
+                                // alert("Payment was successful but could not update subscription. Please contact support.");
+                                dispatch(showSnackbar({ message: "Payment was successful but could not update subscription. Please contact support.", severity: "error" }));
                             }
                         } catch (error) {
                             console.error("Error while updating backend:", error);
-                            alert("An error occurred. Please contact support.");
+                            // alert("An error occurred. Please contact support.");
+                            dispatch(showSnackbar({ message: "An error occurred. Please contact support.", severity: "error" }));
                         }
                     },
                     prefill: {
@@ -95,12 +101,14 @@ export default function UpgradeNow({ open, planName, handleClose, handleOpen, pl
                 razorpay.open();
             } else {
                 console.error('Error fetching plan price');
-                alert('Error fetching plan price');
+                // alert('Error fetching plan price');
+                dispatch(showSnackbar({ message: "Error fetching plan price", severity: "error" }));
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred while fetching plan details');
-        }
+            // alert('An error occurred while fetching plan details');
+            dispatch(showSnackbar({ message: "An error occurred while fetching plan details", severity: "error" }));
+        } 
     };
 
     const payNow = (plan) => {

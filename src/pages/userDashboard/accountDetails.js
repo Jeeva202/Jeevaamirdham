@@ -56,9 +56,14 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
       .post(process.env.REACT_APP_URL + "/updateUserDetails", { ...localFormData, userId }) // Replace with actual API URL
       .then((response) => {
         console.log("User details updated:", response.data);
+        // setFormData(localFormData); // Update parent state with the new values
+        // window.location.reload(); // Reload the page to reflect the changes
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          ...localFormData, // Merge updated fields
+        }));
         setIsEditing(false); // Disable editing after update
-        setFormData(localFormData); // Update parent state with the new values
-        window.location.reload(); // Reload the page to reflect the changes
+
       })
       .catch((error) => {
         console.error("Error updating user details:", error);

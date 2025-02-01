@@ -14,6 +14,7 @@ import ArrowForwardIosRoundedIcon from '@mui/icons-material/ArrowForwardIosRound
 import { useSelector, useDispatch } from "react-redux"
 import { selectUserId, setUserId } from "../../redux/cartSlice"
 import VideoPlayerCard from "../audio_video/videoPlayerCard"
+import { showSnackbar } from "../../redux/SnackBarSlice"
 export default function HomePage({selectedYear, setSelectedYear,allYears, setAllYears, setSelectedMonth}) {
     const carouselImages = [
         "/assets/images/Banner-1.png",
@@ -43,7 +44,7 @@ export default function HomePage({selectedYear, setSelectedYear,allYears, setAll
     };
 
     useEffect(() => {
-        const timer = setTimeout(handleNextStep, 15000);
+        const timer = setTimeout(handleNextStep, 30000);
         return () => clearTimeout(timer);
     }, [step]);
     return (
