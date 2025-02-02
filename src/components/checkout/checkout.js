@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Container, Typography } from '@mui/material';
+import { Box, Button, Container, Typography } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom"
-import { selectIsUserLoggedIn, setUserLoggedIn, openLogin, selectCartDetails, selectUserId, setCartDetails } from '../../redux/cartSlice';
+import { selectIsUserLoggedIn, setUserLoggedIn, openLogin, selectBooksData, selectCartDetails, selectUserId, setCartDetails } from '../../redux/cartSlice';
 import LoginModal from '../../pages/login/NewLogin';
 import axios from 'axios';
 import { showSnackbar } from '../../redux/SnackBarSlice';
@@ -20,8 +20,11 @@ export default function Checkout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cartDetails = useSelector(selectCartDetails)
-  // const handleOpen = () => setOpenModal(true);
-  // const handleClose = () => setOpenModal(false);
+  let booksDataFromStore = useSelector(selectBooksData)
+  const [rows, setRows] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const handleLoginOpen = () => setShowLoginModal(true);
   const handleLoginClose = () => setShowLoginModal(false)
 
@@ -109,7 +112,7 @@ export default function Checkout() {
 
               // window.location.reload();
               navigate('/dashboard?tab=2');
-        dispatch(setCartDetails(cartData));
+              dispatch(setCartDetails(cartData));
 
 
             } else {
@@ -198,6 +201,63 @@ export default function Checkout() {
     // console.log('Order submitted', userDetails, totalAmount);
     // Add your logic to handle the order placement (e.g., API call)
   };
+
+  const fetchBookDetails = async (cartData) => {
+    try {
+      const bookIds = cartData.map(item => item.book_id);
+      const bookDetails = await Promise.all(bookIds.map(async (bookId) => {
+        const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/book-info?id=${bookId}`);
+        return response.data;
+      }));
+
+      const updatedRows = cartData.map((item) => {
+        const book = bookDetails.find(book => book.id === item.book_id);
+        return {
+          name: book ? book.title : 'Unknown Title',
+          price: book ? parseFloat(book.offPrice) : 0,
+          quantity: item.quantity,
+          subtotal: (book ? parseFloat(book.offPrice) : 0) * item.quantity,
+          id: item.book_id,
+        };
+      });
+      setRows(updatedRows);
+    } catch (error) {
+      console.error("Error fetching book details:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        if (isUserLoggedIn) {
+          const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
+          const cartData = response.data.cart_details;
+          await fetchBookDetails(cartData);
+        } else {
+          const cartFromStore = cartDetails.map(item => {
+            const book = booksDataFromStore.find(b => b.id === item.book_id);
+            return {
+              id: book.id,
+              name: book.title,
+              price: parseFloat(book.offPrice),
+              quantity: item.quantity,
+              subtotal: parseFloat(book.offPrice) * item.quantity
+            };
+          });
+          setRows(cartFromStore);
+        }
+      } catch (err) {
+        setError("Failed to load cart items. Please try again.");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCart();
+  }, [isUserLoggedIn, userId]);
 
   return (
     <Container maxWidth="lg">
@@ -378,8 +438,23 @@ export default function Checkout() {
             <p style={{ fontSize: '1.5rem', margin: '10px 0' }}>Your Order</p>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <p>Product</p>
-              <p>Subtotal</p>
+              <p>Price</p>
             </div>
+            {rows.map((row, index) => (
+              <Box key={index} sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, mb: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Typography variant="body1" fontWeight={600} fontFamily={'Sora'}>
+                    {row.name} × {row.quantity}
+                  </Typography>
+                  <Typography variant="body1" fontWeight={600} fontFamily={'Sora'}>
+                    ₹ {row.subtotal.toFixed(2)}
+                  </Typography>
+                </Box>
+                <Typography variant="body2" color="text.secondary" fontFamily={'Sora'} textAlign={'right'}>
+                  Each ₹{row.price}
+                </Typography>
+              </Box>
+            ))}
             <hr color="#d5d5d5" style={{ margin: '0.8rem 0' }} />
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <p>Subtotal</p>

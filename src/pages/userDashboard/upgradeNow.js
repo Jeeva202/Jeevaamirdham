@@ -73,7 +73,7 @@ export default function UpgradeNow({ open, planName, handleClose, handleOpen, pl
                                 console.log("Payment data saved successfully:", data);
                                 // alert("Payment successful and subscription activated!");
                                 dispatch(showSnackbar({ message: "Payment successful and subscription activated!", severity: "success" }));
-
+                                handleClose();
                                 
                             } else {
                                 console.error("Failed to update backend");
