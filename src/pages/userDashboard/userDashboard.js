@@ -60,6 +60,8 @@ export default function UserDashboard() {
     const [userName, setUserName] = React.useState(localStorage.getItem('username') || localStorage.getItem('email'));
     const [formData, setFormData] = useState({});  // Store editable form data
     const userId = useSelector(selectUserId) || localStorage.getItem("id");  // Get the user ID from Redux
+    const [missingFields, setMissingFields] = useState(false);
+
     // Fetch user data on component mount
     const { data: userData, isLoading:userDataLoading, isError, error } = useQuery(
       ["userDetails", userId],  // Query key (this is how react-query knows about the query)
@@ -106,9 +108,27 @@ export default function UserDashboard() {
         }
     }, []);
 
+    const validateFields = (data) => {
+        console.log("Validating formData:", data);
+    
+        if (!data || Object.keys(data).length === 0) return true; // If no data, assume fields are missing
+    
+        const requiredFields = ["firstName", "lastName", "gender", "dob", "phone", "email", "doorNo", "streetName", "city", "state", "country", "zipCode"];
+        
+        return !requiredFields.every((field) => !!data[field]); // Returns `true` if any field is missing
+    };
+    
+    // Validate fields when the component first renders and when `formData` changes
+    useEffect(() => {
+        console.log("formData updated:", formData); // Debugging output
+        setMissingFields(validateFields(formData)); 
+    }, [formData]);
+    
+
     const tabs = [
-        { label: "Dashboard", content: <Dashboard /> },
-        { label: "Account Details", content: <AccountDetails formData={formData[0]} setFormData={setFormData} userData={userData} isLoading={userDataLoading} userId={userId} /> },
+        { label: "Dashboard", content: <Dashboard showAlert={missingFields} /> },
+        { label: "Account Details", content: <AccountDetails formData={formData[0]} 
+            setFormData={setFormData} userData={userData} isLoading={userDataLoading} userId={userId} setMissingFields={setMissingFields}  /> },
         // { label: "Magazine Subscription", content: <MagazineSubsricption /> },
         { label: "Your Order", content: <YourOrder /> },
         // { label: "E-Magazine last read", content: <LastRead /> },

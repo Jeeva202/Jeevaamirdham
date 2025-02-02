@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid, TextField, Button, Box, Typography } from "@mui/material";
 import axios from "axios";
 import Gif_Loader from "../../components/loader/Gif_Loader";
@@ -6,15 +6,31 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import { showSnackbar } from "../../redux/SnackBarSlice";
+import { useDispatch } from "react-redux";
 
-export default function AccountDetails({ formData, setFormData, isLoading, userId }) {
+export default function AccountDetails({ formData, setFormData, isLoading, userId, setMissingFields }) {
   const [isEditing, setIsEditing] = useState(false); // Track if the user is editing
   const [localFormData, setLocalFormData] = useState(formData || {}); // Local state for editing
+  const dispatch = useDispatch();
 
   // Sync local state when formData changes externally
   React.useEffect(() => {
     setLocalFormData(formData);
   }, [formData]);
+
+  useEffect(() => {
+    if (!formData || Object.keys(formData).length === 0) {
+        setMissingFields(true);
+        return;
+    }
+
+    const requiredFields = ["firstName", "lastName", "gender", "dob", "phone", "email", "doorNo", "streetName", "city", "state", "country", "zipCode"];
+    const isValid = requiredFields.every((field) => !!formData[field]);
+
+    setMissingFields(!isValid); // If any field is missing, show alert in Dashboard
+}, [formData, setMissingFields]);
+
 
   // Handle changes in form inputs
   const handleInputChange = (e) => {
@@ -50,7 +66,20 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
   // Handle the "Update" button click
   const handleUpdateClick = () => {
     console.log("handleUpdate", { ...localFormData, userId });
+    const requiredFields = [
+      "firstName", "lastName", "gender", "dob", 
+      "phone", "email", "doorNo", "streetName", 
+      "city", "state", "country", "zipCode"
+    ];
+  
+    // Find any missing fields
+    const missingFields = requiredFields.filter(field => !localFormData[field]?.trim());
+  
+    if (missingFields.length > 0) {
+      dispatch(showSnackbar({ message: "Please fill all required fields", severity: "info" }));
 
+      return;
+    }
     // Send the updated form data to the server to update the DB
     axios
       .post(process.env.REACT_APP_URL + "/updateUserDetails", { ...localFormData, userId }) // Replace with actual API URL
@@ -63,6 +92,7 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
           ...localFormData, // Merge updated fields
         }));
         setIsEditing(false); // Disable editing after update
+      dispatch(showSnackbar({ message: "Account details updated.", severity: "success" }));
 
       })
       .catch((error) => {
