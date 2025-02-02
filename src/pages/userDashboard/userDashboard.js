@@ -4,7 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Container } from '@mui/material';
+import { Container, useMediaQuery, useTheme } from '@mui/material';
 import Dashboard from './dashboard';
 import Avatar from '@mui/material/Avatar';
 import AccountDetails from './accountDetails';
@@ -32,7 +32,10 @@ function TabPanel(props) {
             {...other}
         >
             {value === index && (
-                <Box sx={{ marginLeft: "3rem" }}>
+                <Box sx={{ 
+                    marginLeft: { xs: 0, md: "3rem" },
+                    mt: { xs: 2, md: 0 }
+                }}>
                     <Typography>{children}</Typography>
                 </Box>
             )}
@@ -136,62 +139,119 @@ export default function UserDashboard() {
         { label: "Delete Account", content: <DeleteAccount userId={userId}/> },
     ];
 
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
     return (
         <Container maxWidth="lg">
-            <Box sx={{ flexGrow: 1, display: 'flex', padding: "4rem 0" }}>
-                {/* /* User Info Section */}
-                                <Box width={"18rem"}>
-                                    <div style={{
-                                        textAlign: "center",
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        alignItems: "center",
-                                        background: "white",
-                                        paddingTop: "1rem",
-                                        
-                                    }}>
-                                        <Avatar alt="User Avatar" sx={{ width: "5rem", height: "5rem", backgroundColor: "#DC6803", fontSize: "2rem", fontWeight: "bold" }}>{userName?.slice(0,1).toUpperCase()}</Avatar>
-                                        <h3>{userName}</h3>
-                                    </div>
+            <Box sx={{ 
+                flexGrow: 1, 
+                display: 'flex', 
+                padding: { xs: "2rem 0", md: "4rem 0" },
+                flexDirection: { xs: 'column', md: 'row' }
+            }}>
+                {/* User Info Section */}
+                <Box sx={{
+                    width: { xs: '100%', md: '18rem' },
+                    mb: { xs: 3, md: 0 }
+                }}>
+                    <div style={{
+                        textAlign: "center",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        backgroundColor: isMobile ? "transparent" : "white",
+                        paddingTop: "1rem",
+                    }}>
+                        <Avatar 
+                            alt="User Avatar" 
+                            sx={{ 
+                                width: { xs: "4rem", md: "5rem" }, 
+                                height: { xs: "4rem", md: "5rem" }, 
+                                backgroundColor: "#DC6803", 
+                                fontSize: { xs: "1.5rem", md: "2rem" }, 
+                                fontWeight: "bold" 
+                            }}
+                        >
+                            {userName?.slice(0,1).toUpperCase()}
+                        </Avatar>
+                        <h3>{userName}</h3>
+                    </div>
 
-                                    <Tabs
-                                        orientation="vertical"
-                                        value={value}
-                                        onChange={handleChange}
-                                        aria-label="Vertical tabs example"
-                                        sx={{
-                                            background: "white",
-                                            "& .MuiTabs-indicator": { left: 0, width: "5px" }
-                                        }}
-                                        TabIndicatorProps={{ style: { backgroundColor: "#f09300", width: "5px" } }}
-                                    >
-                                        {tabs.map((tab, index) => (
-                                            <Tab
-                                                key={index}
-                                                label={tab.label}
-                                                sx={{
-                                                    textTransform: "none",
-                                                    textAlign: "left",
-                                                    "&.Mui-selected": {
-                                                        backgroundColor: "#f0930094",
-                                                        color: "#000",
-                                                        fontWeight: "bold",
-                                                    }
-                                                }}
-                                                {...a11yProps(index)}
-                                            />
-                                        ))}
-                                    </Tabs>
-                                    <br/>
-                                    <Button disableElevation variant="contained" color="black" sx={{ float: "center", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", width:"100%" , padding: "1rem 3rem" }}  
-                                    onClick={() => handleLogout()}
-                                    >
-                                        Logout
-                                    </Button>
-                                </Box>
+                    <Tabs
+                        orientation={isMobile ? "horizontal" : "vertical"}
+                        value={value}
+                        onChange={handleChange}
+                        aria-label="Dashboard tabs"
+                        variant={isMobile ? "scrollable" : "standard"}
+                        scrollButtons={isMobile ? "auto" : false}
+                        sx={{
+                            backgroundColor: isMobile ? "transparent" : "white",
+                            
+                            "& .MuiTabs-indicator": { 
+                                [isMobile ? 'bottom' : 'left']: 0,
+                                width: isMobile ? "100%" : "5px",
+                                height: isMobile ? "2px" : "auto"
+                            },
+                            ...(isMobile && {
+                                borderBottom: 1,
+                                borderColor: 'divider',
+                            })
+                        }}
+                        TabIndicatorProps={{ 
+                            style: { 
+                                backgroundColor: "#f09300",
+                                width: isMobile ? "100%" : "5px"
+                            } 
+                        }}
+                    >
+                        {tabs.map((tab, index) => (
+                            <Tab
+                                key={index}
+                                label={tab.label}
+                                sx={{
+                                    textTransform: "none",
+                                    textAlign: "left",
+                                    minWidth: { xs: 'auto', md: '100%' },
+                                    "&.Mui-selected": {
+                                        backgroundColor: isMobile ? "transparent" : "#f0930094",
+                                        color: "#000",
+                                        fontWeight: "bold",
+                                    }
+                                }}
+                                {...a11yProps(index)}
+                            />
+                        ))}
+                    </Tabs>
+                    <Box sx={{ 
+                        mt: 2,
+                        px: { xs: 2, md: 0 }
+                    }}>
+                        <Button 
+                            disableElevation 
+                            variant="contained" 
+                            color="black" 
+                            onClick={() => handleLogout()}
+                            sx={{ 
+                                float: "center", 
+                                textTransform: 'none', 
+                                background: "#f09300", 
+                                fontWeight: "bold", 
+                                borderRadius: "30px", 
+                                width: "100%",
+                                padding: { xs: "0.8rem 2rem", md: "1rem 3rem" }
+                            }}
+                        >
+                            Logout
+                        </Button>
+                    </Box>
+                </Box>
 
-                                {/* Tab Content */}
-                <Box sx={{ flexGrow: 1 }}>
+                {/* Tab Content */}
+                <Box sx={{ 
+                    flexGrow: 1,
+                    mt: { xs: 3, md: 0 }
+                }}>
                     {tabs.map((tab, index) => (
                         <TabPanel key={index} value={value} index={index}>
                             {tab.content}

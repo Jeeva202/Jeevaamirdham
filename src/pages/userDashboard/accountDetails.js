@@ -115,7 +115,7 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
       }}
     >
       <Box display={"flex"} justifyContent={"space-between"}>
-        <Typography variant="h5" sx={{ marginBottom: "1.5rem", fontWeight: "bold" }}>
+        <Typography variant="h5" sx={{ marginBottom: "1.5rem", fontWeight: "bold", fontSize:{xs:"0.9rem", sm:"1rem", md:"1rem"} }}>
           Basic Information
         </Typography>
         {!isEditing && (
@@ -129,6 +129,8 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
               fontWeight: "bold",
               borderRadius: "30px",
               padding: "0.8rem 3rem",
+              padding:{xs:"0.5rem 1rem", sm:"0.8rem 2rem", md:"0.8rem 3rem"},
+              height:{xs:"30px", sm:"40px", md:"60px"}
             }}
             onClick={handleEditClick}
           >

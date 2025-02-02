@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Container, Typography } from '@mui/material';
+import { 
+    Box, Button, Container, Typography, TextField, Grid, 
+    Divider, Paper 
+} from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom"
@@ -7,6 +10,7 @@ import { selectIsUserLoggedIn, setUserLoggedIn, openLogin, selectBooksData, sele
 import LoginModal from '../../pages/login/NewLogin';
 import axios from 'axios';
 import { showSnackbar } from '../../redux/SnackBarSlice';
+
 export default function Checkout() {
   // Get totalAmount passed via location
   // const [openModal, setOpenModal] = useState(false);
@@ -261,261 +265,237 @@ export default function Checkout() {
 
   return (
     <Container maxWidth="lg">
-      <div>
-        <div
-          style={{
-            fontSize: '2rem',
-            fontWeight: 'bold',
-            textAlign: 'center',
-            padding: '2rem 0',
-          }}
-        >
-          Checkout
-        </div>
+        <Typography variant="h4" sx={{ textAlign: 'center', py: 4, fontWeight: 'bold' }}>
+            Checkout
+        </Typography>
 
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-            gap: '5rem',
-          }}
-        >
-          {/* Billing Details Section */}
-          <div style={{ marginBottom: '3rem', width: '65%' }}>
-            <div
-              style={{
-                fontSize: '1.5rem',
-                textAlign: 'left',
-                paddingTop: '0',
-                paddingBottom: '2rem',
-              }}
-            >
-              Billing details
-            </div>
-
-            <label>Firstname <span style={requiredStyle}>*</span></label>
-            <input
-              type="text"
-              name="firstname"
-              value={userDetails.firstname}
-              onChange={handleInputChange}
-              style={inputStyle}
-              required
-            />
-
-            <label>Lastname <span style={requiredStyle}>*</span></label>
-            <input
-              type="text"
-              name="lastname"
-              value={userDetails.lastname}
-              onChange={handleInputChange}
-              style={inputStyle}
-              required
-            />
-
-            <label>Company name (Optional)</label>
-            <input
-              type="text"
-              name="company"
-              value={userDetails.company}
-              onChange={handleInputChange}
-              style={inputStyle}
-            />
-
-            <label>Country <span style={requiredStyle}>*</span></label>
-            <input
-              type="text"
-              name="country"
-              value={userDetails.country}
-              onChange={handleInputChange}
-              style={inputStyle}
-              required
-            />
-
-            <label>State <span style={requiredStyle}>*</span></label>
-            <input
-              type="text"
-              name="state"
-              value={userDetails.state}
-              onChange={handleInputChange}
-              style={inputStyle}
-              required
-            />
-
-            <label>Street address <span style={requiredStyle}>*</span></label>
-            <input
-              type="text"
-              name="street"
-              value={userDetails.street}
-              onChange={handleInputChange}
-              placeholder="House number and street name"
-              style={inputStyle}
-              required
-            />
-            <input
-              type="text"
-              name="street2"
-              value={userDetails.street2}
-              onChange={handleInputChange}
-              placeholder="Apartment, suite, unit, etc (optional)"
-              style={inputStyle}
-            />
-
-            <label>Town/City <span style={requiredStyle}>*</span></label>
-            <input
-              type="text"
-              name="city"
-              value={userDetails.city}
-              onChange={handleInputChange}
-              style={inputStyle}
-              required
-            />
-
-            <label>Zipcode/Pincode <span style={requiredStyle}>*</span></label>
-            <input
-              type="text"
-              name="zipcode"
-              value={userDetails.zipcode}
-              onChange={handleInputChange}
-              style={inputStyle}
-              required
-            />
-
-            <label>Phone <span style={requiredStyle}>*</span></label>
-            <input
-              type="tel"
-              name="phone"
-              value={userDetails.phone}
-              onChange={handleInputChange}
-              style={inputStyle}
-              required
-            />
-
-            <label>Email <span style={requiredStyle}>*</span></label>
-            <input
-              type="email"
-              name="email"
-              value={userDetails.email}
-              onChange={handleInputChange}
-              style={inputStyle}
-              required
-            />
-
-            {/* Additional Information */}
-            <div
-              style={{
-                fontSize: '1.5rem',
-                textAlign: 'left',
-                paddingTop: '2rem',
-                paddingBottom: '2rem',
-              }}
-            >
-              Additional information
-            </div>
-            <div style={{ fontSize: '1rem', textAlign: 'left' }}>
-              Order notes (optional)
-            </div>
-            <textarea
-              name="notes"
-              value={userDetails.notes}
-              onChange={handleInputChange}
-              style={textareaStyle}
-              placeholder="Any special notes for delivery"
-            />
-          </div>
-
-          {/* Order Summary Section */}
-          <div
-            style={{
-              background: '#fff',
-              padding: '1.5rem',
-              border: '1px solid #e6e6e6',
-              borderRadius: '5px',
-              width: '30%',
-            }}
-          >
-            <p style={{ fontSize: '1.5rem', margin: '10px 0' }}>Your Order</p>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <p>Product</p>
-              <p>Price</p>
-            </div>
-            {rows.map((row, index) => (
-              <Box key={index} sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, mb: 1 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Typography variant="body1" fontWeight={600} fontFamily={'Sora'}>
-                    {row.name} × {row.quantity}
-                  </Typography>
-                  <Typography variant="body1" fontWeight={600} fontFamily={'Sora'}>
-                    ₹ {row.subtotal.toFixed(2)}
-                  </Typography>
-                </Box>
-                <Typography variant="body2" color="text.secondary" fontFamily={'Sora'} textAlign={'right'}>
-                  Each ₹{row.price}
+        <Box sx={{ display: 'flex', gap: 4, marginBottom: 4, flexDirection:{xs: 'column', md:'column', lg:"row"}}}>
+            {/* Billing Details Section */}
+            <Paper sx={{ flex: 2, p: 3, borderRadius: 2 }}>
+                <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
+                    Billing details
                 </Typography>
-              </Box>
-            ))}
-            <hr color="#d5d5d5" style={{ margin: '0.8rem 0' }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <p>Subtotal</p>
-              <p>₹ {totalAmount}</p>
-            </div>
-            <hr color="#d5d5d5" style={{ margin: '0.8rem 0' }} />
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <p>Total</p>
-              <p>₹ {totalAmount}</p>
-            </div>
-            <br />
-            <div style={{ margin: '1rem 0', fontSize: '0.8rem' }}>
-              Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.
-            </div>
 
-            <Button
-              variant="text"
-              sx={{
-                borderRadius: '40px',
-                width: '100%',
-                background: '#F09300',
-                color: 'White',
-                fontSize: '0.8rem',
-                fontWeight: 'bold',
-                textTransform: 'none',
-                marginTop: '0.5rem',
-                padding: '0.8rem 2rem',
-              }}
-              onClick={handleSubmit}
-            >
-              Place Order
-            </Button>
-          </div>
-        </div>
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="First name"
+                            name="firstname"
+                            value={userDetails.firstname}
+                            onChange={handleInputChange}
+                            required
+                            size="small"
+                            sx={{ mb: 2 }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="Last name"
+                            name="lastname"
+                            value={userDetails.lastname}
+                            onChange={handleInputChange}
+                            required
+                            size="small"
+                            sx={{ mb: 2 }}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="Company name (optional)"
+                            name="company"
+                            value={userDetails.company}
+                            onChange={handleInputChange}
+                            size="small"
+                            sx={{ mb: 2 }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="Country"
+                            name="country"
+                            value={userDetails.country}
+                            onChange={handleInputChange}
+                            required
+                            size="small"
+                            sx={{ mb: 2 }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="State"
+                            name="state"
+                            value={userDetails.state}
+                            onChange={handleInputChange}
+                            required
+                            size="small"
+                            sx={{ mb: 2 }}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="Street address"
+                            name="street"
+                            value={userDetails.street}
+                            onChange={handleInputChange}
+                            required
+                            placeholder="House number and street name"
+                            size="small"
+                            sx={{ mb: 2 }}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <TextField
+                            fullWidth
+                            label="Apartment, suite, etc. (optional)"
+                            name="street2"
+                            value={userDetails.street2}
+                            onChange={handleInputChange}
+                            size="small"
+                            sx={{ mb: 2 }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="Town/City"
+                            name="city"
+                            value={userDetails.city}
+                            onChange={handleInputChange}
+                            required
+                            size="small"
+                            sx={{ mb: 2 }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="Zipcode/Pincode"
+                            name="zipcode"
+                            value={userDetails.zipcode}
+                            onChange={handleInputChange}
+                            required
+                            size="small"
+                            sx={{ mb: 2 }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="Phone"
+                            name="phone"
+                            value={userDetails.phone}
+                            onChange={handleInputChange}
+                            required
+                            size="small"
+                            sx={{ mb: 2 }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            fullWidth
+                            label="Email"
+                            type="email"
+                            name="email"
+                            value={userDetails.email}
+                            onChange={handleInputChange}
+                            required
+                            size="small"
+                            sx={{ mb: 2 }}
+                        />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="h6" sx={{ mt: 2, mb: 2 }}>
+                            Additional information
+                        </Typography>
+                        <TextField
+                            fullWidth
+                            label="Order notes (optional)"
+                            name="notes"
+                            value={userDetails.notes}
+                            onChange={handleInputChange}
+                            multiline
+                            rows={4}
+                            placeholder="Notes about your order, e.g. special delivery instructions"
+                            sx={{ mb: 2 }}
+                        />
+                    </Grid>
+                </Grid>
+            </Paper>
+
+            {/* Order Summary Section */}
+            <Paper sx={{ flex: 1, p: 3, borderRadius: 2, alignSelf: 'flex-start' }}>
+                <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
+                    Your Order
+                </Typography>
+                
+                <Box sx={{ mb: 2 }}>
+                    <Grid container sx={{ fontWeight: 600, mb: 1 }}>
+                        <Grid item xs={6}>Product</Grid>
+                        <Grid item xs={6} sx={{ textAlign: 'right' }}>Price</Grid>
+                    </Grid>
+                    <Divider />
+                    
+                    {rows.map((row, index) => (
+                        <Box key={index} sx={{ my: 2 }}>
+                            <Grid container sx={{ mb: 0.5 }}>
+                                <Grid item xs={8}>
+                                    <Typography variant="body2">
+                                        {row.name} × {row.quantity}
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={4} sx={{ textAlign: 'right' }}>
+                                    <Typography variant="body2" fontWeight={600}>
+                                        ₹{row.subtotal.toFixed(2)}
+                                    </Typography>
+                                </Grid>
+                            </Grid>
+                            <Typography variant="caption" color="text.secondary" display="block" textAlign="right">
+                                Each ₹{row.price}
+                            </Typography>
+                        </Box>
+                    ))}
+                    
+                    <Divider />
+                    <Grid container sx={{ my: 2 }}>
+                        <Grid item xs={6}>Subtotal</Grid>
+                        <Grid item xs={6} sx={{ textAlign: 'right' }}>₹{totalAmount}</Grid>
+                    </Grid>
+                    <Divider />
+                    <Grid container sx={{ my: 2, fontWeight: 600 }}>
+                        <Grid item xs={6}>Total</Grid>
+                        <Grid item xs={6} sx={{ textAlign: 'right' }}>₹{totalAmount}</Grid>
+                    </Grid>
+                </Box>
+
+                <Typography variant="caption" display="block" sx={{ my: 2 }}>
+                    Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.
+                </Typography>
+
+                <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={handleSubmit}
+                    sx={{
+                        mt: 2,
+                        bgcolor: '#F09300',
+                        borderRadius: '40px',
+                        textTransform: 'none',
+                        '&:hover': {
+                            bgcolor: '#DC6803'
+                        }
+                    }}
+                >
+                    Place Order
+                </Button>
+            </Paper>
+        </Box>
         <LoginModal open={showLoginModal} onClose={handleLoginClose} />
-      </div>
     </Container>
   );
 }
-
-// Input style for consistency
-const inputStyle = {
-  borderRadius: '50px',
-  padding: '1rem 2rem',
-  width: '100%',
-  border: '1px solid #E6E6E6',
-  marginTop: '1rem',
-  marginBottom: '1.5rem',
-};
-
-// Textarea style for consistency
-const textareaStyle = {
-  borderRadius: '50px',
-  padding: '1rem 2rem',
-  width: '100%',
-  border: '1px solid #E6E6E6',
-  marginTop: '1rem',
-};
-
-// Style for the red asterisk (*) for required fields
-const requiredStyle = {
-  color: 'red',
-  marginLeft: '4px',
-};
