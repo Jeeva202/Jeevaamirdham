@@ -103,12 +103,14 @@ export default function Checkout() {
               const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
               const cartData = response.data.cart_details;
               setCartDetails(cartData)
-              console.log("Payment data saved successfully:", data);
+              console.log("Payment data saved successfully:", cartData);
               // alert("Payment successful.");
               dispatch(showSnackbar({ message: "Payment successful.", severity: "success" }));
 
-              window.location.reload();
+              // window.location.reload();
               navigate('/dashboard?tab=2');
+        dispatch(setCartDetails(cartData));
+
 
             } else {
               console.error("Failed to update backend");
@@ -179,7 +181,7 @@ export default function Checkout() {
         const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
         const cartData = response.data.cart_details; // Assuming cart_details is the array of books in the cart
 
-        setCartDetails(cartData)
+        dispatch(setCartDetails(cartData))
       } catch (error) {
         console.error("Error fetching cart data:", error);
       }
