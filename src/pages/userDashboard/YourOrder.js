@@ -121,7 +121,7 @@ const YourOrder = () => {
 
     return (
         <Box sx={{ maxWidth: 900 }}>
-            <Card variant="outlined" sx={{ borderRadius: "5px", overflow: "hidden" }}>
+            <Card variant="outlined" sx={{ borderRadius: "5px", overflowY: "scroll", maxHeight: "60vh" }}>
                 <h4 style={{ fontSize: "1rem", margin: "0", padding: "1rem" }}>
                     Your Orders
                 </h4>
