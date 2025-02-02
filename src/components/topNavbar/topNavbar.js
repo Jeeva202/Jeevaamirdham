@@ -292,7 +292,7 @@ export default function TopNavbar() {
                 </div>
             </Container>
             <div style={{ borderBottom: "1px solid #E6E6E6" }}></div>
-            <Container maxWidth="lg" sx={{zoom:{xs:'80%', sm:'100%', md:'100%', lg:'100%'}}}>
+            <Container maxWidth="lg" sx={{zoom:{xs:'80%', sm:'80%', md:'90%', lg:'100%'}}}>
                 <div className='navContainer'>
                     <div className="mobileMenu">
                         <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerToggle}>

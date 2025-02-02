@@ -121,7 +121,7 @@ const YourOrder = () => {
 
     return (
         <Box sx={{ maxWidth: 900 }}>
-            <Card variant="outlined" sx={{ borderRadius: "5px", overflowY: "scroll", maxHeight: "60vh" }}>
+            <Card variant="outlined" sx={{ borderRadius: "5px", overflowY: "scroll", maxHeight:{sm: "90vh", xs: "90vh", md: "80vh"} }}>
                 <h4 style={{ fontSize: "1rem", margin: "0", padding: "1rem" }}>
                     Your Orders
                 </h4>
@@ -139,6 +139,7 @@ const YourOrder = () => {
                                     backgroundColor: "#a8dfff",
                                     borderRadius: "8px",
                                     marginBottom: "1rem",
+                                    flexWrap: "wrap",
                                 }}
                             >
                                 <Box sx={{ display: "flex", gap: "2rem" }}>

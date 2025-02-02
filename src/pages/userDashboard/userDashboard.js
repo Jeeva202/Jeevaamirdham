@@ -239,7 +239,7 @@ export default function UserDashboard() {
                                 fontWeight: "bold", 
                                 borderRadius: "30px", 
                                 width: "100%",
-                                padding: { xs: "0.8rem 2rem", md: "1rem 3rem" }
+                                padding: { xs: "0.4rem 2rem", md: "1rem 3rem" }
                             }}
                         >
                             Logout

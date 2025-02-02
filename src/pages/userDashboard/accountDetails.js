@@ -114,8 +114,8 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
         borderRadius: "8px",
       }}
     >
-      <Box display={"flex"} justifyContent={"space-between"}>
-        <Typography variant="h5" sx={{ marginBottom: "1.5rem", fontWeight: "bold", fontSize:{xs:"0.9rem", sm:"1rem", md:"1rem"} }}>
+      <Box display={"flex"} justifyContent={"space-between"} marginBottom={"1.5rem"} alignItems={"center"}>
+        <Typography variant="h5" sx={{ fontWeight: "bold", fontSize:{xs:"0.9rem", sm:"1rem", md:"1rem"} }}>
           Basic Information
         </Typography>
         {!isEditing && (
@@ -127,7 +127,7 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
               textTransform: "none",
               background: "#f09300",
               fontWeight: "bold",
-              borderRadius: "30px",
+              borderRadius: {xs:'10px', sm:'10px', md:'30px'},
               padding: "0.8rem 3rem",
               padding:{xs:"0.5rem 1rem", sm:"0.8rem 2rem", md:"0.8rem 3rem"},
               height:{xs:"30px", sm:"40px", md:"60px"}
@@ -149,6 +149,7 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
             fullWidth
             placeholder="Enter First Name"
             variant="outlined"
+            size="small"
             value={localFormData?.firstName || ""}
             onChange={handleInputChange}
             name="firstName"
@@ -165,6 +166,7 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
             fullWidth
             placeholder="Enter Last Name"
             variant="outlined"
+            size="small"
             value={localFormData?.lastName || ""}
             onChange={handleInputChange}
             name="lastName"
@@ -181,6 +183,7 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
             fullWidth
             placeholder="Enter Gender"
             variant="outlined"
+            size="small"
             value={localFormData?.gender || ""}
             onChange={handleInputChange}
             name="gender"
@@ -193,11 +196,17 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
           <Typography variant="body2" sx={{ marginBottom: "0.3rem" }}>
             Date of Birth *
           </Typography>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterDayjs} >
             <DatePicker sx={{ width: "100%" }}
               value={localFormData?.dob ? dayjs(localFormData?.dob) : null}
               onChange={handleDateChange}
               disabled={!isEditing}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  sx: { '& .MuiOutlinedInput-input': { padding: '8.5px 14px' } }
+                }
+              }}
               renderInput={(params) => <TextField {...params} fullWidth />}
             />
           </LocalizationProvider>
@@ -212,6 +221,7 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
             fullWidth
             placeholder="Enter Phone Number"
             variant="outlined"
+            size="small"
             value={localFormData?.phone || ""}
             onChange={handleInputChange}
             name="phone"
@@ -228,13 +238,14 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
             fullWidth
             placeholder="Enter Email Address"
             variant="outlined"
+            size="small"
             value={localFormData?.email || ""}
             onChange={handleInputChange}
             name="email"
             disabled={!isEditing}
           />
         </Grid>
-    
+
 
         {/* Address Fields */}
         <Grid item xs={12} md={6}>
@@ -245,6 +256,7 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
             fullWidth
             placeholder="Enter Door Number"
             variant="outlined"
+            size="small"
             value={localFormData?.doorNo || ""}
             onChange={handleInputChange}
             name="doorNo"
@@ -260,6 +272,7 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
             fullWidth
             placeholder="Enter Street Name"
             variant="outlined"
+            size="small"
             value={localFormData?.streetName || ""}
             onChange={handleInputChange}
             name="streetName"
@@ -275,6 +288,7 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
             fullWidth
             placeholder="Enter City/Town"
             variant="outlined"
+            size="small"
             value={localFormData?.city || ""}
             onChange={handleInputChange}
             name="city"
@@ -290,6 +304,7 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
             fullWidth
             placeholder="Enter State/Province"
             variant="outlined"
+            size="small"
             value={localFormData?.state || ""}
             onChange={handleInputChange}
             name="state"
@@ -305,6 +320,7 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
             fullWidth
             placeholder="Enter Country"
             variant="outlined"
+            size="small"
             value={localFormData?.country || ""}
             onChange={handleInputChange}
             name="country"
@@ -320,6 +336,7 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
             fullWidth
             placeholder="Enter Postal/Zip Code"
             variant="outlined"
+            size="small"
             value={localFormData?.zipCode || ""}
             onChange={handleInputChange}
             name="zipCode"
@@ -338,7 +355,8 @@ export default function AccountDetails({ formData, setFormData, isLoading, userI
                 background: "#f09300",
                 fontWeight: "bold",
                 borderRadius: "30px",
-                padding: "1rem 3rem",
+                padding:{xs:"0.5rem 1rem", sm:"0.8rem 2rem", md:"0.8rem 3rem"},
+
               }}
               onClick={handleUpdateClick}
             >

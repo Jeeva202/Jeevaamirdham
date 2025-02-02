@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Button, Typography } from "@mui/material";
+import { Container, Button, Typography, Box, Grid } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -169,7 +169,7 @@ export default function ViewCart() {
   }
 
   return (
-    <Container maxWidth="lg" style={{ padding: '2rem 0' }}>
+    <Container maxWidth="lg" style={{ padding: '2rem 2rem' }}>
       <div style={{
         fontSize: isMobile ? "1rem" : "1.5rem",
         fontWeight: "bold",
@@ -211,11 +211,10 @@ export default function ViewCart() {
                     <TableCell></TableCell>
                     <TableCell sx={{
                       fontWeight: "600",
-                      display: isMobile ? 'none' : 'table-cell'
-                    }}>PRODUCT</TableCell>
-                    <TableCell sx={{ fontWeight: "600" }} align="left">PRICE</TableCell>
-                    <TableCell sx={{ fontWeight: "600" }} align="left">QTY</TableCell>
-                    <TableCell sx={{ fontWeight: "600" }} align="left">TOTAL</TableCell>
+                    }}>Product</TableCell>
+                    <TableCell sx={{ fontWeight: "600" }} align="left">Price</TableCell>
+                    <TableCell sx={{ fontWeight: "600" }} align="left">Quantity</TableCell>
+                    <TableCell sx={{ fontWeight: "600", display: isMobile ? 'none' : 'table-cell' }} align="left">Total</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -297,9 +296,28 @@ export default function ViewCart() {
           <div style={{
             display: "flex",
             flexDirection: "column",
-            gap: "1rem"
+            gap: "0.6rem"
           }}>
-            <div style={{
+            {rows.map((row, index) => (
+              <Box key={index} >
+                <Grid container >
+                  <Grid item xs={8}>
+                    <Typography variant="body2">
+                      {row.name} × {row.quantity}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4} sx={{ textAlign: 'right' }}>
+                    <Typography variant="body2" fontWeight={600}>
+                      ₹{row.subtotal.toFixed(2)}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Typography variant="caption" color="text.secondary" display="block" textAlign="right">
+                  Each ₹{row.price}
+                </Typography>
+              </Box>
+            ))}
+                        <div style={{
               display: "flex",
               justifyContent: "space-between",
               fontSize: '0.9rem'

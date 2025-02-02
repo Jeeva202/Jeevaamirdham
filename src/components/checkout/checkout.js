@@ -482,13 +482,18 @@ export default function Checkout() {
                     variant="contained"
                     onClick={handleSubmit}
                     sx={{
-                        mt: 2,
-                        bgcolor: '#F09300',
-                        borderRadius: '40px',
-                        textTransform: 'none',
-                        '&:hover': {
-                            bgcolor: '#DC6803'
-                        }
+                      borderRadius: "8px",
+                      width: "100%",
+                      background: "#F09300",
+                      color: "White",
+                      fontSize: "0.9rem",
+                      fontWeight: "600",
+                      textTransform: "none",
+                      marginTop: "1rem",
+                      padding: "0.8rem",
+                      '&:hover': {
+                        background: "#d67e00"
+                      }
                     }}
                 >
                     Place Order

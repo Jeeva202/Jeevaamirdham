@@ -1,48 +1,49 @@
 import React, { useState } from "react";
 import { TextField, Button, Snackbar, Alert } from "@mui/material";
 import "./newsLetter.css";
-
+import { selectUserId } from "../../redux/cartSlice";
+import { useSelector, useDispatch } from "react-redux";
+import axios
+ from "axios";
+import { showSnackbar } from "../../redux/SnackBarSlice";
 export default function NewsLetter() {
     const [email, setEmail] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
+    let userId = useSelector(selectUserId);
+    const dispatch = useDispatch();
 
+    if (!userId) {
+        userId = localStorage.getItem("id");
+      }
     const handleSubscribe = async () => {
-        if (!email) {
-            setSnackbarMessage('Please enter a valid email address.');
-            setSnackbarSeverity('warning');
-            setSnackbarOpen(true);
-            return;
-        }
-
-        const subscriptionData = {
-            email,
-        };
 
         try {
-            const response = await fetch(process.env.REACT_APP_SUBSCRIBE_API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(subscriptionData)
-            });
+            const response = await axios.post(process.env.REACT_APP_URL + "/subscribe", { userId })
+              console.log("json",response);
 
-            if (response.ok) {
-                setSnackbarMessage('Subscribed successfully!');
-                setSnackbarSeverity('success');
-                setEmail('');
-            } else {
-                setSnackbarMessage('Failed to subscribe. Please try again later.');
-                setSnackbarSeverity('error');
+            if (response.data.message == 'Subscribed successfully!') {
+                // setSnackbarMessage('Subscribed successfully!');
+                // setSnackbarSeverity('success');
+                dispatch(showSnackbar({ message: "Subscribed successfully!", severity: "success" }));
+
+            } else if(response.data.message == 'User is already subscribed'){
+                dispatch(showSnackbar({ message: "Already subscribed.", severity: "info" }));
             }
         } catch (error) {
-            console.error('Error subscribing:', error);
-            setSnackbarMessage('An error occurred. Please try again later.');
-            setSnackbarSeverity('error');
-        } finally {
-            setSnackbarOpen(true);
+            if (error.response) {
+                // Handle known API errors
+                if (error.response.status === 400 && error.response.data.message === "User is already subscribed") {
+                    dispatch(showSnackbar({ message: "Already subscribed.", severity: "info" }));
+                } else {
+                    dispatch(showSnackbar({ message: error.response.data.message || "An error occurred. Please try again later.", severity: "error" }));
+                }
+            } else {
+                // Handle network errors
+                console.error("Error subscribing:", error);
+                dispatch(showSnackbar({ message: "An error occurred. Please try again later.", severity: "error" }));
+            }
         }
     };
 
@@ -62,7 +63,7 @@ export default function NewsLetter() {
                     upcoming events and specific offers.
                 </div>
                 <div className="subscribe">
-                    <TextField
+                    {/* <TextField
                         variant="outlined"
                         placeholder="Your email address"
                         fullWidth
@@ -82,7 +83,7 @@ export default function NewsLetter() {
                                 }
                             }
                         }}
-                    />
+                    /> */}
                     <Button
                         variant="contained"
                         onClick={handleSubscribe}
