@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Button, IconButton, Container, Select, MenuItem } from "@mui/material";
-import StopIcon from "@mui/icons-material/Stop";
+import { 
+    Button, IconButton, Container, Tabs, Tab,
+    List, ListItem, ListItemText, ListItemIcon, Typography, Box 
+} from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
-import axios from "axios";
+import PauseIcon from "@mui/icons-material/Pause";
 import LockIcon from "@mui/icons-material/Lock";
+import axios from "axios";
 import SubscriptionModal from "../../components/subscriptionModal/subscriptionModal";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,7 +21,7 @@ import {
 const AudioPlayerCard = () => {
     const [activeIndex, setActiveIndex] = useState(null); // Track the currently playing card
     const [audioData, setAudioData] = useState([]); // State to store audio data
-    const [selectedCategory, setSelectedCategory] = useState("All");
+    const [selectedCategory, setSelectedCategory] = useState("");  // Empty default value
     const [categories, setCategories] = useState([]);
     const [userPlan, setUserPlan] = useState(null);
     const [openModal, setOpenModal] = useState(false);
@@ -32,14 +35,11 @@ const AudioPlayerCard = () => {
             ? isUserLoggedInFromStore
             : !!localStorage.getItem("id");
 
-    const handleCategoryChange = (event) => {
-        setSelectedCategory(event.target.value);
+    const handleCategoryChange = (event, newValue) => {
+        setSelectedCategory(newValue);
     };
 
-    const filteredAudios =
-        selectedCategory === "All"
-            ? audioData
-            : audioData.filter((audio) => audio.category === selectedCategory);
+    const filteredAudios = audioData.filter((audio) => audio.category === selectedCategory);
 
     const handleOpen = () => setOpenModal(true);
     const handleClose = () => setOpenModal(false);
@@ -51,11 +51,8 @@ const AudioPlayerCard = () => {
                     process.env.REACT_APP_URL + `/audio-video-page/all_audio_data`
                 );
                 setAudioData(response.data);
-                const uniqueCategories = [
-                    "All",
-                    ...new Set(response.data.map((audio) => audio.category)),
-                ];
-                setCategories(uniqueCategories);
+                const uniqueCategories = [...new Set(response.data.map((audio) => audio.category))];
+                setCategories(uniqueCategories);                setSelectedCategory(uniqueCategories[0]); // Set first category as default
             } catch (error) {
                 console.error("Error fetching audio data:", error);
             }
@@ -95,191 +92,154 @@ const AudioPlayerCard = () => {
     };
 
     return (
-        <Container
-            maxWidth="lg"
-            sx={{
-                background: "#fff",
-                borderRadius: "10px",
-                padding: "1rem 0",
-                marginTop: "2rem",
-                marginBottom: "2rem"
-            }}
-        >
-            <div
-                style={{
-                    marginTop: "2rem",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
-                    marginBottom: "1rem"
-                }}
-            >
-                <div className="text">
-                    <h3 style={{ margin: 0, color:'#B54708', fontSize:'1.5rem' }}>Audios</h3>
-                </div>
-                <div>
-                    <div
-                        style={{
-                            fontSize: "1.2rem",
-                            fontWeight: "600",
-                            marginBottom: "16px",
-                            display: "flex",
-                        }}
-                    >
-                        Category
-                    </div>
-                    <div style={{ marginBottom: "16px" }}>
-                        <Select
-                            value={selectedCategory}
-                            onChange={handleCategoryChange}
-                            displayEmpty
-                            size="small"
-                            sx={{ backgroundColor: "#fff", width: "25rem" }}
-                        >
-                            {categories.map((category, index) => (
-                                <MenuItem key={index} value={category}>
-                                    {category}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </div>
-                </div>
-            </div>
+        <Container maxWidth="lg" sx={{ 
+            marginTop: "30px", 
+            marginBottom: "30px", 
+            background: "#fff", 
+            borderRadius: "10px", 
+            py: 4 
+        }}>
+            <Box sx={{ 
+                display: "flex", 
+                flexDirection: "column",
+                gap: 3
+            }}>
+                <Typography variant="h4" sx={{ color: '#B54708', fontWeight: 'bold' }}>
+                    Audios
+                </Typography>
+                
+                <Tabs 
+                    value={selectedCategory} 
+                    onChange={handleCategoryChange}
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    sx={{
+                        '& .MuiTab-root': {
+                            color: '#666',
+                            '&.Mui-selected': {
+                                color: '#DC6803',
+                            }
+                        },
+                        '& .MuiTabs-indicator': {
+                            backgroundColor: '#DC6803',
+                        }
+                    }}
+                >
+                    {categories.map((category) => (
+                        <Tab 
+                            key={category} 
+                            label={category} 
+                            value={category}
+                            sx={{ textTransform: 'none' }}
+                        />
+                    ))}
+                </Tabs>
+            </Box>
 
-            <div
-                style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "16px",
-                    justifyContent: "space-between",
-                    marginBottom: "3rem",
-                }}
-            >
+            <List sx={{ 
+                width: '100%', 
+                bgcolor: 'background.paper',
+                maxHeight: '400px',
+                overflowY: 'auto',
+                '&::-webkit-scrollbar': {
+                    width: '8px',
+                },
+                '&::-webkit-scrollbar-track': {
+                    background: '#f1f1f1',
+                    borderRadius: '4px',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                    background: '#666',
+                    borderRadius: '4px',
+                    '&:hover': {
+                        background: '#666',
+                    },
+                },
+                mt: 2
+            }}>
                 {filteredAudios.map((item, index) => (
-                    <div
+                    <ListItem
                         key={index}
-                        style={{
-                            position: "relative",
-                            border: "1px solid #ccc",
-                            borderRadius: "50%",
-                            width: "20rem",
-                            height: "20rem",
-                            overflow: "hidden",
-                            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            backgroundImage: `url(${item.coverImage_url})`,
-                            backgroundSize: "cover",
-                            backgroundPosition: "center center",
-                            backgroundRepeat: "no-repeat",
+                        sx={{
+                            borderRadius: 2,
+                            mb: 1,
+                            '&:hover': {
+                                bgcolor: 'rgba(252, 204, 77, 0.1)',
+                            },
+                            position: 'relative',
+                            ...((!isUserLoggedIn || userPlan === "basic") && index !== 0 && {
+                                opacity: 0.7,
+                                filter: 'blur(0.5px)',
+                            })
                         }}
                     >
-                        {/* Blur Layer */}
-                        {((!isUserLoggedIn || userPlan === "basic") && index !== 0) && (
-                            <div
-                                style={{
-                                    position: "absolute",
-                                    top: 0,
-                                    left: 0,
-                                    width: "100%",
-                                    height: "100%",
-                                    backgroundColor: "rgba(255, 255, 255, 0.6)",
-                                    filter: "blur(2px)",
-                                    zIndex: 1,
-                                }}
-                            ></div>
-                        )}
-
-                        {/* Play Button */}
-                        {activeIndex !== index ? (
-                            <IconButton
-                                onClick={() => handlePlay(index)}
+                        <ListItemIcon>
+                            <Box
+                                component="img"
+                                src={item.coverImage_url}
                                 sx={{
-                                    position: "relative",
-                                    zIndex: 10,
-                                    backgroundColor: "rgba(255, 255, 255, 0.8)",
-                                    borderRadius: "50%",
-                                    padding: "1rem",
-                                    display:
-                                        (!isUserLoggedIn || userPlan === "basic") && index !== 0
-                                            ? "none"
-                                            : "content",
+                                    width: 60,
+                                    height: 60,
+                                    borderRadius: 2,
+                                    mr: 2
                                 }}
-                            >
-                                <PlayArrowIcon fontSize="large" />
-                            </IconButton>
-                        ) : (
-                            <div
-                                style={{
-                                    position: "absolute",
-                                    width: "100%",
-                                    background: "rgb(0 0 0 / 70%)",
-                                    padding: "8px",
-                                    zIndex: 10,
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    alignItems: "center",
-                                    zoom: "0.8",
-                                    justifyContent: "center",
-                                    height: "100%",
-                                }}
-                            >
-                                <div style={{display:'flex', flexDirection:'column', width:"80%", alignItems:'center', gap:"1rem"}}>
-                                <div
-                                    style={{ fontWeight: "bold", color:'#fff', textAlign: 'center'}}
-                                >{item.title}</div>
-                                <div style={{fontWeight: "bold", color:'#fff', textAlign: 'center', fontSize:"0.95rem" }}>{item.subtitle}</div>
+                            />
+                        </ListItemIcon>
+                        <ListItemText
+                            primary={
+                                <Typography variant="b" color="#161616">
+                                    {item.title}
+                                </Typography>
+                            }
+                            secondary={item.subtitle}
+                            sx={{ flex: 1 }}
+                        />
+                        
+                        {activeIndex === index ? (
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                 <audio
                                     controls
                                     autoPlay
                                     disablepictureinpicture
                                     controlslist="nodownload noplaybackrate"
-                                    style={{ width: "100%" }}
+                                    style={{ maxWidth: '300px' }}
                                 >
                                     <source src={item.audiofile_url} type="audio/mp3" />
-                                    Your browser does not support the audio element.
                                 </audio>
                                 <Button
-                                    variant="outlined"
-                                    size="small"
+                                    variant="contained"
                                     onClick={handleStop}
                                     sx={{
-                                        background: "#f09300",
-                                        color: "#fff",
-                                        borderColor: "#f09300",
-                                        textTransform: "none",
-                                        fontWeight: "bold",
-                                        borderRadius: "40px",
-                                        width:'2rem'
+                                        bgcolor: '#f09300',
+                                        '&:hover': { bgcolor: '#DC6803' },
+                                        borderRadius: 20
                                     }}
                                 >
-                                    Stop
+                                    <PauseIcon />
                                 </Button>
-                            </div>
-                            </div>
-                        )}
-
-                        {/* Lock Icon */}
-                        {((!isUserLoggedIn || userPlan === "basic") && index !== 0) && (
+                            </Box>
+                        ) : (
                             <IconButton
-                                style={{
-                                    position: "static",
-                                    right: "8px",
-                                    top: "8px",
-                                    zIndex: 20,
-                                    backgroundColor: "rgba(255, 255, 255, 0.9)",
-                                    borderRadius: "50%",
-                                    fontSize: "2rem",
+                                onClick={() => handlePlay(index)}
+                                disabled={(!isUserLoggedIn || userPlan === "basic") && index !== 0}
+                                sx={{
+                                    bgcolor: '#FCCC4D',
+                                    '&:hover': { bgcolor: '#f09300' },
+                                    '&.Mui-disabled': {
+                                        bgcolor: 'rgba(0, 0, 0, 0.12)'
+                                    }
                                 }}
-                                onClick={handleOpen}
                             >
-                                <LockIcon />
+                                {(!isUserLoggedIn || userPlan === "basic") && index !== 0 ? (
+                                    <LockIcon onClick={handleOpen} />
+                                ) : (
+                                    <PlayArrowIcon />
+                                )}
                             </IconButton>
                         )}
-                    </div>
+                    </ListItem>
                 ))}
-            </div>
+            </List>
 
             <SubscriptionModal
                 open={openModal}

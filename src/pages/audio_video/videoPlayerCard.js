@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, IconButton, Select, MenuItem } from '@mui/material';
+import { Container, IconButton, Tabs, Tab, Box } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import axios from 'axios';
 import SubscriptionModal from '../../components/subscriptionModal/subscriptionModal';
@@ -18,7 +18,7 @@ export default function VideoPlayerCard() {
     const [currentVideo, setCurrentVideo] = useState(null);
     const [userPlan, setUserPlan] = useState(null);
     const [openModal, setOpenModal] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState('All');
+    const [selectedCategory, setSelectedCategory] = useState('');
     const [categories, setCategories] = useState([]);
 
     const dispatch = useDispatch();
@@ -33,20 +33,21 @@ export default function VideoPlayerCard() {
     const handleOpen = () => setOpenModal(true);
     const handleClose = () => setOpenModal(false);
 
-    const handleCategoryChange = (event) => {
-        setSelectedCategory(event.target.value);
+    const handleCategoryChange = (event, newValue) => {
+        setSelectedCategory(newValue);
     };
 
-    const filteredVideos = selectedCategory === 'All' ? videoData : videoData.filter(video => video.category === selectedCategory);
+    const filteredVideos = videoData.filter(video => video.category === selectedCategory);
 
     useEffect(() => {
         const fetchVideoData = async () => {
             try {
                 const response = await axios.get(process.env.REACT_APP_URL + `/audio-video-page/all_video_data`);
                 setVideoData(response.data);
-                setCurrentVideo(response.data[0]); // Set the first video as the current video
-                const uniqueCategories = ['All', ...new Set(response.data.map(video => video.category))];
+                setCurrentVideo(response.data[0]);
+                const uniqueCategories = [...new Set(response.data.map(video => video.category))];
                 setCategories(uniqueCategories);
+                setSelectedCategory(uniqueCategories[0]); // Set first category as default
             } catch (error) {
                 console.error("Error fetching video data:", error);
             }
@@ -79,13 +80,45 @@ export default function VideoPlayerCard() {
     };
 
     return (
-        <Container maxWidth="lg" sx={{ background: '#fff', borderRadius: '10px', marginTop:'2rem' }}>
+        <Container maxWidth="lg" sx={{ background: '#fff', borderRadius: '10px', marginTop:'2rem', padding: '2rem' }}>
             <div className="PranavamTV">
-                <div className="title">
+                <Box sx={{ 
+                    display: "flex", 
+                    flexDirection: "column",
+                    gap: 3,
+                    mb: 3
+                }}>
                     <div className="text" style={{fontWeight:'bold', color:'#B54708', fontSize:'1.5rem'}}>
                         Videos
                     </div>
-                </div>
+                    
+                    <Tabs 
+                        value={selectedCategory} 
+                        onChange={handleCategoryChange}
+                        variant="scrollable"
+                        scrollButtons="auto"
+                        sx={{
+                            '& .MuiTab-root': {
+                                color: '#666',
+                                '&.Mui-selected': {
+                                    color: '#DC6803',
+                                }
+                            },
+                            '& .MuiTabs-indicator': {
+                                backgroundColor: '#DC6803',
+                            }
+                        }}
+                    >
+                        {categories.map((category) => (
+                            <Tab 
+                                key={category} 
+                                label={category} 
+                                value={category}
+                                sx={{ textTransform: 'none' }}
+                            />
+                        ))}
+                    </Tabs>
+                </Box>
 
                 <div className="video-section" style={{ display: 'flex', gap: '16px' }}>
                     <div className="main" style={{ flex: 2 }}>
@@ -110,23 +143,6 @@ export default function VideoPlayerCard() {
                         )}
                     </div>
                     <div className="other" style={{ flex: 1, overflowY: 'auto', maxHeight: '500px' }}>
-                        <div style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '16px' }}>
-                            Category
-                        </div>
-                        <div style={{ marginBottom: '16px' }}>
-                            <Select
-                                value={selectedCategory}
-                                onChange={handleCategoryChange}
-                                displayEmpty
-                                fullWidth
-                                size="small"
-                                sx={{ backgroundColor: '#fff' }}
-                            >
-                                {categories.map((category, index) => (
-                                    <MenuItem key={index} value={category}>{category}</MenuItem>
-                                ))}
-                            </Select>
-                        </div>
                         <div style={{ fontSize: '1.2rem', fontWeight: '600', marginBottom: '16px' }}>
                             Next Videos
                         </div>
