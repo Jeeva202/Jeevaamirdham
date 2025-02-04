@@ -29,6 +29,7 @@ import { selectIsUserLoggedIn, setUserId } from './redux/cartSlice';
 import GlobalSnackbar from './components/Snackbar/SnackBar';
 import { showSnackbar } from './redux/SnackBarSlice';
 import {useDispatch } from 'react-redux';
+import RefundPolicy from './pages/refundPolicy/RefundPolicy';
 
 const queryClient = new QueryClient();
 
@@ -101,6 +102,7 @@ function App() {
                 <Route path="/dashboard" element={userCheck ? <UserDashboard /> : <Navigate to="/home" />} />
                 <Route path="/privacyPolicy" element={<PrivacyPolicy />} />
                 <Route path="/termsAndCondition" element={<TermsAndCondition />} />
+                <Route path="/RefundPolicy" element={<RefundPolicy />} />
                 <Route path="/admin/overview" element={
                   // <AdminPanel />
                   <ProtectedRoute>

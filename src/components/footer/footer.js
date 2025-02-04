@@ -64,7 +64,7 @@ export default function Footer() {
                                 <a href="/termsAndCondition">{t('footer.termsAndConditions')}</a> <br />
                                 {/* <a href="">Returns Policy</a> <br /> */}
                                 <a href="/privacyPolicy">{t('footer.privacyPolicy')}</a> <br />
-                                {/* <a href="">Cancellation policy</a> <br /> */}
+                                <a href="/RefundPolicy">{t('footer.refundPolicy')}</a> <br />
                             </div>
                         </div>
                         <div className="categ">
