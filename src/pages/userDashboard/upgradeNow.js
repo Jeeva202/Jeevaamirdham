@@ -206,6 +206,9 @@ export default function UpgradeNow({ open, planName, handleClose, handleOpen, pl
                                 </Grid>
                             );
                         })}
+                        <Typography variant="caption" display="block" sx={{ my: 2, color:'red',fontWeight:"bold" }}>
+                                            * Note : Please do not pay through QR code since we are facing technical issue using that
+                                                </Typography>
                     </Grid>
                 </Container>
             </Box>

@@ -476,7 +476,9 @@ export default function Checkout() {
                 <Typography variant="caption" display="block" sx={{ my: 2 }}>
                     Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.
                 </Typography>
-
+                <Typography variant="caption" display="block" sx={{ my: 2, color:"red", fontWeight:"bold" }}>
+                    * Note : Please do not pay through QR code since we are facing technical issue using that
+                </Typography>
                 <Button
                     fullWidth
                     variant="contained"
