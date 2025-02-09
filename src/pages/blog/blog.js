@@ -13,7 +13,7 @@ import Gif_Loader from "../../components/loader/Gif_Loader";
 import SelectedBlog from "./selectedBlog";
 
 export default function Blog() {
-    const [selectedCategory, setSelectedCategory] = useState("GNANAM");
+    const [selectedCategory, setSelectedCategory] = useState("All");
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedBlog, setSelectedBlog] = useState(null);
     const { data: BlogData, isLoading: BlogIsLoading } = useQuery("blog", async () => {
@@ -32,27 +32,39 @@ export default function Blog() {
           return <Gif_Loader />;
         }
     const categories = [
-        { id: "GNANAM", label: "GNANAM" },
-        { id: "Sithanaigal", label: "Sithanaigal" },
-        { id: "Varalaru", label: "Varalaru" },
-        { id: "Uncategorized", label: "Uncategorized" }
+        { id: "All", label: "All" },
+        { id: "Kural Amirdham", label: "Kural Amirdham" },
+        { id: "Arul Amirdham", label: "Arul Amirdham" },
+        { id: "Maruthuvam", label: "Maruthuvam" },
+        { id: "Valviyal Amirdham", label: "Valviyal Amirdham" }
     ];
 
-    const recentBlogs = BlogData?.sort((a, b) => new Date(b.created_dt) - new Date(a.created_dt)).slice(0, 5);
+    // Filter blogs based on selected category
+    const filteredBlogs = BlogData ? 
+        selectedCategory === "All" 
+            ? BlogData 
+            : BlogData.filter(blog => blog.category === selectedCategory)
+        : [];
 
+    // Pagination logic
     const blogsPerPage = 4;
-    const totalBlogs = BlogData.length;
+    const totalBlogs = filteredBlogs.length;
     const pageCount = Math.ceil(totalBlogs / blogsPerPage);
     const startIndex = (currentPage - 1) * blogsPerPage;
-    const currentBlogs = BlogData.slice(startIndex, startIndex + blogsPerPage);
+    const currentBlogs = filteredBlogs.slice(startIndex, startIndex + blogsPerPage);
 
     const handlePageChange = (event, value) => {
         setCurrentPage(value);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleCategoryClick = (categoryId) => {
         setSelectedCategory(categoryId);
+        setCurrentPage(1); // Reset to first page when changing category
     };
+
+    const recentBlogs = BlogData?.sort((a, b) => new Date(b.created_dt) - new Date(a.created_dt)).slice(0, 5);
+
     const openBlog =(id)=>{ 
         console.log(BlogData.filter((d)=>d.id==id)[0]);
               
@@ -119,15 +131,15 @@ export default function Blog() {
                                                 bgcolor: '#f5f5f5'
                                             },
                                             '&.Mui-selected:hover': {
-                                                bgcolor: '#f5f5f5'},
-
+                                                bgcolor: '#f5f5f5'
+                                            },
                                         }
                                     }}
                                 />
                             </Box>
                         </div>
                         <div className="right-side">
-                            {/* <div className="Categories">
+                            <div className="Categories">
                                 <Card sx={{ maxWidth: 400, borderRadius: "10px", border: "1px solid #ccc" }} variant="outlined">
                                     <CardHeader
                                         title="Categories"
@@ -164,7 +176,7 @@ export default function Blog() {
                                         ))}
                                     </CardContent>
                                 </Card>
-                            </div> */}
+                            </div>
                             <div className="recent-posts">
                                 <Card sx={{ maxWidth: 400, borderRadius: "10px", border: "1px solid #ccc" }} variant="outlined">
                                     <CardHeader
