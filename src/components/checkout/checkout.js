@@ -261,6 +261,7 @@ export default function Checkout() {
     };
 
     fetchCart();
+    window.scrollTo(0, 0);
   }, [isUserLoggedIn, userId]);
 
   return (
