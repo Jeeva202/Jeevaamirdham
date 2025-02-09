@@ -24,10 +24,14 @@
         "privacyPolicy": "தனியுரிமை மற்றும் கொள்கை",
         "refundPolicy": "திரும்பப்பெறுதல் கொள்கை",
         "exploreCategories": "பகுப்புகளைக் ஆராயவும்",
-        "gnanam": "ஞானம்",
-        "sindhanai": "சிந்தனை",
-        "maruthuvam": "மருத்துவம்",
-        "arul": "அருள்",
+        "exploreCategories_": {
+
+            "kural_amirdham": "குறள் அமிர்தம்",
+            "arul_amirdham": "அருள் அமிர்தம்",
+            "maruthuvam": "மருத்துவம்",
+            "valviyal_amirdham": "வாழ்வியல் அமிர்தம்"
+
+        },
         "copyright": "காப்புரிமை © 2024 Jeevaamirdham . அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை.",
         "socialMedia": {
             "facebook": "பேஸ்புக்",

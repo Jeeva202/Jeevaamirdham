@@ -12,7 +12,7 @@ export default function About() {
                     About Us
                 </div>
                 <Typography variant="body1" sx={{ color: "#444", lineHeight: "35px" }}>
-                    The knowledge and worship practices of saints, siddhas, and great beings related to God can be understood!
+                    Jeevaamirdham & Gnana Amirdham emphasis on the knowledge and worship practices of saints, siddhas, and great beings related to God can be understood!
 
                     By consuming the nectar of love and transforming family life into virtuous living, one can lead a joyous life!
 

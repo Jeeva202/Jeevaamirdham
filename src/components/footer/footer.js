@@ -72,10 +72,10 @@ export default function Footer() {
                             {t('footer.exploreCategories')}
                             </div>
                             <div className="book-cat">
-                                <a href="">{t('footer.gnanam')}</a> <br />
-                                <a href="">{t('footer.sindhanai')}</a> <br />
-                                <a href="">{t('footer.maruthuvam')}</a> <br />
-                                <a href="">{t('footer.arul')}</a> <br />
+                                <a href="">{t('footer.exploreCategories_.kural_amirdham')}</a> <br />
+                                <a href="">{t('footer.exploreCategories_.arul_amirdham')}</a> <br />
+                                <a href="">{t('footer.exploreCategories_.maruthuvam')}</a> <br />
+                                <a href="">{t('footer.exploreCategories_.valviyal_amirdham')}</a> <br />
                             </div>
                         </div>
                     </div>

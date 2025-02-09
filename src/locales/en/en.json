@@ -24,10 +24,13 @@
         "privacyPolicy": "Privacy & Policy",
         "refundPolicy": "Refund Policy",
         "exploreCategories": "Explore Categories",
-        "gnanam": "Gnanam",
-        "sindhanai": "Sindhanai",
-        "maruthuvam": "Maruthuvam",
-        "arul": "Arul",
+        "exploreCategories_":{
+
+            "kural_amirdham": "Kural Amirdham",
+            "arul_amirdham": "Arul Amirdham",
+            "maruthuvam": "Maruthuvam",
+            "valviyal_amirdham": "Valviyal Amirdham"
+        },
         "copyright": "Copyright © 2024 Jeevaamirdham . All rights reserved.",
         "socialMedia": {
             "facebook": "Facebook",

@@ -5,7 +5,7 @@ import CountUp from 'react-countup'; // You'll need to install this package: npm
 
 export default function KPI() {
     const [stats, setStats] = useState({
-        total_books: 250,
+        total_emagazines: 250,
         books_sold: 50,
         total_users: 3800
     });
@@ -14,12 +14,13 @@ export default function KPI() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await fetch(process.env.REACT_APP_URL + '/api/statistics');
+                const response = await fetch(process.env.REACT_APP_URL + '/getStats');
                 const data = await response.json();
+                console.log(data);
                 setStats({
-                    total_books: data.totalEmagazines || 0,
-                    books_sold: data.totalBooksSold || 0,
-                    total_users: data.totalUsers || 0
+                    total_emagazines: data[0].total_emagazines || 0,
+                    books_sold: data[0].total_books_sold || 0,
+                    total_users: data[0].total_users || 0
                 });
             } catch (error) {
                 console.error('Error fetching statistics:', error);
@@ -28,13 +29,13 @@ export default function KPI() {
             }
         };
 
-        // fetchStats();
+        fetchStats();
     }, []);
 
     const kpiData = [
         {
             icon: kpiCard.icons.book,
-            number: stats.total_books,
+            number: stats.total_emagazines,
             text: "TOTAL E-MAGAZINES"
         },
         {
