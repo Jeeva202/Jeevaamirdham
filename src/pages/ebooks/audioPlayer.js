@@ -140,7 +140,7 @@ export default function AudioPlayer({
         if (planName === 'basic') {
             // Handle basic plan logic (if any)
             // alert('You are already on the basic plan!');
-      dispatch(showSnackbar({ message: "You are already on the basic plan!", severity: "info" }));
+            dispatch(showSnackbar({ message: "You are already on the basic plan!", severity: "info" }));
 
         } else {
             // Call the payNow function for elite and premium plans
@@ -412,6 +412,9 @@ export default function AudioPlayer({
                                     </Card>
                                 </Grid>
                             ))}
+                            <Typography variant="caption" display="block" sx={{ my: 2, color: 'red',fontWeight:"bold" }}>
+                                * Note : Please do not pay through QR code since we are facing technical issue using that
+                            </Typography>
                         </Grid>
                     </Container>
                 </Box>
