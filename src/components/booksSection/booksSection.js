@@ -7,6 +7,12 @@ import { Button } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 export default function BooksSection({userId, selectedYear, setSelectedYear,allYears, setAllYears, setSelectedMonth}) {
     const navigate = useNavigate()
+
+    const handleViewAllClick = () =>{
+        navigate('/emagazine')
+        setAllYears(true);
+        setSelectedMonth(null);
+    }
     return (
         <div className="container">
             <div className="left-side">
@@ -27,7 +33,7 @@ export default function BooksSection({userId, selectedYear, setSelectedYear,allY
                         fontWeight:"bold",  
                         padding:{lg:'0.5rem 2.4rem',xs:'0.4rem 0.3rem'}, 
                         background:'#F09300', color:'black', borderRadius:'30px'}}
-                        onClick={()=> navigate('/emagazine')}>View All</Button>
+                        onClick={handleViewAllClick}>View All</Button>
 
                     </div>
                 </div>
