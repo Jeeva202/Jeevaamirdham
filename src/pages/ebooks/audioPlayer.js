@@ -219,7 +219,7 @@ export default function AudioPlayer({
                         Play All
                     </button>
                 </div>
-                <div className="audio-play-section">
+                <div className="audio-play-section" style={{ padding: '10px' }}>
                     {audioData.map((audio, index) => (
                         <Accordion
                             key={index}
@@ -229,26 +229,22 @@ export default function AudioPlayer({
                                 borderRadius: "10px",
                                 border: "1px solid #E6E6E6",
                                 "&::before": {
-                                    height: 0, // Fixed the pseudo-element syntax
+                                    height: 0,
                                 },
+                                marginBottom: '10px'
                             }}
-                            expanded={plan === 'basic' ? index === 0 && expandedState === 0 : expandedState === index}  // First accordion expandable for basic users
-                            onClick={() => handleChapterClick(index)}  // Handle click to toggle expansion
-                            disabled={plan === 'basic' && index !== 0}  // Disable non-first accordion for basic users
+                            expanded={plan === 'basic' ? index === 0 && expandedState === 0 : expandedState === index}
+                            onClick={() => handleChapterClick(index)}
+                            disabled={plan === 'basic' && index !== 0}
                         >
                             <AccordionSummary
                                 expandIcon={<ArrowDropDownIcon />}
                                 aria-controls={`panel${index}-content`}
                                 id={`panel${index}-header`}
                             >
-                                <div className="audio-play-title">
+                                <div className="audio-play-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                                     <div className="index">Chapter {index + 1}</div>
                                     <Typography className="audio-play-title">{audio.title}</Typography>
-                                    {/* {currentAudioIndex === index && (
-                                        <Typography variant="body2" sx={{ ml: 2, color: 'green' }}>
-                                            Currently Playing
-                                        </Typography>
-                                    )} */}
                                 </div>
                             </AccordionSummary>
                             <AccordionDetails
@@ -260,15 +256,16 @@ export default function AudioPlayer({
                                             : "#f8f8f8",
                                 }}
                             >
-                                <div className="player-transcript-section">
-                                    <div className="player">
-                                        <div className="audio-header">
+                                <div className="player-transcript-section" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                    <div className="player" style={{ width: '100%' }}>
+                                        <div className="audio-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                                             <img
                                                 src={audio.img || no_image}
                                                 alt={"thumbnail image"}
                                                 className="audio-image"
+                                                style={{ maxWidth: '100%', height: 'auto', marginBottom: '10px' }}
                                             />
-                                            <div className="audio-details">
+                                            <div className="audio-details" style={{ textAlign: 'center' }}>
                                                 <h3 className="audio-title">{APIBookData.title}</h3>
                                                 <p className="audio-author">{APIBookData.author}</p>
                                                 {(plan != 'basic' || (plan === 'basic' && index == 0)) && (
@@ -279,7 +276,8 @@ export default function AudioPlayer({
                                                         controlslist="nodownload noplaybackrate"
                                                         className="audio-element"
                                                         onPlay={() => handleAudioPlay(index)}
-                                                        onEnded={handleAudioEnded}  // Listen for audio ending
+                                                        onEnded={handleAudioEnded}
+                                                        style={{ width: '100%' }}
                                                     >
                                                         <source src={audio.audio} type="audio/mpeg" />
                                                         Your browser does not support the audio element.
@@ -288,7 +286,7 @@ export default function AudioPlayer({
                                             </div>
                                         </div>
 
-                                        <div className="audio-transcript">
+                                        <div className="audio-transcript" style={{ marginTop: '10px' }}>
                                             <div dangerouslySetInnerHTML={{ __html: audio.transcript }} />
                                         </div>
                                     </div>
@@ -297,34 +295,6 @@ export default function AudioPlayer({
                         </Accordion>
                     ))}
                 </div>
-
-
-
-                {/* <div className="audio-prev-nxt">
-                    <div className="audio-prev" onClick={() => handlePrevNext('previous')}>
-                        {prevMagazine && (
-                            <>
-                                <img src={prevMagazine.imgUrl} alt="" />
-                                <div className="audio-prev-text">
-                                    <div className="prev">PREV</div>
-                                    <div className="prev-title">{prevMagazine.title}</div>
-                                </div>
-                            </>
-                        )}
-                    </div>
-
-                    <div className="audio-nxt" onClick={() => handlePrevNext("next")}>
-                        {nextMagazine && (
-                            <>
-                                <div className="audio-nxt-text">
-                                    <div className="nxt">NEXT</div>
-                                    <div className="nxt-title">{nextMagazine.title}</div>
-                                </div>
-                                <img src={nextMagazine.imgUrl} alt="" />
-                            </>
-                        )}
-                    </div>
-                </div> */}
             </div>
 
             {/* Modal for upgrade */}
@@ -340,11 +310,13 @@ export default function AudioPlayer({
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: 1000,
+                        width: { xs: '90%', sm: 600, md: 800, lg: 1000 },
+                        height: "80vh",
+                        overflow: 'auto',
                         bgcolor: 'background.paper',
                         boxShadow: 24,
                         borderRadius: '8px',
-                        p: 4,
+                        padding: { xs: '0.5rem', sm: '1rem' },
                         display: 'flex',
                         flexDirection: 'column',
                         gap: 3,

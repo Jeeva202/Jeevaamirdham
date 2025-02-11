@@ -171,92 +171,198 @@ export default function SubscriptionModal({ open, handleClose, handleOpen }) {
 
     };
     return (
+        // <Modal open={open} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
+        //     <Box
+        //         sx={{
+        //             position: 'absolute',
+        //             top: '50%',
+        //             left: '50%',
+        //             transform: 'translate(-50%, -50%)',
+        //             width: 1000,
+        //             bgcolor: 'background.paper',
+        //             boxShadow: 24,
+        //             borderRadius: '8px',
+        //             padding: '1rem',
+        //             display: 'flex',
+        //             flexDirection: 'column',
+        //             gap: 3,
+        //         }}
+        //     >
+        //         <IconButton
+        //             onClick={handleClose}
+        //             sx={{
+        //                 position: 'absolute',
+        //                 top: 10,
+        //                 right: 10,
+        //                 color: 'gray',
+        //             }}
+        //         >
+        //             <CloseIcon />
+        //         </IconButton>
+        //         <Container maxWidth="md">
+        //             <Box textAlign="center" my={2}>
+        //                 <Typography variant="h4" gutterBottom>
+        //                     Choose Your Plan
+        //                 </Typography>
+        //                 <Typography variant="subtitle1">
+        //                     Select the perfect subscription plan for your needs
+        //                 </Typography>
+        //             </Box>
+        //             <Grid container spacing={2}>
+        //                 {plans.map((plan, index) => (
+        //                     <Grid item xs={12} sm={6} md={4} key={index}>
+        //                         <Card
+        //                             variant="outlined"
+        //                             sx={{
+        //                                 display: "flex",
+        //                                 flexDirection: "column",
+        //                                 height: "100%",
+        //                             }}
+        //                         >
+        //                             <CardContent sx={{ flexGrow: 1, fontWeight: 600 }}>
+        //                                 <Typography sx={{ fontSize: "1.2rem" }} variant="h6" gutterBottom>
+        //                                     {plan.name}
+        //                                 </Typography>
+        //                                 <Typography sx={{ fontSize: '2rem', fontWeight: 500, color: "black" }} variant="h4" color="primary" gutterBottom>
+        //                                     {plan.price}
+        //                                 </Typography>
+        //                                 <List>
+        //                                     {plan.features.map((feature, idx) => (
+        //                                         <ListItem key={idx} disableGutters>
+        //                                             <ListItemIcon>
+        //                                                 <ListItemIcon>
+        //                                                     <CheckCircleIcon sx={{ color: "rgb(34 197 94)" }} />
+        //                                                 </ListItemIcon>
+        //                                             </ListItemIcon>
+        //                                             <ListItemText primary={feature} />
+        //                                         </ListItem>
+        //                                     ))}
+        //                                 </List>
+        //                             </CardContent>
+        //                             <Box textAlign="center" mb={2} sx={{ px: 2 }}>
+        //                                 <Button
+        //                                     onClick={() => payNow(plan.name)}
+        //                                     variant="contained"
+        //                                     style={{ ...plan.buttonStyle, width: "100%", padding: "10px 0" }}
+        //                                 >
+        //                                     {plan.buttonLabel}
+        //                                 </Button>
+        //                             </Box>
+        //                         </Card>
+        //                     </Grid>
+        //                 ))}
+        //                 <Typography variant="caption" display="block" sx={{ my: 2, color:'red',fontWeight:"bold" }}>
+        //             * Note : Please do not pay through QR code since we are facing technical issue using that
+        //                 </Typography>
+        //             </Grid>
+        //         </Container>
+        //     </Box>
+        // </Modal>
+
+        // =================== for responsive ========================================================================================================
         <Modal open={open} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
-            <Box
+    <Box
+        sx={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: { xs: '90%', sm: 600, md: 800, lg: 1000 },
+            height: "80vh",
+            overflow: 'auto',
+            bgcolor: 'background.paper',
+            boxShadow: 24,
+            borderRadius: '8px',
+            padding: { xs: '0.5rem', sm: '1rem' },
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 3,
+        }}
+    >
+        <IconButton
+            onClick={handleClose}
+            sx={{
+                position: 'absolute',
+                top: 10,
+                right: 10,
+                color: 'gray',
+            }}
+        >
+            <CloseIcon />
+        </IconButton>
+        <Container maxWidth="md">
+            <Box textAlign="center" my={2}>
+                <Typography variant="h5" sx={{ typography: { xs: 'h6', sm: 'h5', md: 'h4' } }} gutterBottom>
+                    Choose Your Plan
+                </Typography>
+                <Typography variant="subtitle2" sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }}>
+                    Select the perfect subscription plan for your needs
+                </Typography>
+            </Box>
+            <Grid container spacing={2}>
+                {plans.map((plan, index) => (
+                    <Grid item xs={12} sm={6} md={4} key={index}>
+                        <Card
+                            variant="outlined"
+                            sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                height: "100%",
+                                textAlign: "center",
+                            }}
+                        >
+                            <CardContent sx={{ flexGrow: 1, fontWeight: 600 }}>
+                                <Typography variant="h6" sx={{ fontSize: { xs: "1rem", sm: "1.2rem" } }} gutterBottom>
+                                    {plan.name}
+                                </Typography>
+                                <Typography variant="h4" sx={{ fontSize: { xs: "1.5rem", sm: "2rem" }, fontWeight: 500, color: "black" }} color="primary" gutterBottom>
+                                    {plan.price}
+                                </Typography>
+                                <List dense>
+                                    {plan.features.map((feature, idx) => (
+                                        <ListItem key={idx} disableGutters>
+                                            <ListItemIcon>
+                                                <CheckCircleIcon sx={{ color: "rgb(34 197 94)" }} />
+                                            </ListItemIcon>
+                                            <ListItemText primary={feature} />
+                                        </ListItem>
+                                    ))}
+                                </List>
+                            </CardContent>
+                            <Box textAlign="center" mb={2} sx={{ px: 2 }}>
+                                <Button
+                                    onClick={() => payNow(plan.name)}
+                                    variant="contained"
+                                    // sx={{
+                                    //     width: "100%",
+                                    //     padding: "8px 0",
+                                    //     fontSize: { xs: "0.9rem", sm: "1rem" },
+                                    // }}
+                                    style={{ ...plan.buttonStyle, width: "100%", padding: "10px 0" }}
+                                >
+                                    {plan.buttonLabel}
+                                </Button>
+                            </Box>
+                        </Card>
+                    </Grid>
+                ))}
+            </Grid>
+            <Typography
+                variant="caption"
+                display="block"
                 sx={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 1000,
-                    bgcolor: 'background.paper',
-                    boxShadow: 24,
-                    borderRadius: '8px',
-                    padding: '1rem',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: 3,
+                    my: 2,
+                    color: 'red',
+                    fontWeight: "bold",
+                    textAlign: 'center',
+                    fontSize: { xs: "0.75rem", sm: "0.9rem" }
                 }}
             >
-                <IconButton
-                    onClick={handleClose}
-                    sx={{
-                        position: 'absolute',
-                        top: 10,
-                        right: 10,
-                        color: 'gray',
-                    }}
-                >
-                    <CloseIcon />
-                </IconButton>
-                <Container maxWidth="md">
-                    <Box textAlign="center" my={2}>
-                        <Typography variant="h4" gutterBottom>
-                            Choose Your Plan
-                        </Typography>
-                        <Typography variant="subtitle1">
-                            Select the perfect subscription plan for your needs
-                        </Typography>
-                    </Box>
-                    <Grid container spacing={2}>
-                        {plans.map((plan, index) => (
-                            <Grid item xs={12} sm={6} md={4} key={index}>
-                                <Card
-                                    variant="outlined"
-                                    sx={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        height: "100%",
-                                    }}
-                                >
-                                    <CardContent sx={{ flexGrow: 1, fontWeight: 600 }}>
-                                        <Typography sx={{ fontSize: "1.2rem" }} variant="h6" gutterBottom>
-                                            {plan.name}
-                                        </Typography>
-                                        <Typography sx={{ fontSize: '2rem', fontWeight: 500, color: "black" }} variant="h4" color="primary" gutterBottom>
-                                            {plan.price}
-                                        </Typography>
-                                        <List>
-                                            {plan.features.map((feature, idx) => (
-                                                <ListItem key={idx} disableGutters>
-                                                    <ListItemIcon>
-                                                        <ListItemIcon>
-                                                            <CheckCircleIcon sx={{ color: "rgb(34 197 94)" }} />
-                                                        </ListItemIcon>
-                                                    </ListItemIcon>
-                                                    <ListItemText primary={feature} />
-                                                </ListItem>
-                                            ))}
-                                        </List>
-                                    </CardContent>
-                                    <Box textAlign="center" mb={2} sx={{ px: 2 }}>
-                                        <Button
-                                            onClick={() => payNow(plan.name)}
-                                            variant="contained"
-                                            style={{ ...plan.buttonStyle, width: "100%", padding: "10px 0" }}
-                                        >
-                                            {plan.buttonLabel}
-                                        </Button>
-                                    </Box>
-                                </Card>
-                            </Grid>
-                        ))}
-                        <Typography variant="caption" display="block" sx={{ my: 2, color:'red',fontWeight:"bold" }}>
-                    * Note : Please do not pay through QR code since we are facing technical issue using that
-                        </Typography>
-                    </Grid>
-                </Container>
-            </Box>
-        </Modal>
+                * Note: Please do not pay through QR code since we are facing technical issues.
+            </Typography>
+        </Container>
+    </Box>
+</Modal>
+
     )
 }

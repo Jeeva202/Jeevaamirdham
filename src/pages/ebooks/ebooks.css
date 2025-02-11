@@ -118,10 +118,11 @@
     /* background: #F09300; */
     padding: 2px;
     width: 5vw;
-    justify-content: center;
+    justify-content: flex-start;
     font-size: 0.8rem;
     color: #000000;
     line-height: 20px;
+    width: 100%;
 }
 
 .audio-section>.audio-subtext {
@@ -149,6 +150,14 @@
     line-height: 44px;
     letter-spacing: -2px;
 }
+@media (min-width: 425px) {
+    .audio-title-section>.audio-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 24px;
+        letter-spacing: -2px;
+    }
+}
 
 .audio-title-section button {
     cursor: pointer;
@@ -159,6 +168,18 @@
     font-weight: 700;
     font-size: 0.8rem;
     line-height: 44px;
+}
+@media (min-width: 425px){
+    .audio-title-section button {
+        cursor: pointer;
+        padding: 0 10px;
+        border: none;
+        border-radius: 80px;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 0.7rem;
+        line-height: 24px;
+    }
 }
 
 .audio-play-title {
@@ -176,6 +197,14 @@
     line-height: 1rem;
     font-weight: 500;
 }
+@media (min-width: 425px){
+    .audio-play-title>.index{
+        padding: 5px 8px;
+        font-size: 0.8rem;
+        line-height: 0.8rem;
+        white-space: nowrap;
+    }
+}
 
 .audio-play-title p {
     color: #11151F;
@@ -186,6 +215,12 @@
     text-underline-position: from-font;
     text-decoration-skip-ink: none;
 
+}
+@media (min-width: 425px){
+    .audio-play-title p{
+        font-size: 14px;
+        line-height: 14px;
+    }
 }
 
 .audio-play-section {

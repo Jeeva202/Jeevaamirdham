@@ -167,7 +167,7 @@ export default function Favorite() {
                     <h4 style={{ fontSize: "1rem", marginTop: "0" }}>Favorite Books</h4>
                     {favorites.length === 0 ? (
                         <Typography variant="body1" color="textSecondary" style={{ padding: '1rem' }}>
-                            No favorite books yet
+                            No favorite books found
                         </Typography>
                     ) : (
                         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
@@ -176,7 +176,7 @@ export default function Favorite() {
                                     key={item.id}
                                     image={item.imgUrl}
                                     title={item.title}
-                                    link={`/book/${item.id}`}
+                                    link={`/emagazine`}
                                     buttonText="Read More"
                                     bookId={item.id}
                                     onDelete={handleDeleteClick}

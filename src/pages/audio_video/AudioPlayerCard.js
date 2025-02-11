@@ -19,7 +19,7 @@ import {
 } from "../../redux/cartSlice";
 
 const AudioPlayerCard = () => {
-    const [activeIndex, setActiveIndex] = useState(null); // Track the currently playing card
+    const [activeAudio, setActiveAudio] = useState({ tab: null, index: null }); // Track the currently playing audio with tab and index
     const [audioData, setAudioData] = useState([]); // State to store audio data
     const [selectedCategory, setSelectedCategory] = useState("");  // Empty default value
     const [categories, setCategories] = useState([]);
@@ -52,7 +52,8 @@ const AudioPlayerCard = () => {
                 );
                 setAudioData(response.data);
                 const uniqueCategories = [...new Set(response.data.map((audio) => audio.category))];
-                setCategories(uniqueCategories);                setSelectedCategory(uniqueCategories[0]); // Set first category as default
+                setCategories(uniqueCategories);                
+                setSelectedCategory(uniqueCategories[0]); // Set first category as default
             } catch (error) {
                 console.error("Error fetching audio data:", error);
             }
@@ -78,17 +79,17 @@ const AudioPlayerCard = () => {
         fetchUserPlan();
     }, [dispatch]);
 
-    const handlePlay = (index) => {
+    const handlePlay = (tab, index) => {
         // Treat not logged-in users or users with a basic plan as restricted
         if ((userPlan === "basic" || !isUserLoggedIn) && index !== 0) {
             setOpenModal(true);
             return;
         }
-        setActiveIndex(index);
+        setActiveAudio({ tab, index });
     };
 
     const handleStop = () => {
-        setActiveIndex(null);
+        setActiveAudio({ tab: null, index: null });
     };
 
     return (
@@ -125,7 +126,7 @@ const AudioPlayerCard = () => {
                         }
                     }}
                 >
-                    {categories.map((category) => (
+                    {categories.map((category, tabIndex) => (
                         <Tab 
                             key={category} 
                             label={category} 
@@ -195,7 +196,7 @@ const AudioPlayerCard = () => {
                             sx={{ flex: 1 }}
                         />
                         
-                        {activeIndex === index ? (
+                        {activeAudio.tab === selectedCategory && activeAudio.index === index ? (
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
                                 <audio
                                     controls
@@ -220,8 +221,7 @@ const AudioPlayerCard = () => {
                             </Box>
                         ) : (
                             <IconButton
-                                onClick={() => handlePlay(index)}
-                                disabled={(!isUserLoggedIn || userPlan === "basic") && index !== 0}
+                                onClick={() => handlePlay(selectedCategory, index)}
                                 sx={{
                                     bgcolor: '#FCCC4D',
                                     '&:hover': { bgcolor: '#f09300' },

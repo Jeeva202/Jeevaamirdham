@@ -211,7 +211,7 @@ export default function TopNavbar() {
     };
 
     const drawer = (
-        <Box sx={{ width: 250, background: '#fbf1e6', height: '-webkit-fill-available' }}>
+        <Box onClick={handleDrawerClose} sx={{ width: 250, background: '#fbf1e6', height: '-webkit-fill-available' }}>
             <Box sx={{ display: "flex", justifyContent: 'center', padding: '2rem 0' }}>
                 <img src={navBanner.logo} alt='logo' style={{ width: "10rem", cursor: "pointer" }} onClick={handleLogoClick} />
             </Box>

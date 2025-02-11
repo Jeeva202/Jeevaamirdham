@@ -17,7 +17,7 @@ import UserDashboard from './pages/userDashboard/userDashboard';
 import AdminPanel from './pages/admin/AdminPanel';
 import LoginModal from './pages/login/loginModal';
 import { QueryClient, QueryClientProvider } from "react-query";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import NewLogin from './pages/login/NewLogin';
 import WhatsAppButton from './components/whatsapp/Whatsapp';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -28,7 +28,7 @@ import TermsAndCondition from './pages/login/TermsAndCondition';
 import { selectIsUserLoggedIn, setUserId } from './redux/cartSlice';
 import GlobalSnackbar from './components/Snackbar/SnackBar';
 import { showSnackbar } from './redux/SnackBarSlice';
-import {useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import RefundPolicy from './pages/refundPolicy/RefundPolicy';
 
 const queryClient = new QueryClient();
@@ -41,9 +41,9 @@ function App() {
   const [selectedYear, setSelectedYear] = useState(NaN);
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [allYears, setAllYears] = useState(true);
-  let check = !! localStorage.getItem("id")
+  let check = !!localStorage.getItem("id")
   let userCheck = useSelector(selectIsUserLoggedIn)
-// console.log("id check",check);
+  // console.log("id check",check);
   const loginPopup = () => {
     setIsLoginOpen(true); // Open the modal
   };
@@ -53,7 +53,10 @@ function App() {
   const closeLoginPopup = () => {
     setIsLoginOpen(false); // Close the modal
   };
-  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <>
@@ -107,7 +110,7 @@ function App() {
                   // <AdminPanel />
                   <ProtectedRoute>
                     <AdminPanel />
-                   </ProtectedRoute>
+                  </ProtectedRoute>
 
                 } />
               </Routes>

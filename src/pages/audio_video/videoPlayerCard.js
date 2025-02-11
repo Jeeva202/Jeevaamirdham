@@ -15,7 +15,7 @@ import {
 
 export default function VideoPlayerCard() {
     const [videoData, setVideoData] = useState([]);
-    const [currentVideo, setCurrentVideo] = useState(null);
+    const [activeVideo, setActiveVideo] = useState({ tab: null, index: null }); // Track the currently playing video with tab and index
     const [userPlan, setUserPlan] = useState(null);
     const [openModal, setOpenModal] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -35,6 +35,7 @@ export default function VideoPlayerCard() {
 
     const handleCategoryChange = (event, newValue) => {
         setSelectedCategory(newValue);
+        setActiveVideo({ tab: newValue, index: 0 });
     };
 
     const filteredVideos = videoData.filter(video => video.category === selectedCategory);
@@ -44,7 +45,6 @@ export default function VideoPlayerCard() {
             try {
                 const response = await axios.get(process.env.REACT_APP_URL + `/audio-video-page/all_video_data`);
                 setVideoData(response.data);
-                setCurrentVideo(response.data[0]);
                 const uniqueCategories = [...new Set(response.data.map(video => video.category))];
                 setCategories(uniqueCategories);
                 setSelectedCategory(uniqueCategories[0]); // Set first category as default
@@ -71,12 +71,12 @@ export default function VideoPlayerCard() {
         fetchUserPlan();
     }, [dispatch]);
 
-    const handleVideoClick = (video) => {
-        if ((!isUserLoggedIn || userPlan === 'basic') && video !== videoData[0]) {
-            setOpenModal(true)
-            return
+    const handleVideoClick = (tab, index) => {
+        if ((!isUserLoggedIn || userPlan === 'basic') && index !== 0) {
+            setOpenModal(true);
+            return;
         }
-        setCurrentVideo(video);
+        setActiveVideo({ tab, index });
     };
 
     return (
@@ -109,7 +109,7 @@ export default function VideoPlayerCard() {
                             }
                         }}
                     >
-                        {categories.map((category) => (
+                        {categories.map((category, tabIndex) => (
                             <Tab 
                                 key={category} 
                                 label={category} 
@@ -122,20 +122,20 @@ export default function VideoPlayerCard() {
 
                 <div className="video-section" style={{ display: 'flex', gap: '16px' }}>
                     <div className="main" style={{ flex: 2 }}>
-                        {currentVideo && (
+                        {activeVideo.tab === selectedCategory && activeVideo.index !== null && (
                             <div style={{ position: 'relative' }}>
-                                <video key={currentVideo.videofile_url} controls style={{ width: '100%', height: "100%", borderRadius: '8px', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)' }}>
-                                    <source src={currentVideo.videofile_url} type="video/mp4" />
+                                <video key={filteredVideos[activeVideo.index].videofile_url} controls style={{ width: '100%', height: "100%", borderRadius: '8px', boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)' }}>
+                                    <source src={filteredVideos[activeVideo.index].videofile_url} type="video/mp4" />
                                     Your browser does not support the video tag.
                                 </video>
                                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginTop: '8px', background: '#fff', padding: '1rem', borderRadius: '8px' }}>
-                                    <img src={currentVideo.coverImage_url} alt={currentVideo.title} style={{ width: '8rem', borderRadius: '8px' }} />
+                                    <img src={filteredVideos[activeVideo.index].coverImage_url} alt={filteredVideos[activeVideo.index].title} style={{ width: '8rem', borderRadius: '8px' }} />
                                     <div className="video-title" style={{ marginTop: '8px' }}>
                                         <div className="text" style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
-                                            {currentVideo.title}
+                                            {filteredVideos[activeVideo.index].title}
                                         </div>
                                         <div style={{ fontSize: '1rem', color: '#555' }}>
-                                            {currentVideo.subtitle}
+                                            {filteredVideos[activeVideo.index].subtitle}
                                         </div>
                                     </div>
                                 </div>
@@ -150,10 +150,9 @@ export default function VideoPlayerCard() {
                             <div
                                 className="embed"
                                 key={index}
-                                onClick={() => handleVideoClick(item)}
+                                onClick={() => handleVideoClick(selectedCategory, index)}
                                 style={{
                                     cursor: (!isUserLoggedIn || userPlan === 'basic') && index !== 0 ? 'default' : 'pointer',
-                                    // pointerEvents: (!isUserLoggedIn || userPlan === 'basic') && index !== 0 ? 'none' : 'auto',
                                     marginBottom: '6px',
                                     display: 'flex',
                                     alignItems: 'center',
@@ -180,7 +179,7 @@ export default function VideoPlayerCard() {
                                             alignItems: 'center',
                                         }}
                                     >
-                                        <IconButton sx={{background:'#44444426'}} onClick={() => handleVideoClick(item)} >  
+                                        <IconButton sx={{background:'#44444426'}} onClick={() => handleVideoClick(selectedCategory, index)} >  
                                         <LockIcon style={{ fontSize: '1.5rem' }} />
                                         </IconButton>
                                         
