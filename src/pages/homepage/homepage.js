@@ -106,6 +106,7 @@ export default function HomePage({selectedYear, setSelectedYear,allYears, setAll
                                         transform: 'translateY(-50%)',
                                         bgcolor: 'rgba(255, 255, 255, 0.8)',
                                         '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.9)' },
+                                        zoom: { xs: "70%", sm: "100%" },
                                     }}
                                 >
                                     <ArrowBackIosNewRoundedIcon />
@@ -120,6 +121,8 @@ export default function HomePage({selectedYear, setSelectedYear,allYears, setAll
                                         transform: 'translateY(-50%)',
                                         bgcolor: 'rgba(255, 255, 255, 0.8)',
                                         '&:hover': { bgcolor: 'rgba(255, 255, 255, 0.9)' },
+                                        zoom: { xs: "70%", sm: "100%" },
+
                                     }}
                                 >
                                     <ArrowForwardIosRoundedIcon />
