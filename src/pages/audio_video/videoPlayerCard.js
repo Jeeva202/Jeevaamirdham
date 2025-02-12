@@ -36,7 +36,7 @@ export default function VideoPlayerCard() {
     const handleCategoryChange = (event, newValue) => {
         setSelectedCategory(newValue);
         setActiveVideo({ tab: newValue, index: 0 });
-    };
+    }; 
 
     const filteredVideos = videoData.filter(video => video.category === selectedCategory);
 
@@ -71,7 +71,14 @@ export default function VideoPlayerCard() {
         fetchUserPlan();
     }, [dispatch]);
 
+    useEffect(() => {
+        if (categories.length > 0) {
+            setActiveVideo({ tab: categories[0], index: 0 });
+        }
+    }, [categories]);
+
     const handleVideoClick = (tab, index) => {
+        console.log(`handle`, tab)
         if ((!isUserLoggedIn || userPlan === 'basic') && index !== 0) {
             setOpenModal(true);
             return;

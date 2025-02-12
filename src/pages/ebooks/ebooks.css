@@ -150,9 +150,9 @@
     line-height: 44px;
     letter-spacing: -2px;
 }
-@media (min-width: 425px) {
+@media (max-width: 435px) {
     .audio-title-section>.audio-title {
-        font-size: 1.5rem;
+        font-size: 1.1rem;
         font-weight: 700;
         line-height: 24px;
         letter-spacing: -2px;
@@ -169,7 +169,7 @@
     font-size: 0.8rem;
     line-height: 44px;
 }
-@media (min-width: 425px){
+@media (max-width: 435px){
     .audio-title-section button {
         cursor: pointer;
         padding: 0 10px;
@@ -197,11 +197,10 @@
     line-height: 1rem;
     font-weight: 500;
 }
-@media (min-width: 425px){
+@media (max-width: 435px){
     .audio-play-title>.index{
         padding: 5px 8px;
-        font-size: 0.8rem;
-        line-height: 0.8rem;
+        font-size: 0.7rem;
         white-space: nowrap;
     }
 }
@@ -216,9 +215,9 @@
     text-decoration-skip-ink: none;
 
 }
-@media (min-width: 425px){
+@media (max-width: 435px){
     .audio-play-title p{
-        font-size: 14px;
+        font-size: 12px;
         line-height: 14px;
     }
 }

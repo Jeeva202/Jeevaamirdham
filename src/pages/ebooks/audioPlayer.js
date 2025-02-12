@@ -242,7 +242,7 @@ export default function AudioPlayer({
                                 aria-controls={`panel${index}-content`}
                                 id={`panel${index}-header`}
                             >
-                                <div className="audio-play-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                                <div className="audio-play-title" style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', width: '100%' }}>
                                     <div className="index">Chapter {index + 1}</div>
                                     <Typography className="audio-play-title">{audio.title}</Typography>
                                 </div>
@@ -257,8 +257,8 @@ export default function AudioPlayer({
                                 }}
                             >
                                 <div className="player-transcript-section" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                                    <div className="player" style={{ width: '100%' }}>
-                                        <div className="audio-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                    <div className="player">
+                                        <div className="audio-header" style={{ display: 'flex', flexDirection:{md: 'row',sm: 'column', xs: 'column'}, alignItems: 'center' }}>
                                             <img
                                                 src={audio.img || no_image}
                                                 alt={"thumbnail image"}
