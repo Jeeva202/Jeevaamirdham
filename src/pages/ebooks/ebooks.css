@@ -94,16 +94,30 @@
     gap: 3%;
     justify-content: center;
     margin-top: 1rem;
+    @media screen and (max-width: 430px) {
+        flex-direction: column;
+        align-items: center;
+        
+    }
 }
 
 .img-details-section img {
     width: 25vw;
+    @media screen and (max-width: 430px) {
+        width: 100%;
+    }
 }
 
 .img-details-section>.details {
     padding-top: 1rem;
     width: 50%;
     line-height: 1.7;
+    @media screen and (max-width: 430px) {
+        width: 100%;
+        text-align: justify;
+        font-size: 14px;
+        
+    }
 }
 
 .audio-section {
@@ -248,6 +262,11 @@
     display: flex;
     align-items: center;
     margin-bottom: 15px;
+    @media screen and (max-width: 430px) {
+        flex-direction: column;
+        /* align-items: flex-start; */
+        
+    }
 }
 
 .audio-play-section .audio-image {
@@ -1308,7 +1327,7 @@
     
     .ebook .year-wrapper, 
     .ebooks-one-year .month-wrapper {
-        height: 300px;
+        height: 200px;
     }
     
     .ebook .year-wrapper button,

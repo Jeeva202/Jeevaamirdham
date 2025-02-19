@@ -31,6 +31,10 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     justify-content: space-between;
     cursor: pointer;
+    @media screen and (max-width: 768px) {
+        width: 250px;
+        
+    }
 }
 
 .shop-section .book-card:hover {

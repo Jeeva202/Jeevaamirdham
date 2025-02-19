@@ -127,7 +127,7 @@ export default function VideoPlayerCard() {
                     </Tabs>
                 </Box>
 
-                <div className="video-section" style={{ display: 'flex', gap: '16px' }}>
+                <div className="video-section" style={{ display: 'flex', gap: '16px', flexDirection: { xs: 'column', md: 'row' } }}>
                     <div className="main" style={{ flex: 2 }}>
                         {activeVideo.tab === selectedCategory && activeVideo.index !== null && (
                             <div style={{ position: 'relative' }}>
@@ -135,13 +135,13 @@ export default function VideoPlayerCard() {
                                     <source src={filteredVideos[activeVideo.index].videofile_url} type="video/mp4" />
                                     Your browser does not support the video tag.
                                 </video>
-                                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginTop: '8px', background: '#fff', padding: '1rem', borderRadius: '8px' }}>
-                                    <img src={filteredVideos[activeVideo.index].coverImage_url} alt={filteredVideos[activeVideo.index].title} style={{ width: '8rem', borderRadius: '8px' }} />
-                                    <div className="video-title" style={{ marginTop: '8px' }}>
-                                        <div className="text" style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px', background: '#fff', padding: '1rem', borderRadius: '8px', flexDirection: { xs: 'column', md: 'row' } }}>
+                                    <img className="video-img" src={filteredVideos[activeVideo.index].coverImage_url} alt={filteredVideos[activeVideo.index].title} style={{ width: '100%', borderRadius: '8px' }} />
+                                    <div className="video-title" style={{ marginTop: '8px', textAlign: { xs: 'center', md: 'left' } }}>
+                                        <div className="text" style={{ fontWeight: 'bold' }}>
                                             {filteredVideos[activeVideo.index].title}
                                         </div>
-                                        <div style={{ fontSize: '1rem', color: '#555' }}>
+                                        <div className="sub-text" style={{ color: '#555' }}>
                                             {filteredVideos[activeVideo.index].subtitle}
                                         </div>
                                     </div>
@@ -167,7 +167,9 @@ export default function VideoPlayerCard() {
                                     background: '#fff',
                                     position: 'relative',
                                     borderRadius: '8px',
-                                    overflow: 'hidden',
+                                    border: "1px solid #dee",
+
+                                    // overflow: 'hidden',
                                 }}
                             >
                                 {/* Grey Overlay for Locked Content */}
@@ -196,7 +198,7 @@ export default function VideoPlayerCard() {
                                 {/* Video Thumbnail */}
                                 <div
                                     style={{
-                                        width: '30%',
+                                        width: '25%',
                                         borderRadius: '8px',
                                     }}
                                 >

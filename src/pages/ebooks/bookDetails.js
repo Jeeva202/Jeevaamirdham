@@ -7,12 +7,13 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { Loader } from "../../components/loader/loader";
 import Gif_Loader from "../../components/loader/Gif_Loader";
+import { useMediaQuery } from "@mui/material";
 
 export default function BookDetails({ backToHomePage, booksData, catSelectedBook, changeBook, handleAddToCart, isOpen }) {
     const [quantity, setQuantity] = useState(1);
     console.log("catselect", catSelectedBook);
     const bookId = parseInt(catSelectedBook) + 1
-
+    const isMobile = useMediaQuery("(max-width:768px)");
     // Scroll to the top of the page when the component rerenders
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -67,7 +68,8 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
                 alignItems: 'center',
                 gap: '1rem',
                 padding: '1rem 0',
-                margin: '0 2rem'
+                margin: isMobile ? '0 1rem' : '0 2rem',
+                flexWrap: 'nowrap'
             }}>
                 <a style={{
                     cursor: 'pointer',
@@ -84,13 +86,13 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
 
             <div style={{
                 display: 'grid',
-                gridTemplateColumns: 'minmax(300px, 1fr) 2fr',
+                gridTemplateColumns: isMobile ? '1fr' : 'minmax(300px, 1fr) 2fr',
                 gap: '2rem',
-                padding: '2rem',
-                margin: '1rem 2rem',
+                padding: isMobile ? '1rem' : '2rem',
+                margin: isMobile ? '1rem' : '1rem 2rem',
                 backgroundColor: '#fff',
                 borderRadius: '8px',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
             }}>
                 <div style={{
                     display: 'flex',
@@ -109,7 +111,9 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        marginBottom: '1.5rem'
+                        marginBottom: '1.5rem',
+                        flexWrap: 'nowrap',
+                        zoom: isMobile ? '0.8' : '1'
                     }}>
                         <div
                             style={{
@@ -177,7 +181,11 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
                                 <div style={{
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: '2rem'
+                                    gap: '2rem',
+                                    flexWrap: 'wrap',
+                                    '@media (max-width: 430px)': {
+                                        flexWrap: 'nowrap',
+                                    }
                                 }}>
                                     <div style={{
                                         padding: '1rem',
@@ -229,8 +237,8 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
                 </div>
             </div>
             <div style={{
-                margin: '2rem',
-                padding: '2rem',
+                margin: isMobile ? '1rem' : '2rem',
+                padding: isMobile ? '1rem' : '2rem',
                 backgroundColor: '#fff',
                 borderRadius: '8px',
                 boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
@@ -256,7 +264,7 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
                 </div>
             </div>
             <div style={{
-                padding: '2rem'
+                padding: isMobile ? '1rem' : '2rem'
             }}>
             <div style={{
                 marginBottom: '2rem',
@@ -276,7 +284,7 @@ export default function BookDetails({ backToHomePage, booksData, catSelectedBook
                 display: 'grid',
                 gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
                 gap: '2rem',
-                padding: '1rem'
+                padding: isMobile ? '0rem' : '1rem'
             }}>
                 {booksData.map((e, i) => {
 

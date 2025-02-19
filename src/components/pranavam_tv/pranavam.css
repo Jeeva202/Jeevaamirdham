@@ -111,6 +111,9 @@
     flex-direction: column;
     gap: 5px;
 }
+.video-img{
+    max-width: 8rem;
+}
 
 .add-info {
     display: flex;
@@ -150,7 +153,13 @@
     }
 
     .video-title .text {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
+    }
+    .video-title .sub-text{
+        font-size: 0.7rem;
+    }
+    .video-img{
+        max-width: 6rem;
     }
 
     .add-info .count {

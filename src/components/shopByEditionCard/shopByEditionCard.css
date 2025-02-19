@@ -67,13 +67,11 @@ a {
         align-items: flex-start;
         display: flex;
         align-items: center;
-        width: 80%;
-        margin-right: 10px;
         justify-content: space-evenly;
     }
 
     .card-img {
-        width: 18vw;
+        width: 22vw;
         height: auto;
     }
 
