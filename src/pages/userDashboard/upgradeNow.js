@@ -16,7 +16,13 @@ export default function UpgradeNow({ open, planName, handleClose, handleOpen, pl
     useEffect(() => {
         // Filter out the "basic" plan and update the state with only "elite" and "premium" plans
         const filteredPlans = plans.filter(plan => plan.name !== 'basic');
-        setUpgradePlans(filteredPlans);
+        
+        // If the current plan is "premium", only show the "premium" plan in the modal
+        if (planName === 'premium') {
+            setUpgradePlans([plans.find(plan => plan.name === 'premium')]);
+        } else {
+            setUpgradePlans(filteredPlans); // Show "elite" and "premium" if current plan isn't "premium"
+        }
 
         // Fetch current plan price if available (assuming the current plan data is passed as planName)
         if (planName) {
@@ -40,22 +46,42 @@ export default function UpgradeNow({ open, planName, handleClose, handleOpen, pl
             if (response.ok) {
                 const amount = data.price;
 
+                // Step 1: Create Razorpay order on backend
+                const orderResponse = await fetch(process.env.REACT_APP_URL + '/emagazine-page/create-order', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ amount: amount, user_id: userData.id, planName: planName })
+                });
+
+                const orderData = await orderResponse.json();
+
+                if (!orderResponse.ok) {
+                    throw new Error('Failed to create order');
+                }
+
+                const orderId = orderData.orderId;
+
+                // Step 2: Open Razorpay payment gateway with the created order
                 const options = {
-                    key: "rzp_live_tjwWB1t6xxjHG1", // Your Razorpay key
+                    key: "rzp_live_OwYWxXYV5JFbXK", // Your Razorpay key
                     amount: amount * 100, // Amount in paise
                     currency: "INR",
                     name: "Jeevaamirdham",
                     description: "Subscription Payment",
+                    order_id: orderId, // Pass the created order ID here
                     handler: async function (response) {
                         console.log("Payment successful:", response);
 
                         // Prepare payment data to send to the backend
                         const paymentData = {
                             razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_order_id: response.razorpay_order_id,
                             plan: planName,
                             amount: amount,
                             user_id: userData?.id || null,
-                            purchaseType:data.purchase_type
+                            purchaseType: data.purchase_type
                         };
 
                         // Send payment data to your backend to store it
@@ -71,18 +97,14 @@ export default function UpgradeNow({ open, planName, handleClose, handleOpen, pl
                             if (res.ok) {
                                 const data = await res.json();
                                 console.log("Payment data saved successfully:", data);
-                                // alert("Payment successful and subscription activated!");
                                 dispatch(showSnackbar({ message: "Payment successful and subscription activated!", severity: "success" }));
                                 handleClose();
-                                
                             } else {
                                 console.error("Failed to update backend");
-                                // alert("Payment was successful but could not update subscription. Please contact support.");
                                 dispatch(showSnackbar({ message: "Payment was successful but could not update subscription. Please contact support.", severity: "error" }));
                             }
                         } catch (error) {
                             console.error("Error while updating backend:", error);
-                            // alert("An error occurred. Please contact support.");
                             dispatch(showSnackbar({ message: "An error occurred. Please contact support.", severity: "error" }));
                         }
                     },
@@ -99,16 +121,15 @@ export default function UpgradeNow({ open, planName, handleClose, handleOpen, pl
 
                 const razorpay = new window.Razorpay(options);
                 razorpay.open();
+
             } else {
                 console.error('Error fetching plan price');
-                // alert('Error fetching plan price');
                 dispatch(showSnackbar({ message: "Error fetching plan price", severity: "error" }));
             }
         } catch (error) {
             console.error('Error:', error);
-            // alert('An error occurred while fetching plan details');
             dispatch(showSnackbar({ message: "An error occurred while fetching plan details", severity: "error" }));
-        } 
+        }
     };
 
     const payNow = (plan) => {
@@ -161,7 +182,7 @@ export default function UpgradeNow({ open, planName, handleClose, handleOpen, pl
                             Select the perfect subscription plan for your needs
                         </Typography>
                     </Box>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={2} justifyContent={upgradePlans.length === 1 ? 'center' : 'flex-start'}>
                         {upgradePlans.map((plan, index) => {
                             // Calculate the upgrade cost by subtracting current plan price
                             const upgradeCost = plan.priceInt - currentPlanPrice;
@@ -192,7 +213,7 @@ export default function UpgradeNow({ open, planName, handleClose, handleOpen, pl
                                                         </ListItemIcon>
                                                         <ListItemText primary={feature} />
                                                     </ListItem>
-                                                ))}
+                                                ))} 
                                             </List>
                                         </CardContent>
                                         <Box textAlign="center" mb={2} sx={{ px: 2 }}>
@@ -208,9 +229,6 @@ export default function UpgradeNow({ open, planName, handleClose, handleOpen, pl
                                 </Grid>
                             );
                         })}
-                        <Typography variant="caption" display="block" sx={{ my: 2, color:'red',fontWeight:"bold" }}>
-                                            * Note : Please do not pay through QR code since we are facing technical issue using that
-                                                </Typography>
                     </Grid>
                 </Container>
             </Box>

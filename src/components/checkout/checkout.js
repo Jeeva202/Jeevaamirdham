@@ -67,34 +67,46 @@ export default function Checkout() {
       email: localStorage.getItem('email') || null,
       id: localStorage.getItem('id') || null
     };
-
+  
     try {
-
-      // Fetch the price of the selected plan from the backend
-      // const response = await fetch(process.env.REACT_APP_URL + `/ebooks/get-book-amount?id=${userData.id}`);
-      // const data = await response.json();
-
-      // if (response.ok) {
-      //     const amount = data.price;
-
+      // Step 1: Create Razorpay order on backend
+      const response = await fetch(process.env.REACT_APP_URL + '/ebooks/create-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount: totalAmount, user_id: userData.id })
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        throw new Error('Failed to create order');
+      }
+  
+      const orderId = data.orderId;
+  
+      // Step 2: Open Razorpay payment gateway
       const options = {
-        key: "rzp_live_tjwWB1t6xxjHG1", // Your Razorpay key
+        key: "rzp_live_OwYWxXYV5JFbXK", // Your Razorpay key
         amount: totalAmount * 100, // Amount in paise
         currency: "INR",
         name: "Jeevaamirdham",
         description: "Subscription Payment",
+        order_id: orderId, // Pass the created order ID here
         handler: async function (response) {
           console.log("Payment successful:", response);
-
+  
           // Prepare payment data to send to the backend
           const paymentData = {
             razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
             amount: totalAmount,
             user_id: userData?.id || null,
             userDetails: userDetails,
             cartDetails: cartDetails
           };
-
+  
           // Send payment data to your backend to store it
           try {
             const res = await fetch(process.env.REACT_APP_URL + "/ebooks/payment-success", {
@@ -104,32 +116,24 @@ export default function Checkout() {
               },
               body: JSON.stringify(paymentData),
             });
-
+  
             if (res.ok) {
               const data = await res.json();
               const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
               const cartData = response.data.cart_details;
-              setCartDetails(cartData)
+              setCartDetails(cartData);
               console.log("Payment data saved successfully:", cartData);
-              // alert("Payment successful.");
               dispatch(showSnackbar({ message: "Payment successful.", severity: "success" }));
-
-              // window.location.reload();
+  
               navigate('/dashboard?tab=2');
               dispatch(setCartDetails(cartData));
-
-
             } else {
               console.error("Failed to update backend");
-              // alert("Payment was successful but could not update subscription. Please contact support.");
               dispatch(showSnackbar({ message: "Payment was successful but could not update subscription. Please contact support.", severity: "error" }));
-
             }
           } catch (error) {
             console.error("Error while updating backend:", error);
-            // alert("An error occurred. Please contact support.");
             dispatch(showSnackbar({ message: "An error occurred. Please contact support.", severity: "error" }));
-
           }
         },
         prefill: {
@@ -142,20 +146,16 @@ export default function Checkout() {
           color: "#7C3AED",
         },
       };
-
+  
       const razorpay = new window.Razorpay(options);
       razorpay.open();
-      // } else {
-      //     console.error('Error fetching plan price');
-      //     alert('Error fetching plan price');
-      // }
+  
     } catch (error) {
       console.error('Error:', error);
-      // alert('An error occurred while fetching plan details');
-      dispatch(showSnackbar({ message: "An error occurred while fetching plan details", severity: "error" }));
-
+      dispatch(showSnackbar({ message: "An error occurred while fetching book details", severity: "error" }));
     }
-  }
+  };
+  
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();

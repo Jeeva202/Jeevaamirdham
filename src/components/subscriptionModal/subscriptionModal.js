@@ -65,87 +65,105 @@ export default function SubscriptionModal({ open, handleClose, handleOpen }) {
             email: localStorage.getItem('email') || null,
             id: localStorage.getItem('id') || null
         };
-
+    
         try {
             // Fetch the price of the selected plan from the backend
             const response = await fetch(process.env.REACT_APP_URL + `/emagazine-page/get-plan-amount?planName=${planName}`);
             const data = await response.json();
-
+    
             if (response.ok) {
                 const amount = data.price;
-
-                const options = {
-                    key: "rzp_live_tjwWB1t6xxjHG1", // Your Razorpay key
-                    amount: amount * 100, // Amount in paise
-                    currency: "INR",
-                    name: "Jeevaamirdham",
-                    description: "Subscription Payment",
-                    handler: async function (response) {
-                        console.log("Payment successful:", response);
-
-                        // Prepare payment data to send to the backend
-                        const paymentData = {
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            plan: planName,
-                            amount: amount,
-                            user_id: userData?.id || null,
-                        };
-
-                        // Send payment data to your backend to store it
-                        try {
-                            const res = await fetch(process.env.REACT_APP_URL + "/emagazine-page/payment-success", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify(paymentData),
-                            });
-
-                            if (res.ok) {
-                                const data = await res.json();
-                                console.log("Payment data saved successfully:", data);
-                                // alert("Payment successful and subscription activated!");
-                                dispatch(showSnackbar({ message: "Payment successful and subscription activated!", severity: "success" }));
-
-                            } else {
-                                console.error("Failed to update backend");
-                                // alert("Payment was successful but could not update subscription. Please contact support.");
-                                dispatch(showSnackbar({ message: "Payment was successful but could not update subscription. Please contact support.", severity: "error" }));
-
+    
+                // Call the backend to create the Razorpay order
+                const orderResponse = await fetch(process.env.REACT_APP_URL + "/emagazine-page/create-order", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        amount: amount,
+                        user_id: userData?.id,
+                        planName: planName
+                    }),
+                });
+    
+                const orderData = await orderResponse.json();
+    
+                if (orderResponse.ok && orderData?.orderId) {
+                    const orderId = orderData.orderId;
+    
+                    // Proceed with Razorpay payment (initialize Razorpay with orderId)
+                    const options = {
+                        key: "rzp_live_OwYWxXYV5JFbXK", // Your Razorpay key
+                        amount: amount * 100, // Amount in paise
+                        currency: "INR",
+                        order_id: orderId, // Use the orderId generated from the backend
+                        name: "Jeevaamirdham",
+                        description: "Subscription Payment",
+                        handler: async function (response) {
+                            console.log("Payment successful:", response);
+    
+                            // Prepare payment data to send to the backend
+                            const paymentData = {
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                plan: planName,
+                                amount: amount,
+                                user_id: userData?.id || null,
+                            };
+    
+                            // Send payment data to your backend to store it
+                            try {
+                                const res = await fetch(process.env.REACT_APP_URL + "/emagazine-page/payment-success", {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                    },
+                                    body: JSON.stringify(paymentData),
+                                });
+    
+                                if (res.ok) {
+                                    const data = await res.json();
+                                    console.log("Payment data saved successfully:", data);
+                                    // alert("Payment successful and subscription activated!");
+                                    dispatch(showSnackbar({ message: "Payment successful and subscription activated!", severity: "success" }));
+                                } else {
+                                    console.error("Failed to update backend");
+                                    // alert("Payment was successful but could not update subscription. Please contact support.");
+                                    dispatch(showSnackbar({ message: "Payment was successful but could not update subscription. Please contact support.", severity: "error" }));
+                                }
+                            } catch (error) {
+                                console.error("Error while updating backend:", error);
+                                // alert("An error occurred. Please contact support.");
+                                dispatch(showSnackbar({ message: "An error occurred. Please contact support.", severity: "error" }));
                             }
-                        } catch (error) {
-                            console.error("Error while updating backend:", error);
-                            // alert("An error occurred. Please contact support.");
-                            dispatch(showSnackbar({ message: "An error occurred. Please contact support.", severity: "error" }));
-
-                        }
-                    },
-                    prefill: {
-                        name: userData?.name || "",
-                        email: userData?.email || "",
-                        contact: userData?.contact || "",
-                        id: userData?.id || "",
-                    },
-                    theme: {
-                        color: "#7C3AED",
-                    },
-                };
-
-                const razorpay = new window.Razorpay(options);
-                razorpay.open();
+                        },
+                        prefill: {
+                            name: userData?.name || "",
+                            email: userData?.email || "",
+                            contact: userData?.contact || "",
+                            id: userData?.id || "",
+                        },
+                        theme: {
+                            color: "#7C3AED",
+                        },
+                    };
+    
+                    const razorpay = new window.Razorpay(options);
+                    razorpay.open();
+                } else {
+                    console.error('Error creating Razorpay order');
+                    dispatch(showSnackbar({ message: "Error creating Razorpay order.", severity: "error" }));
+                }
             } else {
                 console.error('Error fetching plan price');
-                // alert('Error fetching plan price');
                 dispatch(showSnackbar({ message: "Error fetching plan price.", severity: "error" }));
-
             }
         } catch (error) {
             console.error('Error:', error);
-            // alert('An error occurred while fetching plan details');
             dispatch(showSnackbar({ message: "An error occurred while fetching plan details.", severity: "error" }));
-
         }
     };
+    
     const payNow = (plan) => {
 
         if (isUserLoggedIn) {
