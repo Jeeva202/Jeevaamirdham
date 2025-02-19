@@ -384,9 +384,9 @@ export default function AudioPlayer({
                                     </Card>
                                 </Grid>
                             ))}
-                            <Typography variant="caption" display="block" sx={{ my: 2, color: 'red',fontWeight:"bold" }}>
+                            {/* <Typography variant="caption" display="block" sx={{ my: 2, color: 'red',fontWeight:"bold" }}>
                                 * Note : Please do not pay through QR code since we are facing technical issue using that
-                            </Typography>
+                            </Typography> */}
                         </Grid>
                     </Container>
                 </Box>

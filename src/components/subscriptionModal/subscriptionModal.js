@@ -365,7 +365,7 @@ export default function SubscriptionModal({ open, handleClose, handleOpen }) {
                     </Grid>
                 ))}
             </Grid>
-            <Typography
+            {/* <Typography
                 variant="caption"
                 display="block"
                 sx={{
@@ -377,7 +377,7 @@ export default function SubscriptionModal({ open, handleClose, handleOpen }) {
                 }}
             >
                 * Note: Please do not pay through QR code since we are facing technical issues.
-            </Typography>
+            </Typography> */}
         </Container>
     </Box>
 </Modal>
