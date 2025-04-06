@@ -87,6 +87,45 @@
     font-weight: 600;
 }
 
+.audio-play-button {
+    background: none;
+    border: none;
+    color: #DC6803;
+    cursor: pointer;
+    padding: 0 5px;
+    /* padding: 0 5px 0 0; */
+    margin-right: 5px;
+    display: inline-flex;
+    align-items: center;
+    transition: transform 0.2s ease;
+  }
+  
+.audio-play-button:hover {
+transform: scale(1.1);
+}
+
+.audio-play-button:focus {
+outline: none;
+}
+.audio-play-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+.audio-play-button:disabled {
+opacity: 0.5;
+cursor: not-allowed;
+}
+  
+.audio-play-button:not(:disabled):hover {
+transform: scale(1.1);
+}
+@media (max-width: 768px) {
+.audio-play-button {
+    padding: 0 3px 0 0;
+    margin-right: 3px;
+}
+}
 @media (max-width: 768px) {
     .today-thoughts-content {
         padding: 0.6rem 1rem;

@@ -52,6 +52,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
     const [paid, setPaid] = useState(false)
     const [plan, setPlan] = useState('basic')
     const [expanded, setExpanded] = useState(0);
+    const [isAccountExpired, setIsAccountExpired] = useState(false);
     const handleChange = (panel) => (event, isExpanded) => {
         setExpanded(isExpanded ? panel : false);
     };
@@ -372,17 +373,23 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
     //     },
     // })
     const navigateToListenPage = async () => {
-        const uid = localStorage.getItem("id")
-        try {
-            const response = await axios.get(process.env.REACT_APP_URL + `/emagazine-page/audiofile?uid=${uid}&year=${selectedYear}&month=${selectedMonthNumber}`)
-            setAudioData(response.data)
-            setListenPage(true)
-
+        if(isAccountExpired){
+            dispatch(showSnackbar({ message: "Your account has been expired, Please renew/upgrade to continue listening", severity: "warning" }));
         }
-        catch (err) {
-            console.error("Error fetching audio data:", error);
-
+        else{
+            const uid = localStorage.getItem("id")
+            try {
+                const response = await axios.get(process.env.REACT_APP_URL + `/emagazine-page/audiofile?uid=${uid}&year=${selectedYear}&month=${selectedMonthNumber}`)
+                setAudioData(response.data)
+                setListenPage(true)
+    
+            }
+            catch (err) {
+                console.error("Error fetching audio data:", error);
+    
+            }
         }
+
 
     }
     const backToBookBuySection = () => {
@@ -479,11 +486,23 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
     const handleCategoryClick = (categoryId) => {
         setSelectedCategory([...selectedCategory, categoryId]);
     };
-    const redirectToMonthPage = (month) => {
+    const redirectToMonthPage = async (month) => {
         // console.log(month);
 
         setSelectedMonth(month)
         window.scrollTo(0, 0);
+        const accountExpiry = await axios.get(process.env.REACT_APP_URL + `/account-expiry`, {
+            params: {
+                uid: localStorage.getItem('id')
+            },
+        })
+        if(accountExpiry["isUserActive"]){
+            setIsAccountExpired(false)
+        }
+        else{
+            setIsAccountExpired(true)
+        }
+        
     }
 
 
