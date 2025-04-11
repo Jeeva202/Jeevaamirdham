@@ -496,7 +496,7 @@ export default function Ebooks({selectedYear, setSelectedYear, allYears, setAllY
                 uid: localStorage.getItem('id')
             },
         })
-        if(accountExpiry["isUserActive"]){
+        if(accountExpiry.data["isUserActive"]){
             setIsAccountExpired(false)
         }
         else{
