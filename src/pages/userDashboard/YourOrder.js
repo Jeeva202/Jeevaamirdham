@@ -198,9 +198,12 @@ const YourOrder = () => {
                                 </Typography>
                                 <Typography sx={{ fontSize: '0.8rem', fontWeight: 'bold' }}>
                                 Develivered within 5 to 7 working days.
+                                <br/>
+                                Status: {order.status}
                                     {/* <Typography sx={{ fontSize: '0.8rem' }}>{order.returnWindow}</Typography> */}
                                 </Typography>
                             </Box>
+                            
 
 
 

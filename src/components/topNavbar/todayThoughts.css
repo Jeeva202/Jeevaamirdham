@@ -85,6 +85,8 @@
     border-radius: 4px;
     color: #DC6803;
     font-weight: 600;
+    white-space: nowrap;
+    margin-right: 10px ;
 }
 
 .audio-play-button {

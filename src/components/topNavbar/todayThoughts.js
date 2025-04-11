@@ -144,7 +144,7 @@ export default function TodayThoughts() {
               }}
             />
             <div className="today-thoughts-text">
-              <h4>
+              <h4 style={{display: 'flex', alignItems: 'center'}}>
                 {thoughts[currentThought]?.audioUrl && (
                   <button 
                     onClick={toggleAudio} 
@@ -153,9 +153,9 @@ export default function TodayThoughts() {
                     aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
                   >
                     {isPlaying ? (
-                      <PauseCircleFilled fontSize="small" />
+                      <PauseCircleFilled fontSize="large" />
                     ) : (
-                      <PlayCircleFilled fontSize="small" />
+                      <PlayCircleFilled fontSize="large" />
                     )}
                   </button>
                 )}

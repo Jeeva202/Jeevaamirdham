@@ -22,7 +22,7 @@ const FavoriteItem = ({ image, title, link, buttonText, onDelete, bookId, isDele
             display: 'flex', 
             flexDirection: 'column', 
             margin: '1rem', 
-            maxWidth: 225,
+            width: 200,
             position: 'relative' 
         }}>
             <IconButton
@@ -30,7 +30,7 @@ const FavoriteItem = ({ image, title, link, buttonText, onDelete, bookId, isDele
                     position: 'absolute',
                     right: 8,
                     top: 8,
-                    backgroundColor: 'transparent',
+                    backgroundColor: '#f5f5f5b8',
                     '&:hover': {
                         backgroundColor: '#f0930029',
                     }

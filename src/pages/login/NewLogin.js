@@ -159,28 +159,6 @@ const LoginModal = () => {
 
     };
 
-    // const handleSendOtp = async () => {
-    //     dispatch(clearLoginOtp());
-    //     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    //     const expiry = Date.now() + 5 * 60 * 1000; // 5 minutes from now
-    //     console.log(otp, expiry);
-    //     // Store OTP in Redux
-    //     dispatch(setLoginOtp({ otp, expiry }));
-    //     console.log('New OTP sent successfully!', loginOtp);
-    //     // Simulate sending OTP via email
-    //     try {
-    //         await axios.post(`${domain}/login/send-otpToEmail`, { email: email.toLowerCase(), otp });
-    //         setSnackbarMessage('OTP has been sent successfully');
-    //         setSnackbarOpen(true);
-    //         console.log('OTP sent successfully!');
-    //         setShowOtpScreen(true);
-    //     } catch (error) {
-    //         console.error('Failed to send OTP:', error);
-    //         setSnackbarMessage('Failed to send OTP');
-    //         setSnackbarOpen(true);
-
-    //     }
-    // };
     const handleSendOtp = async () => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_URL}/login/send-otpToEmail`, {
@@ -202,42 +180,7 @@ const LoginModal = () => {
         }
     };
     
-    // const handleVerifyOtp = () => {
-    //     console.log("Verify OTP!", otp, loginOtp, loginOtpExpiry);
-    //     const storedOtp = loginOtp
-    //     console.log('verify otppp!', storedOtp)
-    //     const expiry = loginOtpExpiry;
-    //     // Validate OTP and expiry
-    //     if (!storedOtp || !expiry) {
-    //         console.log("OTP or expiry not set.");
-    //         setSnackbarMessage("OTP not set. Please request a new OTP.");
-    //         setSnackbarOpen(true);
-    //         dispatch(clearLoginOtp());
-    //         return;
-    //     }
-    //     // Check if the OTP is expired
-    //     const currentTime = Date.now();
-    //     if (currentTime > expiry) {
-    //         console.log("OTP expired.");
-    //         setSnackbarMessage("OTP expired. Please request a new OTP.");
-    //         setSnackbarOpen(true);
-    //         dispatch(clearLoginOtp());
-    //         return;
-    //     }
-    //     // Compare the input OTP with the stored OTP
-    //     if (otp === storedOtp) {
-    //         console.log("OTP verified successfully!");
-    //         setSnackbarMessage("OTP verified successfully.");
-    //         setSnackbarOpen(true);
-    //         dispatch(clearLoginOtp()); // Clear OTP from Redux after successful verification
-    //         setShowOtpScreen(false); // Hide OTP screen
-    //         setShowCreatePasswd(true); // Show create password fields after OTP is verified
-    //     } else {
-    //         console.log("Invalid OTP.");
-    //         setSnackbarMessage("Invalid OTP. Please try again.");
-    //         setSnackbarOpen(true);
-    //     }
-    // };
+    
     const handleVerifyOtp = async () => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_URL}/login/verify-otp`, {
@@ -330,14 +273,6 @@ const LoginModal = () => {
             setShowExstingUser(false);
             setShowOtpScreen(true);
             handleSendOtp();
-            // const response = await axios.post(`${domain}/login/forgot-password`, { email });
-            // if (response.data.success) {
-            //     setSnackbarMessage("Password reset link sent to your email.");
-            //     setSnackbarOpen(true);
-            // } else {
-            //     setSnackbarMessage("Failed to send reset link. Please try again.");
-            //     setSnackbarOpen(true);
-            // }
         } catch (error) {
             setSnackbarMessage("An error occurred. Please try again.");
             setSnackbarOpen(true);
@@ -461,20 +396,6 @@ const LoginModal = () => {
 const LoginOptions = ({ setShowSignIn, handleGoogleLoginSuccess, handleGoogleLoginError, handleFacebookLogin, responseFacebook, navigate }) => (
     <>
         <GoogleLogin onSuccess={handleGoogleLoginSuccess} onError={handleGoogleLoginError} />
-        {/* <FacebookLogin
-            appId="1088597931155576"
-            autoLoad={false}
-            fields="name,email,picture"
-            render={renderProps => (
-                <Box onClick={renderProps.onClick} sx={{ p: 1, margin: "1rem 0", display: "flex", alignItems: "center", border: "1px solid #dadce0", borderRadius: "4px", cursor: "pointer" }}>
-                    <FacebookIcon sx={{ mr: 1, color: "#1877F2" }} />
-                    <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
-                        <Typography sx={{ fontSize: "14px", color: "#3c4043" }}>Sign in with Facebook</Typography>
-                    </Box>
-                </Box>
-            )}
-            callback={responseFacebook}
-        /> */}
         <Divider sx={{ margin: "1rem 0" }}><Typography variant="caption" color="#999">Or sign in with</Typography></Divider>
         <Button onClick={() => setShowSignIn(true)} disableElevation fullWidth variant="contained" sx={{ color: "white", textTransform: 'none', background: "#f09300", fontWeight: "bold", borderRadius: "30px", padding: { lg: "0.7rem 3rem", md: "0.5rem 2rem", xs: "0.3rem 0rem" } }}>
             Continue with Email ID
