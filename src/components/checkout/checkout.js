@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { 
-    Box, Button, Container, Typography, TextField, Grid, 
-    Divider, Paper 
+import {
+  Box, Button, Container, Typography, TextField, Grid,
+  Divider, Paper, FormControl, InputLabel, Select, MenuItem
 } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,6 +10,7 @@ import { selectIsUserLoggedIn, setUserLoggedIn, openLogin, selectBooksData, sele
 import LoginModal from '../../pages/login/NewLogin';
 import axios from 'axios';
 import { showSnackbar } from '../../redux/SnackBarSlice';
+import { Country, State, City } from 'country-state-city';
 
 export default function Checkout() {
   // Get totalAmount passed via location
@@ -42,7 +43,7 @@ export default function Checkout() {
     firstname: '',
     lastname: '',
     company: '',
-    country: '',
+    country: 'IN',
     state: '',
     street: '',
     street2: '',
@@ -54,11 +55,34 @@ export default function Checkout() {
   });
 
   // Handle input change
+  const [states, setStates] = useState([]);
+  const [cities, setCities] = useState([]);
+
+  // Load India's states on component mount
+  useEffect(() => {
+    const indiaStates = State.getStatesOfCountry('IN');
+    setStates(indiaStates);
+  }, []);
+
+  // Load cities when state changes
+  useEffect(() => {
+    if (userDetails.state) {
+      const stateCities = City.getCitiesOfState('IN', userDetails.state);
+      setCities(stateCities);
+    } else {
+      setCities([]);
+    }
+  }, [userDetails.state]);
+
   const handleInputChange = (e) => {
-    setUserDetails({
-      ...userDetails,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setUserDetails(prev => ({
+      ...prev,
+      [name]: value,
+      // Reset state and city when country changes (though country is fixed to India here)
+      ...(name === 'country' && { state: '', city: '' }),
+      ...(name === 'state' && { city: '' }),
+    }));
   };
 
   const razorpay_payment = async (totalAmount) => {
@@ -67,7 +91,7 @@ export default function Checkout() {
       email: localStorage.getItem('email') || null,
       id: localStorage.getItem('id') || null
     };
-  
+
     try {
       // Step 1: Create Razorpay order on backend
       const response = await fetch(process.env.REACT_APP_URL + '/ebooks/create-order', {
@@ -77,15 +101,15 @@ export default function Checkout() {
         },
         body: JSON.stringify({ amount: totalAmount, user_id: userData.id })
       });
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
         throw new Error('Failed to create order');
       }
-  
+
       const orderId = data.orderId;
-  
+
       // Step 2: Open Razorpay payment gateway
       const options = {
         key: "rzp_live_OwYWxXYV5JFbXK", // Your Razorpay key
@@ -96,7 +120,7 @@ export default function Checkout() {
         order_id: orderId, // Pass the created order ID here
         handler: async function (response) {
           console.log("Payment successful:", response);
-  
+
           // Prepare payment data to send to the backend
           const paymentData = {
             razorpay_payment_id: response.razorpay_payment_id,
@@ -106,7 +130,7 @@ export default function Checkout() {
             userDetails: userDetails,
             cartDetails: cartDetails
           };
-  
+
           // Send payment data to your backend to store it
           try {
             const res = await fetch(process.env.REACT_APP_URL + "/ebooks/payment-success", {
@@ -116,7 +140,7 @@ export default function Checkout() {
               },
               body: JSON.stringify(paymentData),
             });
-  
+
             if (res.ok) {
               const data = await res.json();
               const response = await axios.get(process.env.REACT_APP_URL + `/ebooks/get_cart?id=${userId}`);
@@ -124,7 +148,7 @@ export default function Checkout() {
               setCartDetails(cartData);
               console.log("Payment data saved successfully:", cartData);
               dispatch(showSnackbar({ message: "Payment successful.", severity: "success" }));
-  
+
               navigate('/dashboard?tab=2');
               dispatch(setCartDetails(cartData));
             } else {
@@ -146,16 +170,16 @@ export default function Checkout() {
           color: "#7C3AED",
         },
       };
-  
+
       const razorpay = new window.Razorpay(options);
       razorpay.open();
-  
+
     } catch (error) {
       console.error('Error:', error);
       dispatch(showSnackbar({ message: "An error occurred while fetching book details", severity: "error" }));
     }
   };
-  
+
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -266,244 +290,259 @@ export default function Checkout() {
 
   return (
     <Container maxWidth="lg">
-        <Typography variant="h4" sx={{ textAlign: 'center', py: 4, fontWeight: 'bold' }}>
-            Checkout
-        </Typography>
+      <Typography variant="h4" sx={{ textAlign: 'center', py: 4, fontWeight: 'bold' }}>
+        Checkout
+      </Typography>
 
-        <Box sx={{ display: 'flex', gap: 4, marginBottom: 4, flexDirection:{xs: 'column', md:'column', lg:"row"}}}>
-            {/* Billing Details Section */}
-            <Paper sx={{ flex: 2, p: 3, borderRadius: 2 }}>
-                <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
-                    Billing details
-                </Typography>
+      <Box sx={{ display: 'flex', gap: 4, marginBottom: 4, flexDirection: { xs: 'column', md: 'column', lg: "row" } }}>
+        {/* Billing Details Section */}
+        <Paper sx={{ flex: 2, p: 3, borderRadius: 2 }}>
+          <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
+            Billing details
+          </Typography>
 
-                <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="First name"
-                            name="firstname"
-                            value={userDetails.firstname}
-                            onChange={handleInputChange}
-                            required
-                            size="small"
-                            sx={{ mb: 2 }}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="Last name"
-                            name="lastname"
-                            value={userDetails.lastname}
-                            onChange={handleInputChange}
-                            required
-                            size="small"
-                            sx={{ mb: 2 }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="Company name (optional)"
-                            name="company"
-                            value={userDetails.company}
-                            onChange={handleInputChange}
-                            size="small"
-                            sx={{ mb: 2 }}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="Country"
-                            name="country"
-                            value={userDetails.country}
-                            onChange={handleInputChange}
-                            required
-                            size="small"
-                            sx={{ mb: 2 }}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="State"
-                            name="state"
-                            value={userDetails.state}
-                            onChange={handleInputChange}
-                            required
-                            size="small"
-                            sx={{ mb: 2 }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="Street address"
-                            name="street"
-                            value={userDetails.street}
-                            onChange={handleInputChange}
-                            required
-                            placeholder="House number and street name"
-                            size="small"
-                            sx={{ mb: 2 }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            fullWidth
-                            label="Apartment, suite, etc. (optional)"
-                            name="street2"
-                            value={userDetails.street2}
-                            onChange={handleInputChange}
-                            size="small"
-                            sx={{ mb: 2 }}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="Town/City"
-                            name="city"
-                            value={userDetails.city}
-                            onChange={handleInputChange}
-                            required
-                            size="small"
-                            sx={{ mb: 2 }}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="Zipcode/Pincode"
-                            name="zipcode"
-                            value={userDetails.zipcode}
-                            onChange={handleInputChange}
-                            required
-                            size="small"
-                            sx={{ mb: 2 }}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="Phone"
-                            name="phone"
-                            value={userDetails.phone}
-                            onChange={handleInputChange}
-                            required
-                            size="small"
-                            sx={{ mb: 2 }}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            fullWidth
-                            label="Email"
-                            type="email"
-                            name="email"
-                            value={userDetails.email}
-                            onChange={handleInputChange}
-                            required
-                            size="small"
-                            sx={{ mb: 2 }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Typography variant="h6" sx={{ mt: 2, mb: 2 }}>
-                            Additional information
-                        </Typography>
-                        <TextField
-                            fullWidth
-                            label="Order notes (optional)"
-                            name="notes"
-                            value={userDetails.notes}
-                            onChange={handleInputChange}
-                            multiline
-                            rows={4}
-                            placeholder="Notes about your order, e.g. special delivery instructions"
-                            sx={{ mb: 2 }}
-                        />
-                    </Grid>
-                </Grid>
-            </Paper>
-
-            {/* Order Summary Section */}
-            <Paper sx={{ flex: 1, p: 3, borderRadius: 2, alignSelf: 'flex-start' }}>
-                <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
-                    Your Order
-                </Typography>
-                
-                <Box sx={{ mb: 2 }}>
-                    <Grid container sx={{ fontWeight: 600, mb: 1 }}>
-                        <Grid item xs={6}>Product</Grid>
-                        <Grid item xs={6} sx={{ textAlign: 'right' }}>Price</Grid>
-                    </Grid>
-                    <Divider />
-                    
-                    {rows.map((row, index) => (
-                        <Box key={index} sx={{ my: 2 }}>
-                            <Grid container sx={{ mb: 0.5 }}>
-                                <Grid item xs={8}>
-                                    <Typography variant="body2">
-                                        {row.name} × {row.quantity}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={4} sx={{ textAlign: 'right' }}>
-                                    <Typography variant="body2" fontWeight={600}>
-                                        ₹{row.subtotal.toFixed(2)}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                            <Typography variant="caption" color="text.secondary" display="block" textAlign="right">
-                                Each ₹{row.price}
-                            </Typography>
-                        </Box>
-                    ))}
-                    
-                    <Divider />
-                    <Grid container sx={{ my: 2 }}>
-                        <Grid item xs={6}>Subtotal</Grid>
-                        <Grid item xs={6} sx={{ textAlign: 'right' }}>₹{totalAmount}</Grid>
-                    </Grid>
-                    <Divider />
-                    <Grid container sx={{ my: 2, fontWeight: 600 }}>
-                        <Grid item xs={6}>Total</Grid>
-                        <Grid item xs={6} sx={{ textAlign: 'right' }}>₹{totalAmount}</Grid>
-                    </Grid>
-                </Box>
-
-                <Typography variant="caption" display="block" sx={{ my: 2 }}>
-                    Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.
-                </Typography>
-                {/* <Typography variant="caption" display="block" sx={{ my: 2, color:"red", fontWeight:"bold" }}>
-                    * Note : Please do not pay through QR code since we are facing technical issue using that
-                </Typography> */}
-                <Button
-                    fullWidth
-                    variant="contained"
-                    onClick={handleSubmit}
-                    sx={{
-                      borderRadius: "8px",
-                      width: "100%",
-                      background: "#F09300",
-                      color: "White",
-                      fontSize: "0.9rem",
-                      fontWeight: "600",
-                      textTransform: "none",
-                      marginTop: "1rem",
-                      padding: "0.8rem",
-                      '&:hover': {
-                        background: "#d67e00"
-                      }
-                    }}
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="First name"
+                name="firstname"
+                value={userDetails.firstname}
+                onChange={handleInputChange}
+                required
+                size="small"
+                sx={{ mb: 2 }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Last name"
+                name="lastname"
+                value={userDetails.lastname}
+                onChange={handleInputChange}
+                required
+                size="small"
+                sx={{ mb: 2 }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Company name (optional)"
+                name="company"
+                value={userDetails.company}
+                onChange={handleInputChange}
+                size="small"
+                sx={{ mb: 2 }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Country"
+                name="country"
+                value="India"
+                disabled
+                required
+                size="small"
+                sx={{ mb: 2 }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+                <InputLabel>State</InputLabel>
+                <Select
+                  name="state"
+                  value={userDetails.state}
+                  onChange={handleInputChange}
+                  label="State"
+                  required
                 >
-                    Place Order
-                </Button>
-            </Paper>
-        </Box>
-        <LoginModal open={showLoginModal} onClose={handleLoginClose} />
+                  <MenuItem value=""><em>Select State</em></MenuItem>
+                  {states.map((state) => (
+                    <MenuItem key={state.isoCode} value={state.isoCode}>
+                      {state.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Street address"
+                name="street"
+                value={userDetails.street}
+                onChange={handleInputChange}
+                required
+                placeholder="House number and street name"
+                size="small"
+                sx={{ mb: 2 }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Apartment, suite, etc. (optional)"
+                name="street2"
+                value={userDetails.street2}
+                onChange={handleInputChange}
+                size="small"
+                sx={{ mb: 2 }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth size="small" sx={{ mb: 2 }}>
+                <InputLabel>Town/City</InputLabel>
+                <Select
+                  name="city"
+                  value={userDetails.city}
+                  onChange={handleInputChange}
+                  label="Town/City"
+                  required
+                  disabled={!userDetails.state}
+                >
+                  <MenuItem value=""><em>Select City</em></MenuItem>
+                  {cities.map((city) => (
+                    <MenuItem key={city.name} value={city.name}>
+                      {city.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Zipcode/Pincode"
+                name="zipcode"
+                value={userDetails.zipcode}
+                onChange={handleInputChange}
+                required
+                size="small"
+                sx={{ mb: 2 }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Phone"
+                name="phone"
+                value={userDetails.phone}
+                onChange={handleInputChange}
+                required
+                size="small"
+                sx={{ mb: 2 }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                label="Email"
+                type="email"
+                name="email"
+                value={userDetails.email}
+                onChange={handleInputChange}
+                required
+                size="small"
+                sx={{ mb: 2 }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6" sx={{ mt: 2, mb: 2 }}>
+                Additional information
+              </Typography>
+              <TextField
+                fullWidth
+                label="Order notes (optional)"
+                name="notes"
+                value={userDetails.notes}
+                onChange={handleInputChange}
+                multiline
+                rows={4}
+                placeholder="Notes about your order, e.g. special delivery instructions"
+                sx={{ mb: 2 }}
+              />
+            </Grid>
+          </Grid>
+        </Paper>
+
+        {/* Order Summary Section */}
+        <Paper sx={{ flex: 1, p: 3, borderRadius: 2, alignSelf: 'flex-start' }}>
+          <Typography variant="h5" sx={{ mb: 3, fontWeight: 600 }}>
+            Your Order
+          </Typography>
+
+          <Box sx={{ mb: 2 }}>
+            <Grid container sx={{ fontWeight: 600, mb: 1 }}>
+              <Grid item xs={6}>Product</Grid>
+              <Grid item xs={6} sx={{ textAlign: 'right' }}>Price</Grid>
+            </Grid>
+            <Divider />
+
+            {rows.map((row, index) => (
+              <Box key={index} sx={{ my: 2 }}>
+                <Grid container sx={{ mb: 0.5 }}>
+                  <Grid item xs={8}>
+                    <Typography variant="body2">
+                      {row.name} × {row.quantity}
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={4} sx={{ textAlign: 'right' }}>
+                    <Typography variant="body2" fontWeight={600}>
+                      ₹{row.subtotal.toFixed(2)}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                <Typography variant="caption" color="text.secondary" display="block" textAlign="right">
+                  Each ₹{row.price}
+                </Typography>
+              </Box>
+            ))}
+
+            <Divider />
+            <Grid container sx={{ my: 2 }}>
+              <Grid item xs={6}>Subtotal</Grid>
+              <Grid item xs={6} sx={{ textAlign: 'right' }}>₹{totalAmount}</Grid>
+            </Grid>
+            <Divider />
+            <Grid container sx={{ my: 2, fontWeight: 600 }}>
+              <Grid item xs={6}>Total</Grid>
+              <Grid item xs={6} sx={{ textAlign: 'right' }}>₹{totalAmount}</Grid>
+            </Grid>
+          </Box>
+
+          <Typography variant="caption" display="block" sx={{ my: 2 }}>
+            Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our privacy policy.
+          </Typography>
+          <Typography variant="caption" display="block" sx={{ my: 2, color: "red", fontWeight: "bold" }}>
+            * Note : Shipping charges may vary. Our admin team will contact you to confirm your order and provide details about the shipping costs.
+          </Typography>
+          <Button
+            fullWidth
+            variant="contained"
+            onClick={handleSubmit}
+            sx={{
+              borderRadius: "8px",
+              width: "100%",
+              background: "#F09300",
+              color: "White",
+              fontSize: "0.9rem",
+              fontWeight: "600",
+              textTransform: "none",
+              marginTop: "1rem",
+              padding: "0.8rem",
+              '&:hover': {
+                background: "#d67e00"
+              }
+            }}
+          >
+            Place Order
+          </Button>
+        </Paper>
+      </Box>
+      <LoginModal open={showLoginModal} onClose={handleLoginClose} />
     </Container>
   );
 }

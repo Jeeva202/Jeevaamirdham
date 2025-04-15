@@ -96,8 +96,9 @@ export default function TodayThoughts() {
     }, 15000);
 
     return () => clearInterval(timer);
-  }, [thoughts.length]);
+  }, [thoughts.length, isPlaying]);
 
+  
   const handleThoughtChange = (index) => {
     // Pause current audio before changing thought
     if (audioRef.current) {
